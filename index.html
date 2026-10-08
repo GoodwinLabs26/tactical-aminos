@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tactical Aminos — research compounds and laboratory supplies. Create a member account to explore the catalog.">
+  <meta name="theme-color" content="#1648ed">
+  <title>Tactical Aminos | Research. Innovation. Results.</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="announcement"><span>RESEARCH. INNOVATION. RESULTS.</span><span>USPS SHIPPING · $8 FLAT RATE</span><span>MEMBER ACCESS · 21+</span></div>
+  <header class="header">
+    <a class="wordmark" href="#home" aria-label="Tactical Aminos home"><span class="brand-icon" aria-hidden="true">⌖</span><span>TACTICAL<strong>AMINOS<span class="tm">™</span></strong></span></a>
+    <nav aria-label="Main navigation"><a href="#shop" data-route="shop">Shop</a><a href="#about" data-route="about">About</a><a href="#contact" data-route="contact">Contact</a></nav>
+    <div class="header-actions"><button class="text-button" id="accountButton">Member sign in <span aria-hidden="true">↗</span></button><button class="text-button" id="signOutButton" hidden>Sign out</button></div>
+  </header>
+  <main id="main">
+    <section id="homeView" class="page-view">
+      <div class="hero wrap">
+        <div class="hero-copy"><p class="eyebrow"><span></span> TACTICAL AMINOS · RESEARCH CATALOG</p><h1>Precision.<br>Purpose.<br><em>Possibility.</em></h1><p class="hero-description">A focused space for research compounds and laboratory essentials. Your next discovery starts here.</p><div class="hero-buttons"><button class="button" data-open-shop>Explore the catalog <span aria-hidden="true">→</span></button><a class="button button-outline" href="#about">Meet Tactical Aminos</a></div><div class="hero-footnote"><span>01 / MEMBER ACCESS</span><span>FOR LABORATORY RESEARCH ONLY</span></div></div>
+        <div class="hero-image"><img src="assets/tactical-reference.png" alt="Tactical Aminos branding with a blue-capped PT-141 research vial" width="638" height="641"><span class="image-caption">RESEARCH. INNOVATION. RESULTS.</span></div>
+      </div>
+      <div class="feature-strip wrap"><div><span class="feature-number">01</span><div><strong>A focused catalog</strong><p>Compounds, blends & laboratory supplies</p></div></div><div><span class="feature-number">02</span><div><strong>Member access</strong><p>Create an account. No application required.</p></div></div><div><span class="feature-number">03</span><div><strong>Simple shipping</strong><p>USPS Ground Advantage · $8 per order</p></div></div></div>
+      <section class="intro wrap"><p class="eyebrow">BUILT FOR DISCOVERY</p><h2>Explore with intention.</h2><p>Browse our member catalog by compound or category. Product information and availability will be added as the catalog is finalized.</p><button class="inline-link" data-open-shop>Enter the member catalog <span aria-hidden="true">→</span></button></section>
+    </section>
+    <section id="authView" class="page-view auth-page wrap" hidden>
+      <div class="auth-story"><img src="assets/tactical-reference.png" alt="Tactical Aminos blue research vial branding" width="638" height="641"><div><p class="eyebrow">MEMBER ACCESS</p><h2>Your research.<br>Your space.</h2><p>Catalog access begins with your account.</p></div></div>
+      <div class="auth-panel"><p class="eyebrow">TACTICAL AMINOS</p><h1 id="authHeading">Welcome back.</h1><p class="auth-intro" id="authIntro">Sign in to access your account and the catalog.</p><div class="auth-tabs" role="group" aria-label="Account options"><button id="signInTab" class="active" type="button">Sign in</button><button id="signUpTab" type="button">Create account</button></div>
+      <form id="authForm">
+        <div id="nameField" hidden><label for="fullName">Full name</label><input id="fullName" name="name" autocomplete="name" maxlength="100"></div>
+        <label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="username" required maxlength="254">
+        <label for="password">Password</label><div class="password-field"><input id="password" name="password" type="password" autocomplete="current-password" required minlength="6"><button id="passwordToggle" type="button" aria-label="Show password" aria-pressed="false">Show</button></div>
+        <div id="confirmField" hidden><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="6"></div>
+        <div id="ageField" hidden><label class="check-label"><input id="ageConfirmed" type="checkbox"><span>I am 21 or older and understand that products are for laboratory research only, not for human or animal use.</span></label></div>
+        <button class="button full-width" id="submitButton" type="submit">Sign in</button><p id="authMessage" class="form-message" role="status" aria-live="polite"></p>
+      </form><button id="resetPasswordButton" class="inline-link small" type="button">Forgot your password?</button><a class="auth-back" href="#home">← Back to home</a></div>
+    </section>
+    <section id="ageView" class="page-view wrap narrow" hidden><p class="eyebrow">MEMBER ACCESS</p><h1>One final confirmation.</h1><p>Confirm your eligibility to enter the member catalog.</p><form id="ageForm"><label class="check-label"><input id="existingAgeConfirmed" type="checkbox" required><span>I am 21 or older and understand that products are for laboratory research only, not for human or animal use.</span></label><button class="button" type="submit">Continue to catalog →</button><p id="ageMessage" class="form-message" role="status"></p></form></section>
+    <section id="shopView" class="page-view wrap catalog-page" hidden>
+      <div class="section-heading"><div><p class="eyebrow">RESEARCH CATALOG · MEMBER ACCESS</p><h1>Explore our products.</h1><p>Compounds, blends, and laboratory essentials.</p></div><span class="small-label">TACTICAL AMINOS / CATALOG</span></div>
+      <div class="catalog-note"><strong>Catalog preview</strong><span>This starter uses a selection from Mark’s pricing sheet. Descriptions and stock are pending. Orders are not enabled yet.</span></div>
+      <label class="sr-only" for="productSearch">Search products</label><input id="productSearch" class="search-input" type="search" placeholder="Search by compound or strength…"><div class="catalog-toolbar"><div id="categoryButtons" class="category-buttons" aria-label="Product categories"></div><span id="productCount" class="small-label"></span></div>
+      <div id="productGrid" class="product-grid"></div><p id="emptySearch" class="empty-state" hidden>No products match your search. Try another name or category.</p>
+    </section>
+    <section id="aboutView" class="page-view wrap about-page" hidden><div><p class="eyebrow">ABOUT TACTICAL AMINOS</p><h1>Research.<br>Innovation.<br><em>Results.</em></h1><p class="lead">Precision, purpose, and a commitment to discovery.</p><div class="placeholder-copy"><h2>Our story is coming soon.</h2><p>Mark’s introduction, business story, and approach to research will go here.</p></div><button class="button" data-open-shop>Explore the member catalog →</button></div><img src="assets/tactical-reference.png" alt="Tactical Aminos research branding" width="638" height="641"></section>
+    <section id="contactView" class="page-view wrap narrow" hidden><p class="eyebrow">GET IN TOUCH</p><h1>Let’s connect.</h1><p>For catalog and order questions, contact Tactical Aminos.</p><a class="contact-email" href="mailto:TacticalAminos@gmail.com">TacticalAminos@gmail.com ↗</a><div class="contact-details"><h2>Payment & shipping</h2><p>Venmo: <strong>@Mark-Williams-1389</strong></p><p>PayPal: details coming soon.</p><p>Shipping: USPS Ground Advantage, $8 per order.</p></div></section>
+    <section id="accountView" class="page-view wrap narrow" hidden><p class="eyebrow">YOUR ACCOUNT</p><h1>Welcome, <span id="accountName">member</span>.</h1><p id="accountEmail"></p><div class="placeholder-copy"><h2>Your member space</h2><p>Your order history and saved shipping information will appear here when checkout is connected.</p></div><button class="button" data-open-shop>Browse the catalog →</button></section>
+  </main>
+  <footer class="footer"><div class="wrap footer-top"><a class="wordmark" href="#home"><span class="brand-icon" aria-hidden="true">⌖</span><span>TACTICAL<strong>AMINOS</strong></span></a><p>RESEARCH. INNOVATION. RESULTS.</p><a href="mailto:TacticalAminos@gmail.com">TacticalAminos@gmail.com ↗</a></div><div class="wrap disclaimer">For laboratory research only. Not intended for human or animal use. Account access requires confirmation that you are 21 or older.</div><div class="wrap footer-bottom"><span>© <span id="year"></span> Tactical Aminos</span><span>Precision. Purity. Performance.</span></div></footer>
+  <dialog id="productDialog"><button class="dialog-close" id="closeProductDialog" aria-label="Close product details">×</button><div id="productDialogContent"></div></dialog>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
