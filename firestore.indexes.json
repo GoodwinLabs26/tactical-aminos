@@ -1,0 +1,4 @@
+{
+  "indexes": [{ "collectionGroup": "orders", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "ownerUid", "order": "ASCENDING" }, { "fieldPath": "createdAt", "order": "DESCENDING" }] }],
+  "fieldOverrides": []
+}

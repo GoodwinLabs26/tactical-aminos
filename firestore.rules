@@ -20,8 +20,18 @@ service cloud.firestore {
         && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
-    // Orders, products, affiliates, and admin access are introduced in the
-    // next phase. Until then no client can write or read these collections.
+    match /orders/{orderId} {
+      allow read: if request.auth != null && resource.data.ownerUid == request.auth.uid;
+      // Prices, discounts, ownership, paid status and quantities are written
+      // only by the authenticated server-side order service.
+      allow create, update, delete: if false;
+    }
+    match /customerStats/{uid} {
+      allow get: if owner(uid);
+      allow list, create, update, delete: if false;
+    }
+    // Catalog, promotions, config, affiliates, inventory and admin operations
+    // are served by the backend. Customers cannot directly edit them.
     match /{document=**} {
       allow read, write: if false;
     }

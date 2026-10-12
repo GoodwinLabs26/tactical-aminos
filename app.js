@@ -1,11 +1,16 @@
-import { categories, products } from './catalog.js';
+import { categories, products as previewProducts } from './catalog.js';
+import { initCheckout } from './checkout-ui.js';
+import { siteSettings } from './site-settings.js';
+
+let products = siteSettings.previewCheckout ? previewProducts : [];
+let checkoutController;
 
 const $ = id => document.getElementById(id);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
 const money = value => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 let service, serviceError, currentUser = null, profile = null, authMode = 'signin', sessionReady = false, busy = false, profileError = null, category = 'all';
 let sessionGeneration = 0;
-const views = ['home', 'auth', 'age', 'shop', 'about', 'contact', 'account'];
+const views = ['home', 'auth', 'age', 'shop', 'about', 'contact', 'account', 'cart'];
 let wantedRoute = 'shop';
 const firebaseReady = import('./firebase-service.js').then(module => {
   service = module;
@@ -31,7 +36,7 @@ const firebaseReady = import('./firebase-service.js').then(module => {
 }).catch(error => {
   serviceError = error;
   sessionReady = true;
-  if (location.hash === '#shop' || location.hash === '#account' || location.hash === '#auth') route();
+  if (['#shop','#account','#auth','#cart'].includes(location.hash)) route();
   return null;
 });
 
@@ -61,12 +66,14 @@ function message(id, text, success = false) {
 function showView(view) {
   for (const key of views) $(key + 'View').hidden = key !== view;
   document.querySelectorAll('[data-route]').forEach(link => link.classList.toggle('active', link.dataset.route === view));
-  const titles = { home: 'Research. Innovation. Results.', auth: 'Member access', shop: 'Research catalog', about: 'About', contact: 'Contact', account: 'My account', age: 'Member confirmation' };
+  const titles = { home: 'Research. Innovation. Results.', auth: 'Member access', shop: 'Research catalog', about: 'About', contact: 'Contact', account: 'My account', age: 'Member confirmation', cart:'Cart & checkout' };
   document.title = `Tactical Aminos | ${titles[view]}`;
+  if (view === 'cart') checkoutController?.render();
+  if (view === 'account') checkoutController?.loadHistory();
 }
 function route() {
   const key = location.hash.slice(1) || 'home';
-  if (key === 'shop' || key === 'account') {
+  if (['shop', 'account', 'cart'].includes(key)) {
     wantedRoute = key;
     if (!sessionReady) { showView('auth'); message('authMessage', 'Connecting to your account…'); return; }
     if (!currentUser) { showView('auth'); message('authMessage', serviceError ? authError(serviceError) : ''); return; }
@@ -84,6 +91,7 @@ function updateAccount() {
   $('signOutButton').hidden = !currentUser;
   $('accountName').textContent = profile?.name || currentUser?.displayName || 'member';
   $('accountEmail').textContent = currentUser?.email || '';
+  checkoutController?.updateSession(currentUser, profile);
 }
 function setAuthMode(mode) {
   authMode = mode;
@@ -203,7 +211,7 @@ function renderProducts() {
   const filtered = products.filter(product => (category === 'all' || product.category === category) && `${product.name} ${product.strength}`.toLowerCase().includes(query));
   $('productCount').textContent = `${filtered.length} products`;
   $('emptySearch').hidden = filtered.length !== 0;
-  $('productGrid').innerHTML = filtered.map(product => `<article class="product-card"><div class="product-art">${vial(product)}<span class="strength-tag">${escape(product.strength)}</span><span class="stock-tag">Stock pending</span></div><div class="product-copy"><p class="eyebrow">${escape(categories.find(item => item.id === product.category).name)}</p><h2>${escape(product.name)} <span>${escape(product.strength)}</span></h2><p class="product-description">Product description coming soon.</p><div class="product-card-bottom"><strong>${money(product.price)}</strong><button class="button button-small" data-product-id="${product.id}">View product</button></div></div></article>`).join('');
+  $('productGrid').innerHTML = filtered.map(product => `<article class="product-card"><div class="product-art">${vial(product)}<span class="strength-tag">${escape(product.strength)}</span><span class="stock-tag">${product.stockQuantity === 0 ? 'Out of stock' : Number.isInteger(product.stockQuantity) ? 'In stock' : 'Stock pending'}</span></div><div class="product-copy"><p class="eyebrow">${escape(categories.find(item => item.id === product.category)?.name || 'Research compounds')}</p><h2>${escape(product.name)} <span>${escape(product.strength)}</span></h2><p class="product-description">Product description coming soon.</p><div class="product-card-bottom"><strong>${money(product.price)}</strong><button class="button button-small button-outline" data-product-id="${product.id}">View product</button></div><button class="button button-small product-add" data-add-product="${product.id}" ${product.stockQuantity === 0 ? 'disabled' : ''}>${product.stockQuantity === 0 ? 'Out of stock' : 'Add to cart'}</button></div></article>`).join('');
   $('categoryButtons').innerHTML = categories.map(item => `<button class="chip ${category === item.id ? 'selected' : ''}" data-category="${item.id}" aria-pressed="${category === item.id}">${escape(item.name)}</button>`).join('');
 }
 $('categoryButtons').addEventListener('click', event => {
@@ -214,15 +222,30 @@ $('categoryButtons').addEventListener('click', event => {
 });
 $('productSearch').addEventListener('input', renderProducts);
 $('productGrid').addEventListener('click', event => {
+  const add = event.target.closest('[data-add-product]');
+  if (add) { checkoutController?.addItem(add.dataset.addProduct); return; }
   const button = event.target.closest('[data-product-id]');
   if (!button || !currentUser || !profile?.ageConfirmed) return;
   const product = products.find(item => item.id === button.dataset.productId);
-  $('productDialogContent').innerHTML = `<div class="dialog-art">${vial(product)}</div><p class="eyebrow">TACTICAL AMINOS · RESEARCH CATALOG</p><h2>${escape(product.name)}</h2><p>${escape(product.strength)} · ${money(product.price)}</p><p class="muted">Product description and inventory coming soon.</p><button class="button full-width" disabled>Ordering coming soon</button><p class="dialog-disclaimer">For laboratory research only. Not intended for human or animal use.</p>`;
+  $('productDialogContent').innerHTML = `<div class="dialog-art">${vial(product)}</div><p class="eyebrow">TACTICAL AMINOS · RESEARCH CATALOG</p><h2>${escape(product.name)}</h2><p>${escape(product.strength)} · ${money(product.price)}</p><p class="muted">Product description coming soon.</p><label for="detailQuantity">Quantity</label><input id="detailQuantity" type="number" min="1" max="100" step="1" value="1"><button class="button full-width" data-add-product="${product.id}" ${product.stockQuantity === 0 ? 'disabled' : ''}>${product.stockQuantity === 0 ? 'Out of stock' : 'Add to cart'}</button><p class="dialog-disclaimer">For laboratory research only. Not intended for human or animal use.</p>`;
   $('productDialog').showModal();
 });
 $('closeProductDialog').addEventListener('click', () => $('productDialog').close());
+$('productDialogContent').addEventListener('click', event => {
+  const button = event.target.closest('[data-add-product]');
+  if (!button) return;
+  checkoutController?.addItem(button.dataset.addProduct, Number($('detailQuantity').value));
+  $('productDialog').close();
+});
 $('productDialog').addEventListener('click', event => { if (event.target === $('productDialog')) $('productDialog').close(); });
 $('year').textContent = new Date().getFullYear();
+checkoutController = initCheckout({ products, getService: requireService, onCatalog: catalog => {
+  products = catalog;
+  renderProducts();
+} });
+if (!siteSettings.previewCheckout) {
+  document.querySelector('.catalog-note').innerHTML='<strong>Member catalog</strong><span>Prices and availability are checked again when you submit your order.</span>';
+}
 setAuthMode('signin');
 renderProducts();
 route();
