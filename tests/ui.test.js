@@ -1,0 +1,41 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import vm from 'node:vm';
+
+test('account gate, cart, discounts, preview checkout and scoped cart restoration',async()=>{
+  const root=path.resolve(new URL('..',import.meta.url).pathname);
+  const html=await fs.readFile(path.join(root,'index.html'),'utf8');
+  const elements=new Map();
+  const element=id=>({id,value:'',checked:false,hidden:false,disabled:false,innerHTML:'',textContent:'',dataset:{},type:'password',listeners:{},classList:{toggle(){},add(){},remove(){}},setAttribute(){},checkValidity(){return this.value.includes('@');},addEventListener(type,fn){this.listeners[type]=fn;},querySelector(){return element('button');},showModal(){this.open=true;},close(){this.open=false;},scrollIntoView(){},reset(){for(const name of ['shippingName','shippingPhone','shippingStreet','shippingApartment','shippingCity','shippingState','shippingZip','orderNotes'])elements.get(name).value='';elements.get('purchaseConfirmation').checked=false;}});
+  for(const match of html.matchAll(/id="([^"]+)"/g))elements.set(match[1],element(match[1]));
+  const promotions=['first','code','none'].map(value=>({...element('promotion-'+value),value}));
+  const payments=[{...element('venmo'),value:'venmo',checked:true},elements.get('paypalPayment')];payments[1].value='paypal';
+  const openShop=[element('openShop')],storage=new Map(),events=new Map();
+  let hash='',watcher,profile=null,placeCalls=0;
+  const user={uid:'test-user',email:'test@example.com',displayName:'Test Member'};
+  const context=vm.createContext({console,Date,String,Intl,Number,Map,Set,JSON,setTimeout,clearTimeout,location:{get hash(){return hash;},set hash(value){hash=value.startsWith('#')?value:'#'+value;setTimeout(()=>events.get('hashchange')?.(),0);}},sessionStorage:{getItem:key=>storage.get(key) || null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},document:{title:'',getElementById:id=>{assert(elements.has(id),`Missing element ${id}`);return elements.get(id);},querySelector:selector=>selector.includes('paymentMethod')?payments.find(item=>item.checked):element('selector'),querySelectorAll:selector=>selector==='[data-route]'?[]:selector==='[data-open-shop]'?openShop:selector==='input[name="promotion"]'?promotions:selector==='input[name="paymentMethod"]'?payments:[]},window:{addEventListener:(type,fn)=>events.set(type,fn),scrollTo(){}}});
+  const api={watchSession:fn=>{watcher=fn;setTimeout(()=>fn(null),0);},signup:async()=>{await watcher(user);return user;},login:async()=>{await watcher(user);return {user};},logout:async()=>watcher(null),getProfile:async()=>profile,confirmMembership:async()=>{profile={name:'Test Member',ageConfirmed:true,researchOnlyAccepted:true};return profile;},resetPassword:async()=>{},placeOrder:async()=>{placeCalls++;}};
+  const mock=new vm.SyntheticModule(Object.keys(api),function(){for(const[key,value]of Object.entries(api))this.setExport(key,value);},{context});await mock.link(()=>{});await mock.evaluate();
+  const modules=new Map();
+  async function load(filename){if(modules.has(filename))return modules.get(filename);const source=await fs.readFile(filename,'utf8');const module=new vm.SourceTextModule(source,{context,identifier:filename,importModuleDynamically:async()=>mock});modules.set(filename,module);return module;}
+  const app=await load(path.join(root,'app.js'));await app.link((specifier,parent)=>load(path.resolve(path.dirname(parent.identifier),specifier)));await app.evaluate();
+  const pause=()=>new Promise(resolve=>setTimeout(resolve,10));await pause();
+  const el=id=>elements.get(id);const trigger=async(id,type='click',extra={})=>el(id).listeners[type]({preventDefault(){},currentTarget:el(id),...extra});
+  await openShop[0].listeners.click();await pause();assert.equal(el('authView').hidden,false);assert.equal(el('shopView').hidden,true);
+  await trigger('signUpTab');el('fullName').value='Test Member';el('email').value=user.email;el('password').value='TestPass123!';el('confirmPassword').value='Different!';el('ageConfirmed').checked=true;
+  await trigger('authForm','submit');assert.match(el('authMessage').textContent,/do not match/);
+  el('confirmPassword').value=el('password').value;await trigger('authForm','submit');await pause();assert.equal(el('shopView').hidden,false);
+  await trigger('productGrid','click',{target:{closest:selector=>selector==='[data-add-product]'?{dataset:{addProduct:'bpc157'}}:null}});
+  assert.equal(Number(el('cartCount').textContent),1);await trigger('cartButton');await pause();assert.equal(el('cartView').hidden,false);assert.match(el('orderTotals').innerHTML,/\$42.20/);
+  for(let index=0;index<4;index++)await trigger('cartLines','click',{target:{closest:selector=>selector==='[data-quantity]'?{dataset:{quantity:'bpc157',delta:'1'}}:null}});
+  assert.equal(Number(el('cartCount').textContent),5);assert.match(el('orderTotals').innerHTML,/\$160.00/);
+  await promotions[1].listeners.change();el('promoCode').value='BAD';await trigger('applyPromoButton');assert.match(el('promoMessage').textContent,/TEST10/);assert.match(el('orderTotals').innerHTML,/\$179.00/);
+  el('promoCode').value='TEST10';await trigger('applyPromoButton');assert.match(el('orderTotals').innerHTML,/\$160.00/);assert(!el('orderTotals').innerHTML.includes('First order'));
+  el('shippingName').value='Test Member';el('shippingPhone').value='515-555-0123';el('shippingStreet').value='123 Sample St';el('shippingCity').value='Des Moines';el('shippingState').value='IA';el('shippingZip').value='50309';el('purchaseConfirmation').checked=true;
+  await trigger('checkoutForm','submit');assert.equal(el('checkoutResult').hidden,false);assert.match(el('checkoutResultContent').innerHTML,/No order was sent. No payment is due./);assert.equal(placeCalls,0);assert.equal(Number(el('cartCount').textContent),5);
+  await trigger('signOutButton');await pause();assert.equal(Number(el('cartCount').textContent),0);assert.equal(el('shippingStreet').value,'');assert.equal(el('checkoutResult').hidden,true);
+  await trigger('signInTab');el('email').value=user.email;el('password').value='TestPass123!';await trigger('authForm','submit');await pause();assert.equal(Number(el('cartCount').textContent),5);
+  assert(![...storage.values()].some(value=>value.includes('123 Sample St')||value.includes('TestPass123!')));
+});
