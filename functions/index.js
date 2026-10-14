@@ -58,3 +58,24 @@ export const initializeDraftCatalog = onCall(options, async request => {
   if(created || !settings)await batch.commit();
   return { created, message:'Draft catalog prepared with zero stock. Ordering remains off until actual inventory and store settings are ready.' };
 });
+
+// All admin operations verify the one configured admin on the server.
+export const adminCommand = onCall(options, async request => {
+  try {
+    const { createAdminService } = await import('./admin-service.js');
+    const adminStore = { ...store, list: async (collectionName, settings={}) => {
+      let query=db.collection(collectionName).orderBy(settings.sort || '__name__',settings.sort?'desc':'asc');
+      if(settings.afterId){const cursor=await db.doc(`${collectionName}/${settings.afterId}`).get();if(!cursor.exists)throw new CheckoutError('failed-precondition','This page changed. Refresh the dashboard.');query=query.startAfter(cursor);}
+      const snapshot=await query.limit(51).get();
+      const documents=snapshot.docs.slice(0,50);
+      return {items:documents.map(document=>({ ...document.data(),id:document.id })),hasMore:snapshot.size>50,nextId:documents.at(-1)?.id||null};
+    }};
+    const adminService=createAdminService({store:adminStore,timestamp:()=>FieldValue.serverTimestamp()});
+    const actions=['dashboard','page','inventory','saveCode','paid','cancel','ship'];
+    if(!actions.includes(request.data?.action))throw new CheckoutError('invalid-argument','Choose a valid admin action.');
+    const result=await adminService[request.data.action](request.auth?.uid,request.data?.input||{});
+    // Callable payloads use ISO dates rather than SDK-specific Timestamp objects.
+    const clean=value=>value?.toDate instanceof Function?value.toDate().toISOString():Array.isArray(value)?value.map(clean):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([key,item])=>[key,clean(item)])):value;
+    return clean(result);
+  } catch(error) {throw translated(error);}
+});
