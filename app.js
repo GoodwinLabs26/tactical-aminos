@@ -1,6 +1,7 @@
 import { categories, products as previewProducts } from './catalog.js';
 import { initCheckout } from './checkout-ui.js';
 import { siteSettings } from './site-settings.js';
+import { initCalculator } from './calculator.js';
 
 let products = siteSettings.previewCheckout ? previewProducts : [];
 let checkoutController;
@@ -10,7 +11,7 @@ const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '
 const money = value => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
 let service, serviceError, currentUser = null, profile = null, authMode = 'signin', sessionReady = false, busy = false, profileError = null, category = 'all';
 let sessionGeneration = 0;
-const views = ['home', 'auth', 'age', 'shop', 'about', 'contact', 'account', 'cart'];
+const views = ['home', 'auth', 'age', 'shop', 'about', 'contact', 'account', 'cart', 'calculator'];
 let wantedRoute = 'shop';
 const firebaseReady = import('./firebase-service.js').then(module => {
   service = module;
@@ -36,7 +37,7 @@ const firebaseReady = import('./firebase-service.js').then(module => {
 }).catch(error => {
   serviceError = error;
   sessionReady = true;
-  if (['#shop','#account','#auth','#cart'].includes(location.hash)) route();
+  if (['#shop','#account','#auth','#cart','#calculator'].includes(location.hash)) route();
   return null;
 });
 
@@ -66,14 +67,14 @@ function message(id, text, success = false) {
 function showView(view) {
   for (const key of views) $(key + 'View').hidden = key !== view;
   document.querySelectorAll('[data-route]').forEach(link => link.classList.toggle('active', link.dataset.route === view));
-  const titles = { home: 'Research. Innovation. Results.', auth: 'Member access', shop: 'Research catalog', about: 'About', contact: 'Contact', account: 'My account', age: 'Member confirmation', cart:'Cart & checkout' };
+  const titles = { home: 'Research. Innovation. Results.', auth: 'Member access', shop: 'Research catalog', about: 'About', contact: 'Contact', account: 'My account', age: 'Member confirmation', cart:'Cart & checkout', calculator:'Research calculator' };
   document.title = `Tactical Aminos | ${titles[view]}`;
   if (view === 'cart') checkoutController?.render();
   if (view === 'account') checkoutController?.loadHistory();
 }
 function route() {
   const key = location.hash.slice(1) || 'home';
-  if (['shop', 'account', 'cart'].includes(key)) {
+  if (['shop', 'account', 'cart', 'calculator'].includes(key)) {
     wantedRoute = key;
     if (!sessionReady) { showView('auth'); message('authMessage', 'Connecting to your account…'); return; }
     if (!currentUser) { showView('auth'); message('authMessage', serviceError ? authError(serviceError) : ''); return; }
@@ -246,6 +247,7 @@ checkoutController = initCheckout({ products, getService: requireService, onCata
 if (!siteSettings.previewCheckout) {
   document.querySelector('.catalog-note').innerHTML='<strong>Member catalog</strong><span>Prices and availability are checked again when you submit your order.</span>';
 }
+initCalculator();
 setAuthMode('signin');
 renderProducts();
 route();
