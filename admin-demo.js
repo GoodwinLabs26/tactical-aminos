@@ -30,7 +30,7 @@ export const initializeCatalog=async()=>({message:'Practice catalog already load
 
 // Historical SAMPLE orders make reports testable without changing the two
 // original unpaid practice orders or connecting to Firebase.
-const currentParts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',year:'numeric',month:'numeric'}).formatToParts(new Date()).filter(part=>part.type!=='literal').map(part=>[part.type,Number(part.value)]));
+const currentParts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'numeric'}).formatToParts(new Date()).filter(part=>part.type!=='literal').map(part=>[part.type,Number(part.value)]));
 const period=reportWindow({year:currentParts.year,quarter:Math.ceil(currentParts.month/3)});
 const examples=[
  {id:'sample-paid-101',orderNumber:'TA-SAMPLE-101',paymentMethod:'venmo',lines:[{productId:'bpc157',name:'BPC-157',strength:'10mg',quantity:2,unitPriceCents:3800,lineTotalCents:7600}],subtotalCents:7600,discountCents:760,shippingCents:800,totalCents:7640},

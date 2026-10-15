@@ -11,6 +11,7 @@ test('quarter boundaries honor business time zones and daylight-saving changes',
  assert.equal(new Date(window.startMs).toISOString(),'2026-01-01T06:00:00.000Z');assert.equal(new Date(window.endMs).toISOString(),'2026-04-01T05:00:00.000Z');
  const fourth=reportWindow({year:2026,quarter:4,timeZone:'America/Chicago'});assert.equal(new Date(fourth.startMs).toISOString(),'2026-10-01T05:00:00.000Z');assert.equal(new Date(fourth.endMs).toISOString(),'2027-01-01T06:00:00.000Z');
  assert.equal(new Date(reportWindow({year:2028,quarter:1,timeZone:'UTC'}).endMs).toISOString(),'2028-04-01T00:00:00.000Z');
+ const eastern=reportWindow({year:2026,quarter:1});assert.equal(eastern.timeZone,'America/New_York');assert.equal(new Date(eastern.startMs).toISOString(),'2026-01-01T05:00:00.000Z');assert.equal(new Date(eastern.endMs).toISOString(),'2026-04-01T04:00:00.000Z');
  assert.throws(()=>reportWindow({...params,timeZone:'invalid'}));assert.throws(()=>reportWindow({...params,quarter:5}));
 });
 test('reports count paid timestamp in range, not placement or shipped date, with an exclusive end/cutoff',()=>{

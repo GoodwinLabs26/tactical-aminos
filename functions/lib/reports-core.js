@@ -11,7 +11,7 @@ function midnight(year,month,timeZone){
  }
  fail('Unable to determine the report date range.');
 }
-export function reportWindow({year,quarter,timeZone='America/Chicago'}){
+export function reportWindow({year,quarter,timeZone='America/New_York'}){
  if(!Number.isInteger(year)||year<2000||year>2100||!Number.isInteger(quarter)||quarter<1||quarter>4)fail('Choose a year from 2000 to 2100 and quarter 1–4.');
  if(!REPORT_ZONES.includes(timeZone))fail('Choose one of the supported report time zones.');
  const startMonth=(quarter-1)*3,endMonth=startMonth+3;

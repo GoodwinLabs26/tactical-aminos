@@ -21,7 +21,7 @@ export async function loadAllReportOrders(fetchPage,params,{isCurrent=()=>true,o
 export function initReports({getApi,demo}){
  let report=null,busy=false,externalLock=false,epoch=0;
  const status=(text,error=false)=>{$('reportMessage').textContent=text;$('reportMessage').classList.toggle('error',error);};
- function controls(){const locked=busy||externalLock;for(const id of ['reportYear','reportQuarter','reportZone','generateReport'])$(id).disabled=locked;for(const id of ['reportPdf','reportOrdersCsv','reportProductsCsv'])$(id).disabled=locked||!report;}
+ function controls(){const locked=busy||externalLock;for(const id of ['reportYear','reportQuarter','generateReport'])$(id).disabled=locked;for(const id of ['reportPdf','reportOrdersCsv','reportProductsCsv'])$(id).disabled=locked||!report;}
  function reset(){epoch++;busy=false;report=null;$('reportOutput').hidden=true;$('reportPeriod').textContent='';$('reportAsOf').textContent='';$('reportOrderNote').textContent='';$('reportSampleLabel').hidden=true;$('reportCards').innerHTML='';$('reportProducts').innerHTML='';$('reportPayments').innerHTML='';$('reportOrders').innerHTML='';status('Choose a quarter, then generate the report.');controls();}
  function render(){
   $('reportOutput').hidden=false;$('reportSampleLabel').hidden=!demo;
@@ -37,7 +37,7 @@ export function initReports({getApi,demo}){
   event.preventDefault();if(busy||externalLock)return;
   const generation=++epoch;report=null;$('reportOutput').hidden=true;busy=true;controls();status('Loading all matching paid orders…');
   try{
-   const params={year:Number($('reportYear').value),quarter:Number($('reportQuarter').value),timeZone:$('reportZone').value};
+   const params={year:Number($('reportYear').value),quarter:Number($('reportQuarter').value),timeZone:'America/New_York'};
    const api=await getApi();
    const result=await loadAllReportOrders(input=>api.reportOrders(input),params,{isCurrent:()=>generation===epoch,onProgress:count=>status(`Loaded ${count} paid orders…`)});
    if(!result||generation!==epoch)return;
@@ -50,8 +50,8 @@ export function initReports({getApi,demo}){
   const blob=new Blob([content],{type:kind==='pdf'?'application/pdf':'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),anchor=document.createElement('a');anchor.href=url;anchor.download=filename+(kind==='pdf'?'-Website-Sales.pdf':`-${kind}.csv`);document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
  }
  $('reportPdf').addEventListener('click',()=>download('pdf'));$('reportOrdersCsv').addEventListener('click',()=>download('orders'));$('reportProductsCsv').addEventListener('click',()=>download('products'));
- for(const id of ['reportYear','reportQuarter','reportZone'])$(id).addEventListener('change',reset);
- const current=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',year:'numeric',month:'numeric'}).formatToParts(new Date()).filter(part=>part.type!=='literal').map(part=>[part.type,Number(part.value)]));
- $('reportYear').value=current.year;$('reportQuarter').value=Math.ceil(current.month/3);$('reportZone').value='America/Chicago';reset();
+ for(const id of ['reportYear','reportQuarter'])$(id).addEventListener('change',reset);
+ const current=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'numeric'}).formatToParts(new Date()).filter(part=>part.type!=='literal').map(part=>[part.type,Number(part.value)]));
+ $('reportYear').value=current.year;$('reportQuarter').value=Math.ceil(current.month/3);reset();
  return {reset,setLocked:value=>{externalLock=value;controls();}};
 }

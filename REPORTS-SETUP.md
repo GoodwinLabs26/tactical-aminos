@@ -48,7 +48,7 @@ for these local tests, the practice report, or PDF/CSV downloads.
 1. Keep the preview server running. Visit http://localhost:8000/admin.html?demo=1
    or open admin.html with Live Server and add ?demo=1 to its address.
 2. Refresh with Command+Shift+R and select Quarterly reports.
-3. Leave the default current year and quarter, Central time zone, then Generate report.
+3. Leave the default current year and quarter, Washington, DC (Eastern) time, then Generate report.
 4. A fresh practice session includes three sample paid orders, plus the original
    two unpaid practice orders. The unpaid orders are excluded from the report.
 5. Expect:
@@ -100,9 +100,10 @@ CDN library, email account, or billing setup is required for practice exports.
   Unpaid orders and unpaid cancellations are excluded.
 - Date basis is `paidAt`: when Mark clicks Mark paid on the website. It is not
   asserted to be when Venmo/PayPal received funds or deposited them into a bank.
-- Quarter starts at local midnight in the selected time zone and ends immediately
-  before the next quarter. Supported zones are Central, Eastern, Mountain, Pacific,
-  and UTC. The default is America/Chicago. Daylight-saving offsets are honored.
+- Quarter starts at local midnight in Washington, DC (Eastern) time and ends immediately
+  before the next quarter. The dashboard always uses America/New_York and has no time-zone selector.
+  Daylight-saving offsets are honored. The shared engine retains support for other
+  time zones for existing records/tests, but the dashboard always requests Eastern.
 - For the current quarter, the first retrieval fixes the report's generation cutoff.
   Orders marked paid later are included only on a newly generated report.
 - Gross product sales come from historical order-line price snapshots. Discounts
