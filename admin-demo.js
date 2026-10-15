@@ -1,5 +1,7 @@
 import { products } from './catalog.js';
 import { createAdminService } from './functions/admin-service.js';
+import { createReportsService } from './functions/reports-service.js';
+import { reportWindow, timestampMs } from './reports-core.js';
 const docs=new Map();
 const now=()=>new Date().toISOString();
 for(const product of products)docs.set(`products/${product.id}`,{...product,priceCents:Math.round(product.price*100),stockQuantity:product.id==='bpc157'?8:12,lowStockThreshold:3,revision:0});
@@ -25,3 +27,24 @@ const store={get,list:async(collection,settings={})=>{
 const service=createAdminService({store,timestamp:now});
 export const adminCommand=(action,input={})=>service[action]('demo-admin',input);
 export const initializeCatalog=async()=>({message:'Practice catalog already loaded. Reload the page to reset sample data.'});
+
+// Historical SAMPLE orders make reports testable without changing the two
+// original unpaid practice orders or connecting to Firebase.
+const currentParts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',year:'numeric',month:'numeric'}).formatToParts(new Date()).filter(part=>part.type!=='literal').map(part=>[part.type,Number(part.value)]));
+const period=reportWindow({year:currentParts.year,quarter:Math.ceil(currentParts.month/3)});
+const examples=[
+ {id:'sample-paid-101',orderNumber:'TA-SAMPLE-101',paymentMethod:'venmo',lines:[{productId:'bpc157',name:'BPC-157',strength:'10mg',quantity:2,unitPriceCents:3800,lineTotalCents:7600}],subtotalCents:7600,discountCents:760,shippingCents:800,totalCents:7640},
+ {id:'sample-paid-102',orderNumber:'TA-SAMPLE-102',paymentMethod:'paypal',lines:[{productId:'d2-30',name:'D2',strength:'30mg',quantity:1,unitPriceCents:15000,lineTotalCents:15000}],subtotalCents:15000,discountCents:1500,shippingCents:800,totalCents:14300},
+ {id:'sample-paid-103',orderNumber:'TA-SAMPLE-103',paymentMethod:'venmo',lines:[{productId:'kpv',name:'KPV',strength:'10mg',quantity:3,unitPriceCents:4500,lineTotalCents:13500},{productId:'bpc157',name:'BPC-157',strength:'10mg',quantity:1,unitPriceCents:3800,lineTotalCents:3800}],subtotalCents:17300,discountCents:0,shippingCents:800,totalCents:18100}
+];
+for(const [index,example]of examples.entries()){
+ const {id,...fields}=example;
+ docs.set(`orders/${id}`,{...common,...fields,paymentStatus:'paid',status:'shipped',fulfillmentStatus:'shipped',inventoryDeducted:true,paidAt:new Date(Math.max(period.startMs,Date.now()-(index+1)*3600000)).toISOString(),promoSnapshot:null});
+}
+const reportStore={get,reportPage:async ({startMs,endMs,afterId})=>{
+ let items=[...docs].filter(([key,data])=>key.startsWith('orders/')&&data.paymentStatus==='paid'&&timestampMs(data.paidAt)>=startMs&&timestampMs(data.paidAt)<endMs).map(([key,data])=>({...structuredClone(data),id:key.split('/')[1]}));
+ items.sort((a,b)=>a.paidAt.localeCompare(b.paidAt)||a.id.localeCompare(b.id));
+ if(afterId)items=items.slice(items.findIndex(item=>item.id===afterId)+1);
+ return {items:items.slice(0,200),hasMore:items.length>200,nextId:items.slice(0,200).at(-1)?.id||null};
+}};
+export const reportOrders=input=>createReportsService({store:reportStore}).page('demo-admin',input);

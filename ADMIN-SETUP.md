@@ -140,7 +140,7 @@ product catalog/content, and launch settings are still pending.
 ## Still to add
 
 Resend delivery (low stock, tracking, confirmations, and promotions), paid-order
-refund handling, quarterly PDF reports, calculator, QR code, final product assets,
+refund handling, QR code, final product assets,
 and remaining promotional-code tools. The dashboard currently records notices;
 it does not send them. The store's first-order and code selection remains exclusive.
 
@@ -156,3 +156,9 @@ No browser JavaScript exceptions or horizontal overflow were found.
 Real callable authorization, database rules, and index readiness still need a
 check against the configured project after deployment. No live credentials,
 customer data, or email keys are in this update.
+
+## Quarterly reports update
+
+Quarterly website sales reports are now available. See REPORTS-SETUP.md for the
+practice data, period basis, PDF/CSV exports, and backend retrieval details.
+Calculator work is separate and does not change this admin setup.

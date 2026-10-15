@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase-admin/app';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { createOrderService } from './order-service.js';
 import { CheckoutError } from './lib/checkout-core.js';
@@ -78,4 +78,25 @@ export const adminCommand = onCall(options, async request => {
     const clean=value=>value?.toDate instanceof Function?value.toDate().toISOString():Array.isArray(value)?value.map(clean):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([key,item])=>[key,clean(item)])):value;
     return clean(result);
   } catch(error) {throw translated(error);}
+});
+
+// Report pages use their own query; dashboard pagination never limits an export.
+export const reportOrders = onCall(options, async request => {
+  try {
+    const {createReportsService}=await import('./reports-service.js');
+    const reportStore={get:read,reportPage:async ({startMs,endMs,afterId})=>{
+      let query=db.collection('orders').where('paymentStatus','==','paid').where('paidAt','>=',Timestamp.fromMillis(startMs)).where('paidAt','<',Timestamp.fromMillis(endMs)).orderBy('paidAt','asc');
+      if(afterId){
+        const cursor=await db.doc(`orders/${afterId}`).get();const paidMs=cursor.data()?.paidAt?.toMillis?.();
+        if(!cursor.exists||cursor.data().paymentStatus!=='paid'||!Number.isFinite(paidMs)||paidMs<startMs||paidMs>=endMs)throw new CheckoutError('failed-precondition','Report records changed. Generate the report again.');
+        query=query.startAfter(cursor);
+      }
+      const snapshot=await query.limit(201).get();const documents=snapshot.docs.slice(0,200);
+      return {items:documents.map(document=>{
+        const order=document.data();
+        return {id:document.id,orderNumber:order.orderNumber,paymentStatus:order.paymentStatus,paidAt:order.paidAt.toDate().toISOString(),paymentMethod:order.paymentMethod,subtotalCents:order.subtotalCents,discountCents:order.discountCents,shippingCents:order.shippingCents,totalCents:order.totalCents,lines:(order.lines||[]).map(line=>({productId:line.productId,name:line.name,strength:line.strength,quantity:line.quantity,unitPriceCents:line.unitPriceCents??line.priceCents,...(line.lineTotalCents!==undefined?{lineTotalCents:line.lineTotalCents}:{})})),promoSnapshot:order.promoSnapshot?{code:order.promoSnapshot.code}:null,...Object.fromEntries(['salesTaxCents','taxCents','refundedCents','refundCents'].filter(key=>order[key]!==undefined).map(key=>[key,order[key]]))};
+      }),hasMore:snapshot.size>200,nextId:documents.at(-1)?.id||null};
+    }};
+    return await createReportsService({store:reportStore}).page(request.auth?.uid,request.data||{});
+  }catch(error){throw translated(error);}
 });

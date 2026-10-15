@@ -1,11 +1,13 @@
+import {initReports} from './reports.js';
 const $=id=>document.getElementById(id);
 const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const money=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format((value||0)/100);
 const date=value=>value?new Date(value).toLocaleString('en-US'):'Date pending';
 const demo=new URLSearchParams(location.search).get('demo')==='1';
 let api,user=null,auth=null,data=null,busy=false,sessionGeneration=0,pendingAction=null,codeRevision=0;
+const reportsController=initReports({getApi:async()=>api,demo});
 const message=(text,success=false)=>{$('pageMessage').textContent=text;$('pageMessage').classList.toggle('success',success);};
-function lock(value){busy=value;document.querySelectorAll('#dashboard button,#dashboard input,#dashboard select,#confirmAction,#initialize').forEach(element=>element.disabled=value);$('codeName').readOnly=codeRevision>0;}
+function lock(value){busy=value;document.querySelectorAll('#dashboard button,#dashboard input,#dashboard select,#confirmAction,#initialize').forEach(element=>{if(!element.closest('#reportsPanel'))element.disabled=value;});reportsController.setLocked(value);$('codeName').readOnly=codeRevision>0;}
 function resetCode(){codeRevision=0;$('codeForm').reset();$('codeName').readOnly=false;$('codeHeading').textContent='Create a code';}
 function rows(section){return data?.[section]?.items||[];}
 function render(){
@@ -38,7 +40,7 @@ async function run(action,input){if(busy)return;const generation=sessionGenerati
 function confirm(action,orderId,tracking){const order=rows('orders').find(item=>item.id===orderId);if(!order||busy)return;pendingAction={action,input:{orderId,...(tracking?{tracking}:{})}};const paid=action==='paid',ship=action==='ship';$('dialogContent').innerHTML=`<h2 class="dialog-title">${paid?'Record payment?':ship?'Save USPS tracking?':'Cancel this unpaid order?'}</h2><p><strong>${escape(order.orderNumber)}</strong> · ${money(order.totalCents)}</p><p>${paid?'Confirm you received the full payment. This deducts vials and counts any affiliate referral once.':ship?'Tracking will be saved. Email delivery is not connected yet.':'This releases the order’s promotion reservation. Inventory and paid referral totals are unchanged.'}</p>`;$('confirmAction').textContent=paid?'Yes, payment received':ship?'Save tracking':'Cancel order';$('actionDialog').showModal();}
 $('confirmAction').addEventListener('click',()=>{const action=pendingAction;pendingAction=null;$('actionDialog').close();if(action)run(action.action,action.input);});
 $('cancelAction').addEventListener('click',()=>{$('actionDialog').close();pendingAction=null;});
-$('tabs').addEventListener('click',event=>{const button=event.target.closest('[data-tab]');if(!button)return;document.querySelectorAll('[data-tab]').forEach(item=>item.classList.toggle('selected',item===button));for(const name of ['orders','inventory','codes','customers','notifications'])$(name+'Panel').hidden=name!==button.dataset.tab;});
+$('tabs').addEventListener('click',event=>{const button=event.target.closest('[data-tab]');if(!button)return;document.querySelectorAll('[data-tab]').forEach(item=>item.classList.toggle('selected',item===button));for(const name of ['orders','inventory','codes','customers','notifications','reports'])$(name+'Panel').hidden=name!==button.dataset.tab;});
 $('orderFilter').addEventListener('change',render);$('inventorySearch').addEventListener('input',render);
 $('ordersList').addEventListener('click',event=>{const paid=event.target.closest('[data-paid]'),cancel=event.target.closest('[data-cancel]');if(paid)confirm('paid',paid.dataset.paid);if(cancel)confirm('cancel',cancel.dataset.cancel);});
 $('ordersList').addEventListener('submit',event=>{event.preventDefault();const form=event.target.closest('[data-ship]');if(form)confirm('ship',form.dataset.ship,form.elements.tracking.value);});
@@ -56,6 +58,6 @@ else{
   $('loginPanel').hidden=false;
   try{
     auth=await import('./firebase-service.js');api=await import('./admin-api.js');
-    auth.watchSession(async next=>{sessionGeneration++;const generation=sessionGeneration;user=next;data=null;busy=false;$('dashboard').hidden=true;$('actionDialog').close();pendingAction=null;resetCode();$('adminPassword').value='';$('signOut').hidden=!user;$('loginPanel').hidden=!!user;message('');if(user){try{await refresh();}catch(error){if(generation===sessionGeneration)message(error.code==='functions/permission-denied'?'This account does not have admin access. Sign out and use the configured admin account.':'The admin backend is not connected yet, or could not be reached. Complete the setup in ADMIN-SETUP.md, then refresh.');}}});
+    auth.watchSession(async next=>{sessionGeneration++;reportsController.reset();const generation=sessionGeneration;user=next;data=null;busy=false;$('dashboard').hidden=true;$('actionDialog').close();pendingAction=null;resetCode();$('adminPassword').value='';$('signOut').hidden=!user;$('loginPanel').hidden=!!user;message('');if(user){try{await refresh();}catch(error){if(generation===sessionGeneration)message(error.code==='functions/permission-denied'?'This account does not have admin access. Sign out and use the configured admin account.':'The admin backend is not connected yet, or could not be reached. Complete the setup in ADMIN-SETUP.md, then refresh.');}}});
   }catch(error){message('Unable to connect to Firebase. Check your connection and refresh.');}
 }

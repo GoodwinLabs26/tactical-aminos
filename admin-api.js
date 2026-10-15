@@ -3,3 +3,5 @@ import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/
 import { siteSettings } from './site-settings.js';
 export const adminCommand = async (action,input={}) => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'adminCommand')({action,input})).data;
 export const initializeCatalog = async () => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'initializeDraftCatalog')({})).data;
+
+export const reportOrders = async input => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'reportOrders')(input)).data;
