@@ -29,3 +29,18 @@ test('fractional results are retained instead of rounding to a whole syringe mar
  const result=calculateDilution({...base,desiredAmount:.25});close(result.units,2.5);assert.equal(formatCalculation(result.units),'2.5');
  const tiny=calculateDilution({...base,desiredAmount:.00000001});assert(tiny.units>0);assert.notEqual(formatCalculation(tiny.units),'0');
 });
+
+test('vial yield reports full doses and the unused amount without rounding a partial dose up',()=>{
+ const exact=calculateDilution(base);assert.equal(exact.fullDoseCount,20);assert.equal(exact.remainderMg,0);assert.equal(exact.hasRemainder,false);
+ const partial=calculateDilution({...base,desiredAmount:7});assert.equal(partial.fullDoseCount,4);assert.equal(partial.remainderMg,2);assert.equal(partial.hasRemainder,true);
+ assert.equal(calculateDilution({...base,desiredAmount:30}).fullDoseCount,1);
+ const below=calculateDilution({...base,vialAmount:29.999999999999996,desiredAmount:10});assert.equal(below.fullDoseCount,2);
+});
+test('full-dose counts handle decimal masses, mixed units, and syringe/water changes consistently',()=>{
+ const decimal=calculateDilution({...base,vialAmount:.3,desiredAmount:.1,waterMl:1});assert.equal(decimal.fullDoseCount,3);assert.equal(decimal.remainderMg,0);
+ for(const capacity of [30,50,100])for(const waterMl of [1,2,3]){
+  const result=calculateDilution({...base,capacity,waterMl,vialUnit:'mcg',vialAmount:30000,desiredUnit:'mcg',desiredAmount:1500});assert.equal(result.fullDoseCount,20);
+ }
+ const partial=calculateDilution({...base,vialUnit:'mcg',vialAmount:30000,desiredUnit:'mcg',desiredAmount:7000});assert.equal(partial.fullDoseCount,4);assert.equal(partial.remainderMg,2);
+ const huge=calculateDilution({...base,vialAmount:1,desiredAmount:1e-20,waterMl:1});assert.equal(huge.fullDoseCount,null);
+});

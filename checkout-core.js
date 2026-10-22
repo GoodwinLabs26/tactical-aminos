@@ -28,21 +28,21 @@ export function calculateQuote(input, productRecords, { firstOrderEligible = tru
   const discounts = [];
   if (promotion === 'first') {
     if (!firstOrderEligible) throw new CheckoutError('failed-precondition', 'The first-order discount has already been used for this account.');
-    discounts.push({ kind: 'first', label: 'First order · 10%', amountCents: Math.round(subtotalCents * 0.1) });
+    discounts.push({ kind: 'first', label: 'First order Â· 10%', amountCents: Math.round(subtotalCents * 0.1) });
   }
   if (promotion === 'code') {
     if (!promo || promo.active !== true || !Number.isFinite(promo.percentOff) || promo.percentOff <= 0 || promo.percentOff > 100) throw new CheckoutError('failed-precondition', 'This promotional code is not available.');
-    discounts.push({ kind: 'code', label: `${promo.code} · ${promo.percentOff}%`, amountCents: Math.round(subtotalCents * promo.percentOff / 100) });
+    discounts.push({ kind: 'code', label: `${promo.code} Â· ${promo.percentOff}%`, amountCents: Math.round(subtotalCents * promo.percentOff / 100) });
   }
   const eligible = lines.filter(line => line.bulkEligible);
   if (new Set(eligible.map(line => line.compoundKey)).size >= 5) {
-    discounts.push({ kind: 'mixed', label: '5 distinct compounds · 5%', amountCents: Math.round(eligible.reduce((sum, line) => sum + line.lineTotalCents, 0) * 0.05) });
+    discounts.push({ kind: 'mixed', label: '5 distinct compounds Â· 5%', amountCents: Math.round(eligible.reduce((sum, line) => sum + line.lineTotalCents, 0) * 0.05) });
   }
   // Preserve Corey's cap: the first 5 identical vials get 10%, or the first
   // 10 get 20%. This is not a discount on all vials when quantity exceeds 10.
   for (const line of eligible) {
-    if (line.quantity >= 10) discounts.push({ kind: 'bulk10', productId: line.productId, label: `${line.name} ${line.strength} · 10 vials, 20%`, amountCents: Math.round(line.unitPriceCents * 10 * 0.2) });
-    else if (line.quantity >= 5) discounts.push({ kind: 'bulk5', productId: line.productId, label: `${line.name} ${line.strength} · 5 vials, 10%`, amountCents: Math.round(line.unitPriceCents * 5 * 0.1) });
+    if (line.quantity >= 10) discounts.push({ kind: 'bulk10', productId: line.productId, label: `${line.name} ${line.strength} Â· 10 vials, 20%`, amountCents: Math.round(line.unitPriceCents * 10 * 0.2) });
+    else if (line.quantity >= 5) discounts.push({ kind: 'bulk5', productId: line.productId, label: `${line.name} ${line.strength} Â· 5 vials, 10%`, amountCents: Math.round(line.unitPriceCents * 5 * 0.1) });
   }
   const rawDiscountCents = discounts.reduce((sum, discount) => sum + discount.amountCents, 0);
   const discountCents = Math.min(subtotalCents, rawDiscountCents);
