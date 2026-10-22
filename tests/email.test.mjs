@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PassThrough,Writable} from 'node:stream';
-import {renderOrderEmails,PAYMENT_NOTE} from '../functions/email-templates.js';
-import {buildTestMessages,sampleOrder,sendTestEmails,readHiddenKey,TEST_RECIPIENT} from '../scripts/test-email.mjs';
+import {renderOrderEmails,renderShippingEmail,renderLowStockEmail,PAYMENT_NOTE} from '../functions/email-templates.js';
+import {buildTestMessages,sampleOrder,sendTestEmails,readHiddenKey,TEST_RECIPIENT,sampleShipment,sampleStockNotice} from '../scripts/test-email.mjs';
 import {siteSettings} from '../site-settings.js';
 
 const fakeKey='re_unit_test_not_a_real_key';
@@ -47,4 +47,27 @@ test('hidden key entry accepts paste/backspace, restores the terminal, and never
 });
 test('cancelled or noninteractive key entry never proceeds to sending',async()=>{
   const {input,output,getDisplayed}=terminal();const pending=readHiddenKey(input,output);input.write(fakeKey+'\u0003');await assert.rejects(pending,/Cancelled/);assert.equal(input.isRaw,false);assert.doesNotMatch(getDisplayed(),/re_unit_test/);input.destroy();assert.throws(()=>readHiddenKey({isTTY:false},output),/VS Code/);
+});
+
+test('shipping and stock samples are separately selectable and can only reach the test inbox',async()=>{
+  const messages=buildTestMessages('alerts');assert.equal(messages.length,2);
+  for(const message of messages){assert.deepEqual(message.to,[TEST_RECIPIENT]);assert.match(message.subject,/^\[TEST\]/);assert.equal(message.cc,undefined);assert.equal(message.bcc,undefined);assert.equal(message.from,'Tactical Aminos <onboarding@resend.dev>');}
+  assert.match(messages[0].subject,/Shipping update/);assert.match(messages[1].subject,/Low stock/);
+  assert.match(messages[0].text,/sample tracking number/);assert.match(messages[1].text,/No inventory was changed/);
+  let calls=0;await sendTestEmails(fakeKey,{group:'alerts',fetchImpl:async(url,options)=>{calls++;assert.deepEqual(JSON.parse(options.body),messages);return {ok:true,json:async()=>({data:[{id:'shipping-test'},{id:'stock-test'}]})};}});assert.equal(calls,1);
+  await assert.rejects(sendTestEmails(fakeKey,{group:'customers',fetchImpl:async()=>{calls++;}}),/Choose orders or alerts/);assert.equal(calls,1);
+});
+test('shipping emails require paid/shipped status and include only the validated USPS tracking URL',()=>{
+  const email=renderShippingEmail(sampleShipment,{test:true});const link='https://tools.usps.com/go/TrackConfirmAction?tLabels='+sampleShipment.trackingNumber;
+  assert.ok(email.html.includes(`href="${link}"`));assert.ok(email.text.includes(link));assert.match(email.text,/Payment status: Paid/);assert.doesNotMatch(email.text,/Payment account|awaiting payment/i);
+  for(const overrides of [{paymentStatus:'unpaid'},{fulfillmentStatus:'unfulfilled'},{status:'cancelled'}])assert.throws(()=>renderShippingEmail({...sampleShipment,...overrides}),/paid order marked shipped/);
+  for(const trackingNumber of ['', '123', '1'.repeat(41), '1234567890\n','https://untrusted.example/12345','1234567890" onclick="alert(1)'])assert.throws(()=>renderShippingEmail({...sampleShipment,trackingNumber}),/tracking number/);
+  const escaped=renderShippingEmail({...sampleShipment,customer:{name:'<img src=x onerror=alert(1)>'}});assert.match(escaped.html,/&lt;img/);assert.doesNotMatch(escaped.html,/<img src=x/);
+});
+test('low-stock emails use plain counts, singular and zero wording, and identify historical stock readings',()=>{
+  for(const [stockQuantity,expected]of [[10,'Only 10 vials left'],[1,'Only 1 vial left'],[0,'Out of stock — no vials left']]){
+    const email=renderLowStockEmail({...sampleStockNotice,stockQuantity},{test:true});assert.ok(email.html.includes(expected));assert.ok(email.text.includes(expected));assert.match(email.text,/when the alert was created/);assert.match(email.text,/Oct 22, 2026, 3:00 PM Eastern/);
+  }
+  const escaped=renderLowStockEmail({...sampleStockNotice,productName:'KPV <test>'});assert.match(escaped.html,/KPV &lt;test&gt;/);assert.doesNotMatch(escaped.html,/KPV <test>/);
+  for(const overrides of [{stockQuantity:-1},{stockQuantity:1.5},{stockQuantity:11},{threshold:-1},{createdAt:'not-a-date'},{productName:'KPV\nBcc: other@example.com'}])assert.throws(()=>renderLowStockEmail({...sampleStockNotice,...overrides}));
 });

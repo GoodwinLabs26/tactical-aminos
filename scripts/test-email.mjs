@@ -1,5 +1,5 @@
 // Run manually from the VS Code terminal. Never imported by the website.
-import {renderOrderEmails} from '../functions/email-templates.js';
+import {renderOrderEmails,renderShippingEmail,renderLowStockEmail} from '../functions/email-templates.js';
 import {randomUUID} from 'node:crypto';
 import {mkdtemp,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
@@ -15,14 +15,20 @@ export const sampleOrder={
   subtotalCents:8300,discountCents:830,shippingCents:800,totalCents:8270,paymentMethod:'venmo',
   paymentInstructions:{handle:'SAMPLE ONLY — DO NOT PAY'},notes:'Sample order for email testing only.'
 };
-export function buildTestMessages(){return renderOrderEmails(sampleOrder,{test:true}).map(({kind,...content})=>({from:TEST_FROM,to:[TEST_RECIPIENT],...content}));}
+export const sampleShipment={...sampleOrder,paymentStatus:'paid',fulfillmentStatus:'shipped',status:'shipped',trackingNumber:'0000000000000000000000'};
+export const sampleStockNotice={productName:'KPV',strength:'10mg',stockQuantity:10,threshold:10,createdAt:'2026-10-22T19:00:00.000Z'};
+export function buildTestMessages(group='orders'){
+  if(!['orders','alerts'].includes(group))throw new Error('Choose orders or alerts for the local email test.');
+  const templates=group==='alerts'?[renderShippingEmail(sampleShipment,{test:true}),renderLowStockEmail(sampleStockNotice,{test:true})]:renderOrderEmails(sampleOrder,{test:true});
+  return templates.map(({kind,...content})=>({from:TEST_FROM,to:[TEST_RECIPIENT],...content}));}
 
 // This sender deliberately cannot accept arbitrary recipients, orders, or CC/BCC.
-export async function sendTestEmails(apiKey,{fetchImpl=globalThis.fetch,requestId=randomUUID()}={}){
+export async function sendTestEmails(apiKey,{fetchImpl=globalThis.fetch,requestId=randomUUID(),group='orders'}={}){
   if(typeof apiKey!=='string'||!/^re_[A-Za-z0-9_-]+$/.test(apiKey.trim()))throw new Error('That does not look like a Resend API key. Run again and paste the key starting with re_.');
+  const messages=buildTestMessages(group);
   let response;
   try{
-    response=await fetchImpl('https://api.resend.com/emails/batch',{method:'POST',redirect:'error',signal:AbortSignal.timeout(30000),headers:{Authorization:`Bearer ${apiKey.trim()}`,'Content-Type':'application/json','Idempotency-Key':`tactical-email-test-${requestId}`},body:JSON.stringify(buildTestMessages())});
+    response=await fetchImpl('https://api.resend.com/emails/batch',{method:'POST',redirect:'error',signal:AbortSignal.timeout(30000),headers:{Authorization:`Bearer ${apiKey.trim()}`,'Content-Type':'application/json','Idempotency-Key':`tactical-email-test-${requestId}`},body:JSON.stringify(messages)});
   }catch{
     throw new Error('Could not confirm whether Resend accepted the emails. Check Resend → Emails before running again.');
   }
@@ -54,18 +60,21 @@ export function readHiddenKey(input=process.stdin,output=process.stdout){
 
 async function main(){
   const args=process.argv.slice(2);
-  if(args.length!==1||!['--preview','--send'].includes(args[0])){
-    console.log('Preview without sending: node scripts/test-email.mjs --preview\nSend two sample emails to goodwinlabs.co@gmail.com: node scripts/test-email.mjs --send');return;
+  if(args.length!==1||!['--preview','--send','--send-alerts'].includes(args[0])){
+    console.log('Preview without sending: node scripts/test-email.mjs --preview\nSend order samples: node scripts/test-email.mjs --send\nSend shipping and stock samples: node scripts/test-email.mjs --send-alerts');return;
   }
   if(args[0]==='--preview'){
     const directory=await mkdtemp(join(tmpdir(),'tactical-email-preview-'));
-    for(const [index,email]of buildTestMessages().entries()){
-      const name=index===0?'customer-confirmation':'admin-order-alert';await writeFile(join(directory,name+'.html'),email.html);await writeFile(join(directory,name+'.txt'),email.text);
+    const names=['customer-confirmation','admin-order-alert','shipping-confirmation','low-stock-alert'];
+    const messages=[...buildTestMessages('orders'),...buildTestMessages('alerts')];
+    for(const [index,email]of messages.entries()){
+      const name=names[index];await writeFile(join(directory,name+'.html'),email.html);await writeFile(join(directory,name+'.txt'),email.text);
     }
     console.log('Preview files created. No email was sent and no API key is needed.\n'+directory);return;
   }
-  console.log(`Sending TWO sample emails only to ${TEST_RECIPIENT}.\nNo order, stock, payment, or customer record will change.`);
+  const group=args[0]==='--send-alerts'?'alerts':'orders';
+  console.log(`Sending TWO ${group==='alerts'?'shipping/low-stock':'order'} sample emails only to ${TEST_RECIPIENT}.\nNo order, stock, payment, or customer record will change.`);
   let apiKey=await readHiddenKey();
-  try{const ids=await sendTestEmails(apiKey);console.log('Resend accepted both emails for delivery. Check your Inbox and Spam folders.\nCustomer confirmation ID: '+ids[0]+'\nAdmin alert ID: '+ids[1]);}finally{apiKey='';}
+  try{const ids=await sendTestEmails(apiKey,{group});const labels=group==='alerts'?['Shipping confirmation','Low-stock alert']:['Customer confirmation','Admin alert'];console.log('Resend accepted both emails for delivery. Check your Inbox and Spam folders.\n'+labels[0]+' ID: '+ids[0]+'\n'+labels[1]+' ID: '+ids[1]);}finally{apiKey='';}
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){main().catch(error=>{console.error(error.message);process.exitCode=1;});}

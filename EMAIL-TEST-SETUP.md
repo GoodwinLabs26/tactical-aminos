@@ -1,4 +1,4 @@
-# Local email test
+# Local email tests
 
 This update adds a manual local test. It sends TWO sample messages, both only to
 **goodwinlabs.co@gmail.com**:
@@ -23,7 +23,7 @@ Keep the same folders as the download:
 No package installation or Firebase/Cloudflare changes are required for this
 local test. Use your existing Node installation (Node 22 or newer).
 
-## Send the test
+## Send order confirmation samples
 
 In the VS Code terminal:
 
@@ -48,13 +48,37 @@ If Resend returns 401, check the API key. For 403, check that the key has sendin
 permission and belongs to the account registered as goodwinlabs.co@gmail.com.
 For 429, check sending limits in Resend. Do not share a screenshot containing a key.
 
+## Send shipping and low-stock samples
+
+After adding the updated files, run:
+
+```bash
+cd ~/Projects/tactical-aminos &&
+npm test &&
+node scripts/test-email.mjs --send-alerts
+```
+
+Enter your saved Resend key only at the hidden prompt. This sends TWO more sample
+emails, both only to goodwinlabs.co@gmail.com:
+
+- Shipping confirmation with a USPS tracking link. Its tracking number is all
+  zeros and explicitly labeled as a sample; no shipment was created.
+- Low-stock alert for KPV 10mg: **Only 10 vials left**. No inventory was changed.
+
+This command does not resend the first two order emails. The shipping template
+rejects unpaid orders, orders not marked shipped, cancelled orders, and invalid
+tracking numbers. The low-stock template handles singular vials and out-of-stock
+counts, and says that the count was recorded at the time of the alert. Check
+Inventory for current stock when using this template in the future.
+
 ## Preview without sending
 
 ```bash
 node scripts/test-email.mjs --preview
 ```
 
-This prints a temporary folder path containing HTML and plain-text previews.
+This prints a temporary folder path containing HTML and plain-text previews of
+all FOUR templates (the two order emails, shipping confirmation, and stock alert).
 Open the HTML files in a browser. Preview mode never asks for a key or calls Resend.
 Generated previews are outside the project, so they are not published with it.
 
@@ -64,7 +88,7 @@ Generated previews are outside the project, so they are not published with it.
 cd ~/Projects/tactical-aminos &&
 npm test &&
 git add functions/email-templates.js scripts/test-email.mjs tests/email.test.js EMAIL-TEST-SETUP.md &&
-git commit -m "Add local order email tests for Goodwin Labs inbox" &&
+git commit -m "Add shipping and low-stock email tests" &&
 git push origin main
 ```
 
@@ -82,4 +106,5 @@ Resend using its DNS records (Cloudflare can manage those). Keep test-recipient
 routing until deliberate live testing is complete. Then route admin alerts to
 Mark and customer messages to their actual customers. Do not simply replace the
 hardcoded test recipient in this sample script to turn it into production code.
-Shipping and low-stock email templates/integration are separate next steps.
+Shipping and low-stock templates are included. Their automatic delivery still
+needs to be integrated with the trusted backend, alongside order confirmations.
