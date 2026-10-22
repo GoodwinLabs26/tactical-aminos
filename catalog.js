@@ -24,3 +24,13 @@ export const products = [
   { id: 'melanotan1', name: 'Melanotan-I', strength: '10mg', price: 35, category: 'compounds' },
   { id: 'melanotan2', name: 'Melanotan-II', strength: '10mg', price: 35, category: 'compounds' }
 ];
+
+// Storefront presentation only: each strength keeps its original SKU, price,
+// inventory and order history. Add other families here as they are reviewed.
+export const productFamilies = [
+  {
+    id: 'd2', name: 'D2', variantIds: ['d2-30', 'd2-60'],
+    image: 'assets/d2-product.png',
+    description: 'A first-in-class, synthetic 39-amino-acid peptide that acts as a dual receptor agonist for both GIP (glucose-dependent insulinotropic polypeptide) and GLP-1 (glucagon-like peptide-1) receptors.'
+  }
+];

@@ -2,6 +2,8 @@ import { categories, products as previewProducts } from './catalog.js';
 import { initCheckout } from './checkout-ui.js';
 import { siteSettings } from './site-settings.js';
 import { initCalculator } from './calculator.js';
+import {groupProducts,matchingVariants,selectVariant} from './catalog-view.js';
+const selectedVariants=new Map();
 
 let products = siteSettings.previewCheckout ? previewProducts : [];
 let checkoutController;
@@ -207,13 +209,31 @@ function vial(product) {
   const title = product.name.length > 19 ? 'RESEARCH BLEND' : product.name;
   return `<svg class="vial-illustration" viewBox="0 0 300 260" aria-hidden="true"><defs><linearGradient id="glass-${product.id}" x1="0" x2="1"><stop stop-color="#fff" stop-opacity=".35"/><stop offset=".3" stop-color="#fff" stop-opacity=".85"/><stop offset=".65" stop-color="#b3c8f0" stop-opacity=".38"/><stop offset="1" stop-color="#fff" stop-opacity=".85"/></linearGradient></defs><ellipse cx="150" cy="236" rx="65" ry="11" fill="#163987" opacity=".18"/><rect x="119" y="29" width="62" height="40" rx="8" fill="#a5b6d5"/><rect x="112" y="20" width="76" height="23" rx="5" fill="#1648ed"/><path d="M119 65q-19 13-19 35v117q0 13 13 13h74q13 0 13-13V100q0-22-19-35Z" fill="url(#glass-${product.id})" stroke="#bacce9" stroke-width="2"/><rect x="101" y="104" width="98" height="99" rx="3" fill="#fff"/><text x="150" y="123" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="900" fill="#1a2440">TACTICAL</text><text x="150" y="137" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="900" fill="#1648ed">AMINOS</text><path d="M111 146h78" stroke="#1648ed"/><text x="150" y="167" text-anchor="middle" font-family="Arial,sans-serif" font-size="${title.length > 12 ? 9 : 17}" font-weight="900" fill="#151b2c">${escape(title)}</text><rect x="113" y="174" width="74" height="18" rx="3" fill="#1648ed"/><text x="150" y="187" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">${escape(product.strength)}</text><rect x="101" y="199" width="98" height="10" fill="#133087"/></svg>`;
 }
+function productArt(group,product){
+  return group.image?`<img class="product-photo" src="${escape(group.image)}" alt="Tactical Aminos ${escape(group.name)} product artwork; choose vial strength below" width="1254" height="1254" loading="lazy">`:vial(product);
+}
+function stockLabel(product){return product.stockQuantity===0?'Out of stock':Number.isInteger(product.stockQuantity)?'In stock':'Stock pending';}
+function strengthButtons(group,selected,dialog=false){
+  if(group.variants.length<2)return '';
+  return `<div class="variant-options" role="group" aria-label="Choose ${escape(group.name)} vial strength">${group.variants.map(product=>`<button type="button" class="variant-button ${selected.id===product.id?'selected':''}" data-variant-id="${escape(product.id)}" data-family-id="${escape(group.id)}" ${dialog?'data-dialog-variant="true"':''} aria-pressed="${selected.id===product.id}" aria-label="${escape(group.name)} ${escape(product.strength)}${product.stockQuantity===0?' — out of stock':''}">${escape(product.strength)}${product.stockQuantity===0?'<small>Out of stock</small>':''}</button>`).join('')}</div>`;
+}
 function renderProducts() {
-  const query = $('productSearch').value.trim().toLowerCase();
-  const filtered = products.filter(product => (category === 'all' || product.category === category) && `${product.name} ${product.strength}`.toLowerCase().includes(query));
-  $('productCount').textContent = `${filtered.length} products`;
-  $('emptySearch').hidden = filtered.length !== 0;
-  $('productGrid').innerHTML = filtered.map(product => `<article class="product-card"><div class="product-art">${vial(product)}<span class="strength-tag">${escape(product.strength)}</span><span class="stock-tag">${product.stockQuantity === 0 ? 'Out of stock' : Number.isInteger(product.stockQuantity) ? 'In stock' : 'Stock pending'}</span></div><div class="product-copy"><p class="eyebrow">${escape(categories.find(item => item.id === product.category)?.name || 'Research compounds')}</p><h2>${escape(product.name)} <span>${escape(product.strength)}</span></h2><p class="product-description">Product description coming soon.</p><div class="product-card-bottom"><strong>${money(product.price)}</strong><button class="button button-small button-outline" data-product-id="${product.id}">View product</button></div><button class="button button-small product-add" data-add-product="${product.id}" ${product.stockQuantity === 0 ? 'disabled' : ''}>${product.stockQuantity === 0 ? 'Out of stock' : 'Add to cart'}</button></div></article>`).join('');
-  $('categoryButtons').innerHTML = categories.map(item => `<button class="chip ${category === item.id ? 'selected' : ''}" data-category="${item.id}" aria-pressed="${category === item.id}">${escape(item.name)}</button>`).join('');
+  const query=$('productSearch').value.trim().toLowerCase();
+  const filtered=groupProducts(products).map(group=>({group,matching:matchingVariants(group,{category,query})})).filter(({matching})=>matching.length);
+  $('productCount').textContent=`${filtered.length} ${filtered.length===1?'product':'products'}`;
+  $('emptySearch').hidden=filtered.length!==0;
+  $('productGrid').innerHTML=filtered.map(({group,matching})=>{
+    const product=selectVariant(group,selectedVariants.get(group.id),selectedVariants.has(group.id)?group.variants:matching);selectedVariants.set(group.id,product.id);
+    const prices=group.variants.map(variant=>variant.price),minimum=Math.min(...prices),maximum=Math.max(...prices);
+    return `<article class="product-card" data-product-family="${escape(group.id)}"><div class="product-art ${group.image?'has-photo':''}">${productArt(group,product)}${group.image?'':`<span class="strength-tag">${escape(product.strength)}</span>`}<span class="stock-tag">${stockLabel(product)}</span></div><div class="product-copy"><p class="eyebrow">${escape(categories.find(item=>item.id===product.category)?.name||'Research compounds')}</p><h2>${escape(group.name)}${group.variants.length===1?` <span>${escape(product.strength)}</span>`:''}</h2>${group.variants.length>1?`<p class="product-price-range">${money(minimum)}${minimum!==maximum?'–'+money(maximum):''}<span> per vial</span></p>`:''}${strengthButtons(group,product)}<p class="product-description">${escape(group.description||'Product description coming soon.')}</p><div class="product-card-bottom"><div><strong class="selected-price">${money(product.price)}</strong>${group.variants.length>1?`<span class="selected-strength">${escape(product.strength)} selected</span>`:''}</div><button class="button button-small button-outline" data-product-id="${escape(product.id)}">View product</button></div><button class="button button-small product-add" data-add-product="${escape(product.id)}" ${product.stockQuantity===0?'disabled':''}>${product.stockQuantity===0?'Out of stock':'Add to cart'}</button></div></article>`;
+  }).join('');
+  $('categoryButtons').innerHTML=categories.map(item=>`<button class="chip ${category===item.id?'selected':''}" data-category="${item.id}" aria-pressed="${category===item.id}">${escape(item.name)}</button>`).join('');
+}
+function renderProductDialog(productId,quantity=1){
+  const group=groupProducts(products).find(item=>item.variants.some(product=>product.id===productId));if(!group)return;
+  const product=group.variants.find(item=>item.id===productId);selectedVariants.set(group.id,product.id);
+  $('productDialogContent').innerHTML=`<div class="dialog-art ${group.image?'has-photo':''}">${productArt(group,product)}</div><p class="eyebrow">TACTICAL AMINOS · RESEARCH CATALOG</p><h2>${escape(group.name)}</h2>${strengthButtons(group,product,true)}<p class="dialog-selected-price" aria-live="polite">${escape(product.strength)} · ${money(product.price)} · ${stockLabel(product)}</p><p class="muted product-detail-description">${escape(group.description||'Product description coming soon.')}</p><label for="detailQuantity">Quantity</label><input id="detailQuantity" type="number" min="1" max="100" step="1" value="1"><button class="button full-width" data-add-product="${escape(product.id)}" ${product.stockQuantity===0?'disabled':''}>${product.stockQuantity===0?'Out of stock':'Add to cart'}</button><p class="dialog-disclaimer">For laboratory research only. Not intended for human or animal use.</p>`;
+  $('detailQuantity').value=quantity;
 }
 $('categoryButtons').addEventListener('click', event => {
   const button = event.target.closest('[data-category]');
@@ -221,22 +241,23 @@ $('categoryButtons').addEventListener('click', event => {
   category = button.dataset.category;
   renderProducts();
 });
-$('productSearch').addEventListener('input', renderProducts);
-$('productGrid').addEventListener('click', event => {
-  const add = event.target.closest('[data-add-product]');
-  if (add) { checkoutController?.addItem(add.dataset.addProduct); return; }
-  const button = event.target.closest('[data-product-id]');
-  if (!button || !currentUser || !profile?.ageConfirmed) return;
-  const product = products.find(item => item.id === button.dataset.productId);
-  $('productDialogContent').innerHTML = `<div class="dialog-art">${vial(product)}</div><p class="eyebrow">TACTICAL AMINOS · RESEARCH CATALOG</p><h2>${escape(product.name)}</h2><p>${escape(product.strength)} · ${money(product.price)}</p><p class="muted">Product description coming soon.</p><label for="detailQuantity">Quantity</label><input id="detailQuantity" type="number" min="1" max="100" step="1" value="1"><button class="button full-width" data-add-product="${product.id}" ${product.stockQuantity === 0 ? 'disabled' : ''}>${product.stockQuantity === 0 ? 'Out of stock' : 'Add to cart'}</button><p class="dialog-disclaimer">For laboratory research only. Not intended for human or animal use.</p>`;
-  $('productDialog').showModal();
+$('productSearch').addEventListener('input',()=>{selectedVariants.clear();renderProducts();});
+$('productGrid').addEventListener('click',event=>{
+  const variant=event.target.closest('[data-variant-id]');
+  if(variant){selectedVariants.set(variant.dataset.familyId,variant.dataset.variantId);renderProducts();[...document.querySelectorAll('#productGrid [data-variant-id]')].find(button=>button.dataset.variantId===variant.dataset.variantId)?.focus();return;}
+  const add=event.target.closest('[data-add-product]');
+  if(add){checkoutController?.addItem(add.dataset.addProduct);return;}
+  const button=event.target.closest('[data-product-id]');
+  if(!button||!currentUser||!profile?.ageConfirmed)return;
+  renderProductDialog(button.dataset.productId);$('productDialog').showModal();
 });
-$('closeProductDialog').addEventListener('click', () => $('productDialog').close());
-$('productDialogContent').addEventListener('click', event => {
-  const button = event.target.closest('[data-add-product]');
-  if (!button) return;
-  checkoutController?.addItem(button.dataset.addProduct, Number($('detailQuantity').value));
-  $('productDialog').close();
+$('closeProductDialog').addEventListener('click',()=>{$('productDialog').close();renderProducts();});
+$('productDialogContent').addEventListener('click',event=>{
+  const variant=event.target.closest('[data-dialog-variant]');
+  if(variant){const quantity=$('detailQuantity').value;renderProductDialog(variant.dataset.variantId,quantity);[...document.querySelectorAll('#productDialogContent [data-variant-id]')].find(button=>button.dataset.variantId===variant.dataset.variantId)?.focus();renderProducts();return;}
+  const button=event.target.closest('[data-add-product]');
+  if(!button)return;
+  checkoutController?.addItem(button.dataset.addProduct,Number($('detailQuantity').value));$('productDialog').close();renderProducts();
 });
 $('productDialog').addEventListener('click', event => { if (event.target === $('productDialog')) $('productDialog').close(); });
 $('year').textContent = new Date().getFullYear();
