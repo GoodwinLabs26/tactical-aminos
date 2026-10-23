@@ -8,6 +8,10 @@ export const categories = [
   { id: 'blends', name: 'Blends' }
 ];
 export const products = [
+  // NAD+ strengths and prices confirmed by Jasmine on October 23, 2026.
+  { id: 'nad-250', name: 'NAD+', strength: '250mg', price: 40, category: 'compounds' },
+  { id: 'nad-500', name: 'NAD+', strength: '500mg', price: 75, category: 'compounds' },
+  { id: 'nad-1000', name: 'NAD+', strength: '1000mg', price: 110, category: 'compounds' },
   { id: 'd2-30', name: 'D2', strength: '30mg', price: 150, category: 'regulators' },
   { id: 'd2-60', name: 'D2', strength: '60mg', price: 240, category: 'regulators' },
   { id: 'r3-20', name: 'R3', strength: '20mg', price: 145, category: 'regulators' },
@@ -28,6 +32,20 @@ export const products = [
 // Storefront presentation only: each strength keeps its original SKU, price,
 // inventory and order history. Add other families here as they are reviewed.
 export const productFamilies = [
+  {
+    id: 'nad', name: 'NAD+', variantIds: ['nad-250', 'nad-500', 'nad-1000'],
+    image: 'assets/nad-product.png',
+    description: 'NAD+ (nicotinamide adenine dinucleotide) is a naturally occurring coenzyme involved in cellular energy metabolism, DNA repair pathways, and mitochondrial function. It consists of two nucleotides linked through phosphate groups, rather than a chain of amino acids.',
+    sections: [
+      {
+        title: 'Mechanism of action',
+        items: [
+          'Cellular energy metabolism: NAD+ accepts electrons during oxidation–reduction reactions. Its reduced form, NADH, supplies electrons to mitochondrial pathways involved in ATP production.',
+          'Enzyme activity: NAD+ serves as a substrate for enzymes including sirtuins and PARPs, which participate in cellular regulation, stress responses, and DNA repair pathways.'
+        ]
+      }
+    ]
+  },
   {
     id: 'd2', name: 'D2', variantIds: ['d2-30', 'd2-60'],
     image: 'assets/d2-product.png',

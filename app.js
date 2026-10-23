@@ -229,10 +229,13 @@ function renderProducts() {
   }).join('');
   $('categoryButtons').innerHTML=categories.map(item=>`<button class="chip ${category===item.id?'selected':''}" data-category="${item.id}" aria-pressed="${category===item.id}">${escape(item.name)}</button>`).join('');
 }
+function productDetailSections(group){
+  return (group.sections||[]).map(section=>`<section class="product-detail-section"><h3>${escape(section.title)}</h3><ul>${section.items.map(item=>`<li>${escape(item)}</li>`).join('')}</ul></section>`).join('');
+}
 function renderProductDialog(productId,quantity=1){
   const group=groupProducts(products).find(item=>item.variants.some(product=>product.id===productId));if(!group)return;
   const product=group.variants.find(item=>item.id===productId);selectedVariants.set(group.id,product.id);
-  $('productDialogContent').innerHTML=`<div class="dialog-art ${group.image?'has-photo':''}">${productArt(group,product)}</div><p class="eyebrow">TACTICAL AMINOS · RESEARCH CATALOG</p><h2>${escape(group.name)}</h2>${strengthButtons(group,product,true)}<p class="dialog-selected-price" aria-live="polite">${escape(product.strength)} · ${money(product.price)} · ${stockLabel(product)}</p><p class="muted product-detail-description">${escape(group.description||'Product description coming soon.')}</p><label for="detailQuantity">Quantity</label><input id="detailQuantity" type="number" min="1" max="100" step="1" value="1"><button class="button full-width" data-add-product="${escape(product.id)}" ${product.stockQuantity===0?'disabled':''}>${product.stockQuantity===0?'Out of stock':'Add to cart'}</button><p class="dialog-disclaimer">For laboratory research only. Not intended for human or animal use.</p>`;
+  $('productDialogContent').innerHTML=`<div class="dialog-art ${group.image?'has-photo':''}">${productArt(group,product)}</div><p class="eyebrow">TACTICAL AMINOS · RESEARCH CATALOG</p><h2>${escape(group.name)}</h2>${strengthButtons(group,product,true)}<p class="dialog-selected-price" aria-live="polite">${escape(product.strength)} · ${money(product.price)} · ${stockLabel(product)}</p><p class="muted product-detail-description">${escape(group.description||'Product description coming soon.')}</p>${productDetailSections(group)}<label for="detailQuantity">Quantity</label><input id="detailQuantity" type="number" min="1" max="100" step="1" value="1"><button class="button full-width" data-add-product="${escape(product.id)}" ${product.stockQuantity===0?'disabled':''}>${product.stockQuantity===0?'Out of stock':'Add to cart'}</button><p class="dialog-disclaimer">For laboratory research only. Not intended for human or animal use.</p>`;
   $('detailQuantity').value=quantity;
 }
 $('categoryButtons').addEventListener('click', event => {

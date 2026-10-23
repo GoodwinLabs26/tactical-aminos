@@ -6,7 +6,7 @@ export function groupProducts(products) {
   const groups=new Map();
   for(const product of products){
     const family=families.get(product.id),key=family?'family:'+family.id:'sku:'+product.id;
-    if(!groups.has(key))groups.set(key,{id:family?.id||product.id,name:family?.name||product.name,description:family?.description||product.description||'',image:family?.image||'',variants:[]});
+    if(!groups.has(key))groups.set(key,{id:family?.id||product.id,name:family?.name||product.name,description:family?.description||product.description||'',image:family?.image||'',sections:family?.sections||[],variants:[]});
     groups.get(key).variants.push(product);
   }
   for(const group of groups.values())if(group.variants.length>1)group.variants.sort((a,b)=>a.price-b.price);

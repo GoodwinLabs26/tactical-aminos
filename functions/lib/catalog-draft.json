@@ -1,5 +1,44 @@
 [
   {
+    "id": "nad-250",
+    "name": "NAD+",
+    "strength": "250mg",
+    "price": 40,
+    "category": "compounds",
+    "priceCents": 4000,
+    "compoundKey": "nad+",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": true
+  },
+  {
+    "id": "nad-500",
+    "name": "NAD+",
+    "strength": "500mg",
+    "price": 75,
+    "category": "compounds",
+    "priceCents": 7500,
+    "compoundKey": "nad+",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": true
+  },
+  {
+    "id": "nad-1000",
+    "name": "NAD+",
+    "strength": "1000mg",
+    "price": 110,
+    "category": "compounds",
+    "priceCents": 11000,
+    "compoundKey": "nad+",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": true
+  },
+  {
     "id": "d2-30",
     "name": "D2",
     "strength": "30mg",

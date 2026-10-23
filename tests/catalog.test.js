@@ -5,7 +5,7 @@ import {groupProducts,matchingVariants,selectVariant} from '../catalog-view.js';
 
 test('D2 has one display family while original strength SKUs and prices remain separate',()=>{
   const original=structuredClone(products),groups=groupProducts(products),d2=groups.filter(group=>group.name==='D2');
-  assert.equal(d2.length,1);assert.equal(groups.length,products.length-2);
+  assert.equal(d2.length,1);assert.equal(groups.length,products.length-4);
   assert.deepEqual(d2[0].variants.map(product=>[product.id,product.strength,product.price]),[['d2-30','30mg',150],['d2-60','60mg',240]]);
   assert.match(d2[0].description,/39-amino-acid/);assert.match(d2[0].description,/GIP .*GLP-1/);assert.equal(d2[0].image,'assets/d2-product.png');assert.deepEqual(products,original);
   assert.equal(groups.filter(group=>group.name==='R3').length,1);
@@ -34,4 +34,17 @@ test('R3 shares one card while strength prices, zero stock, search and D2 remain
   assert.deepEqual(matchingVariants(r3,{query:'R3 30mg'}).map(product=>product.id),['r3-30']);
   assert.equal(matchingVariants(r3,{category:'regulators'}).length,2);assert.equal(matchingVariants(r3,{category:'compounds'}).length,0);
   const d2=groups.find(group=>group.id==='d2');assert.deepEqual(d2.variants.map(product=>product.id),['d2-30','d2-60']);assert.equal(d2.image,'assets/d2-product.png');
+});
+
+
+test('NAD+ groups three confirmed strengths with distinct prices, stock and mechanism detail',()=>{
+  const records=products.map(product=>({...product,stockQuantity:product.id==='nad-500'?0:5}));
+  const groups=groupProducts(records),nad=groups.find(group=>group.id==='nad');
+  assert.equal(groups.filter(group=>group.name==='NAD+').length,1);
+  assert.deepEqual(nad.variants.map(product=>[product.id,product.strength,product.price]),[['nad-250','250mg',40],['nad-500','500mg',75],['nad-1000','1000mg',110]]);
+  assert.equal(nad.image,'assets/nad-product.png');assert.match(nad.description,/two nucleotides/);assert.match(nad.sections[0].items[0],/ATP/);assert.match(nad.sections[0].items[1],/sirtuins and PARPs/);
+  assert.equal(selectVariant(nad).id,'nad-250');assert.equal(selectVariant(nad,'nad-500').stockQuantity,0);
+  assert.equal(selectVariant(nad,'nad-1000').price,110);
+  assert.deepEqual(matchingVariants(nad,{query:'NAD+ 500mg'}).map(product=>product.id),['nad-500']);
+  assert.equal(matchingVariants(nad,{category:'compounds'}).length,3);
 });
