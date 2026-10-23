@@ -5,7 +5,7 @@ import {groupProducts,matchingVariants,selectVariant} from '../catalog-view.js';
 
 test('D2 has one display family while original strength SKUs and prices remain separate',()=>{
   const original=structuredClone(products),groups=groupProducts(products),d2=groups.filter(group=>group.name==='D2');
-  assert.equal(d2.length,1);assert.equal(groups.length,products.length-4);
+  assert.equal(d2.length,1);assert.equal(groups.length,products.length-5);
   assert.deepEqual(d2[0].variants.map(product=>[product.id,product.strength,product.price]),[['d2-30','30mg',150],['d2-60','60mg',240]]);
   assert.match(d2[0].description,/39-amino-acid/);assert.match(d2[0].description,/GIP .*GLP-1/);assert.equal(d2[0].image,'assets/d2-product.png');assert.deepEqual(products,original);
   assert.equal(groups.filter(group=>group.name==='R3').length,1);
@@ -47,4 +47,16 @@ test('NAD+ groups three confirmed strengths with distinct prices, stock and mech
   assert.equal(selectVariant(nad,'nad-1000').price,110);
   assert.deepEqual(matchingVariants(nad,{query:'NAD+ 500mg'}).map(product=>product.id),['nad-500']);
   assert.equal(matchingVariants(nad,{category:'compounds'}).length,3);
+});
+
+
+test('GHK-Cu groups two confirmed strengths while prices, stock and existing families stay separate',()=>{
+  const original=structuredClone(products),records=products.map(product=>({...product,stockQuantity:product.id==='ghk-cu-50'?0:7}));
+  const groups=groupProducts(records),ghk=groups.find(group=>group.id==='ghk-cu');
+  assert.equal(groups.filter(group=>group.name==='GHK-Cu').length,1);
+  assert.deepEqual(ghk.variants.map(product=>[product.id,product.strength,product.price]),[['ghk-cu-50','50mg',45],['ghk-cu-100','100mg',75]]);
+  assert.equal(ghk.image,'assets/ghk-cu-product.png');assert.match(ghk.description,/copper\(II\)/);assert.equal(ghk.sections[0].title,'Research areas');assert.equal(ghk.sections[0].items.length,3);
+  assert.equal(selectVariant(ghk).id,'ghk-cu-100');assert.equal(selectVariant(ghk,'ghk-cu-50').stockQuantity,0);
+  assert.deepEqual(matchingVariants(ghk,{query:'GHK-Cu 100mg'}).map(product=>product.id),['ghk-cu-100']);assert.equal(matchingVariants(ghk,{category:'compounds'}).length,2);
+  assert.equal(groups.find(group=>group.id==='nad').variants.length,3);assert.equal(groups.find(group=>group.id==='d2').variants.length,2);assert.equal(groups.find(group=>group.id==='r3').variants.length,2);assert.deepEqual(products,original);
 });

@@ -8,6 +8,9 @@ export const categories = [
   { id: 'blends', name: 'Blends' }
 ];
 export const products = [
+  // GHK-Cu strengths and prices confirmed by Jasmine on October 23, 2026.
+  { id: 'ghk-cu-50', name: 'GHK-Cu', strength: '50mg', price: 45, category: 'compounds' },
+  { id: 'ghk-cu-100', name: 'GHK-Cu', strength: '100mg', price: 75, category: 'compounds' },
   // NAD+ strengths and prices confirmed by Jasmine on October 23, 2026.
   { id: 'nad-250', name: 'NAD+', strength: '250mg', price: 40, category: 'compounds' },
   { id: 'nad-500', name: 'NAD+', strength: '500mg', price: 75, category: 'compounds' },
@@ -32,6 +35,27 @@ export const products = [
 // Storefront presentation only: each strength keeps its original SKU, price,
 // inventory and order history. Add other families here as they are reviewed.
 export const productFamilies = [
+  {
+    id: 'ghk-cu', name: 'GHK-Cu', variantIds: ['ghk-cu-50', 'ghk-cu-100'],
+    image: 'assets/ghk-cu-product.png',
+    description: 'GHK-Cu is the copper(II) complex of glycyl-L-histidyl-L-lysine, a naturally occurring tripeptide first isolated from human plasma. It is studied for its interactions with fibroblasts and extracellular matrix remodeling pathways.',
+    sections: [
+      {
+        title: 'Research areas',
+        items: [
+          'Collagen and elastin: Laboratory studies examine how GHK-Cu affects fibroblast activity and the production of structural proteins in cell cultures.',
+          'Skin appearance: Studies of particular topical formulations have examined wrinkle and skin-texture measures. Findings depend on the formulation and study design.',
+          'Tissue remodeling: Preclinical research examines connective-tissue accumulation and matrix-remodeling enzymes in wound models.'
+        ]
+      },
+      {
+        title: 'Research context',
+        items: [
+          'Findings from cell cultures, animal models, or specific topical products do not establish equivalent results for this research preparation.'
+        ]
+      }
+    ]
+  },
   {
     id: 'nad', name: 'NAD+', variantIds: ['nad-250', 'nad-500', 'nad-1000'],
     image: 'assets/nad-product.png',

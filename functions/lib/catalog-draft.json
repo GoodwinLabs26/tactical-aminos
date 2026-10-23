@@ -1,5 +1,31 @@
 [
   {
+    "id": "ghk-cu-50",
+    "name": "GHK-Cu",
+    "strength": "50mg",
+    "price": 45,
+    "category": "compounds",
+    "priceCents": 4500,
+    "compoundKey": "ghk-cu",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": true
+  },
+  {
+    "id": "ghk-cu-100",
+    "name": "GHK-Cu",
+    "strength": "100mg",
+    "price": 75,
+    "category": "compounds",
+    "priceCents": 7500,
+    "compoundKey": "ghk-cu",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": true
+  },
+  {
     "id": "nad-250",
     "name": "NAD+",
     "strength": "250mg",
