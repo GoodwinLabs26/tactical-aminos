@@ -32,5 +32,10 @@ export const productFamilies = [
     id: 'd2', name: 'D2', variantIds: ['d2-30', 'd2-60'],
     image: 'assets/d2-product.png',
     description: 'A first-in-class, synthetic 39-amino-acid peptide that acts as a dual receptor agonist for both GIP (glucose-dependent insulinotropic polypeptide) and GLP-1 (glucagon-like peptide-1) receptors.'
+  },
+  {
+    id: 'r3', name: 'R3', variantIds: ['r3-20', 'r3-30'],
+    image: 'assets/r3-product.png',
+    description: 'An investigational, once-weekly injectable peptide (a chain of amino acids).'
   }
 ];
