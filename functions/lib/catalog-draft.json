@@ -1,5 +1,31 @@
 [
   {
+    "id": "epithalon-40",
+    "name": "Epithalon",
+    "strength": "40mg",
+    "price": 70,
+    "category": "compounds",
+    "priceCents": 7000,
+    "compoundKey": "epithalon",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": true
+  },
+  {
+    "id": "epithalon-50",
+    "name": "Epithalon",
+    "strength": "50mg",
+    "price": 95,
+    "category": "compounds",
+    "priceCents": 9500,
+    "compoundKey": "epithalon",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": true
+  },
+  {
     "id": "mots-c-10",
     "name": "MOTS-C",
     "strength": "10mg",

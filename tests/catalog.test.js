@@ -5,7 +5,7 @@ import {groupProducts,matchingVariants,selectVariant} from '../catalog-view.js';
 
 test('D2 has one display family while original strength SKUs and prices remain separate',()=>{
   const original=structuredClone(products),groups=groupProducts(products),d2=groups.filter(group=>group.name==='D2');
-  assert.equal(d2.length,1);assert.equal(groups.length,products.length-6);
+  assert.equal(d2.length,1);assert.equal(groups.length,products.length-7);
   assert.deepEqual(d2[0].variants.map(product=>[product.id,product.strength,product.price]),[['d2-30','30mg',150],['d2-60','60mg',240]]);
   assert.match(d2[0].description,/39-amino-acid/);assert.match(d2[0].description,/GIP .*GLP-1/);assert.equal(d2[0].image,'assets/d2-product.png');assert.deepEqual(products,original);
   assert.equal(groups.filter(group=>group.name==='R3').length,1);
@@ -72,4 +72,16 @@ test('MOTS-C has two confirmed strength SKUs and stock states with no invented d
   assert.deepEqual(matchingVariants(mots,{query:'MOTS-C 40mg'}).map(product=>product.id),['mots-c-40']);
   assert.equal(matchingVariants(mots,{category:'compounds'}).length,2);
   assert.equal(groups.find(group=>group.id==='ghk-cu').variants.length,2);assert.equal(groups.find(group=>group.id==='nad').variants.length,3);
+});
+
+
+test('Epithalon retains two confirmed strength prices and independent stock without invented copy',()=>{
+  const records=products.map(product=>({...product,stockQuantity:product.id==='epithalon-40'?0:5}));
+  const groups=groupProducts(records),epithalon=groups.find(group=>group.id==='epithalon');
+  assert.equal(groups.filter(group=>group.name==='Epithalon').length,1);
+  assert.deepEqual(epithalon.variants.map(product=>[product.id,product.strength,product.price]),[['epithalon-40','40mg',70],['epithalon-50','50mg',95]]);
+  assert.equal(epithalon.image,'assets/epithalon-product.png');assert.equal(epithalon.description,'');assert.deepEqual(epithalon.sections,[]);
+  assert.equal(selectVariant(epithalon).id,'epithalon-50');assert.equal(selectVariant(epithalon,'epithalon-40').stockQuantity,0);
+  assert.deepEqual(matchingVariants(epithalon,{query:'Epithalon 50mg'}).map(product=>product.id),['epithalon-50']);assert.equal(matchingVariants(epithalon,{category:'compounds'}).length,2);
+  assert.equal(groups.find(group=>group.id==='mots-c').variants.length,2);assert.equal(groups.find(group=>group.id==='nad').variants.length,3);
 });

@@ -8,6 +8,9 @@ export const categories = [
   { id: 'blends', name: 'Blends' }
 ];
 export const products = [
+  // Epithalon strengths and prices confirmed by Jasmine on October 26, 2026.
+  { id: 'epithalon-40', name: 'Epithalon', strength: '40mg', price: 70, category: 'compounds' },
+  { id: 'epithalon-50', name: 'Epithalon', strength: '50mg', price: 95, category: 'compounds' },
   // MOTS-C strengths and prices confirmed by Jasmine on October 26, 2026.
   { id: 'mots-c-10', name: 'MOTS-C', strength: '10mg', price: 48, category: 'compounds' },
   { id: 'mots-c-40', name: 'MOTS-C', strength: '40mg', price: 95, category: 'compounds' },
@@ -38,6 +41,10 @@ export const products = [
 // Storefront presentation only: each strength keeps its original SKU, price,
 // inventory and order history. Add other families here as they are reviewed.
 export const productFamilies = [
+  {
+    id: 'epithalon', name: 'Epithalon', variantIds: ['epithalon-40', 'epithalon-50'],
+    image: 'assets/epithalon-product.png'
+  },
   {
     id: 'mots-c', name: 'MOTS-C', variantIds: ['mots-c-10', 'mots-c-40'],
     image: 'assets/mots-c-product.png'
