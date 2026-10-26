@@ -8,6 +8,9 @@ export const categories = [
   { id: 'blends', name: 'Blends' }
 ];
 export const products = [
+  // MOTS-C strengths and prices confirmed by Jasmine on October 26, 2026.
+  { id: 'mots-c-10', name: 'MOTS-C', strength: '10mg', price: 48, category: 'compounds' },
+  { id: 'mots-c-40', name: 'MOTS-C', strength: '40mg', price: 95, category: 'compounds' },
   // GHK-Cu strengths and prices confirmed by Jasmine on October 23, 2026.
   { id: 'ghk-cu-50', name: 'GHK-Cu', strength: '50mg', price: 45, category: 'compounds' },
   { id: 'ghk-cu-100', name: 'GHK-Cu', strength: '100mg', price: 75, category: 'compounds' },
@@ -35,6 +38,10 @@ export const products = [
 // Storefront presentation only: each strength keeps its original SKU, price,
 // inventory and order history. Add other families here as they are reviewed.
 export const productFamilies = [
+  {
+    id: 'mots-c', name: 'MOTS-C', variantIds: ['mots-c-10', 'mots-c-40'],
+    image: 'assets/mots-c-product.png'
+  },
   {
     id: 'ghk-cu', name: 'GHK-Cu', variantIds: ['ghk-cu-50', 'ghk-cu-100'],
     image: 'assets/ghk-cu-product.png',
