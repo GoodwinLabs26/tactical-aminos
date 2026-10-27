@@ -71,3 +71,11 @@ test('low-stock emails use plain counts, singular and zero wording, and identify
   const escaped=renderLowStockEmail({...sampleStockNotice,productName:'KPV <test>'});assert.match(escaped.html,/KPV &lt;test&gt;/);assert.doesNotMatch(escaped.html,/KPV <test>/);
   for(const overrides of [{stockQuantity:-1},{stockQuantity:1.5},{stockQuantity:11},{threshold:-1},{createdAt:'not-a-date'},{productName:'KPV\nBcc: other@example.com'}])assert.throws(()=>renderLowStockEmail({...sampleStockNotice,...overrides}));
 });
+
+test('customer payment email includes only the selected payment method account',()=>{
+ for(const [method,handle,other] of [['venmo','@selected-venmo','PayPal'],['paypal','selected-paypal@example.com','Venmo']]){
+  const order=structuredClone(sampleOrder);order.paymentMethod=method;order.paymentInstructions={method,handle};
+  const customer=renderOrderEmails(order,{test:true})[0];
+  assert.ok(customer.text.includes(handle));assert.ok(customer.html.includes(handle));assert.ok(!customer.text.includes(other));assert.ok(!customer.html.includes(other));
+ }
+});

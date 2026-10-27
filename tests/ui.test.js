@@ -22,6 +22,7 @@ test('account gate, cart, discounts, preview checkout and scoped cart restoratio
   async function load(filename){if(modules.has(filename))return modules.get(filename);const source=await fs.readFile(filename,'utf8');const module=new vm.SourceTextModule(source,{context,identifier:filename,importModuleDynamically:async()=>mock});modules.set(filename,module);return module;}
   const app=await load(path.join(root,'app.js'));await app.link((specifier,parent)=>load(path.resolve(path.dirname(parent.identifier),specifier)));await app.evaluate();
   const pause=()=>new Promise(resolve=>setTimeout(resolve,10));await pause();
+  assert.doesNotMatch(elements.get('paymentInstructions').textContent,/@Mark-Williams-1389/);
   const el=id=>elements.get(id);const trigger=async(id,type='click',extra={})=>el(id).listeners[type]({preventDefault(){},currentTarget:el(id),...extra});
   await openShop[0].listeners.click();await pause();assert.equal(el('authView').hidden,false);assert.equal(el('shopView').hidden,true);
   await trigger('signUpTab');el('fullName').value='Test Member';el('email').value=user.email;el('password').value='TestPass123!';el('confirmPassword').value='Different!';el('ageConfirmed').checked=true;

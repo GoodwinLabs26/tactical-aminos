@@ -113,7 +113,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
     finally { $('applyPromoButton').disabled=false;render(); }
   });
   document.querySelectorAll('input[name="paymentMethod"]').forEach(input => input.addEventListener('change', () => {
-    $('paymentInstructions').textContent=input.value==='venmo' ? `Venmo: ${siteSettings.venmoHandle}` : siteSettings.paypalHandle ? `PayPal: ${siteSettings.paypalHandle}` : 'PayPal details coming soon. Available for test checkout only.';
+    $('paymentInstructions').textContent='Payment instructions for your selected method will be provided in your order email. Do not send payment before receiving those instructions.';
   }));
   $('checkoutForm').addEventListener('submit', async event => {
     event.preventDefault();
@@ -145,8 +145,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
         const result=await api.placeOrder({...body,requestId:request.id});
         if (generation!==historyGeneration || user?.uid!==ownerUid) return;
         sessionStorage.removeItem(`ta-request:${ownerUid}`);
-        const payment=result.paymentInstructions;
-        $('checkoutResultContent').innerHTML=`<p class="eyebrow">ORDER RECEIVED · AWAITING PAYMENT</p><h2>${escape(result.orderNumber)}</h2><p>Order total: <strong>${dollars(result.totalCents)}</strong></p><p>${escape(payment.method==='venmo'?'Venmo':'PayPal')}: <strong>${escape(payment.handle)}</strong></p><p>${escape(payment.note)}</p><p>This order is unpaid. Confirmation and tracking emails will become available when email delivery is connected.</p>`;
+        $('checkoutResultContent').innerHTML=`<p class="eyebrow">ORDER RECEIVED · AWAITING PAYMENT</p><h2>${escape(result.orderNumber)}</h2><p>Order total: <strong>${dollars(result.totalCents)}</strong></p><p>Payment method: <strong>${escape(paymentMethod==='venmo'?'Venmo':'PayPal')}</strong></p><p>This order is unpaid. Payment instructions will be provided in your order email. Do not send payment before receiving those instructions.</p><p>Email delivery is not connected yet.</p>`;
         cart.clear();saveCart();firstOrderEligible=false;promotion='none';promo=null;serverQuote=null;render();
         loadHistory();
       }
@@ -195,7 +194,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
     }
   }
   $('previewCodeHint').hidden=!siteSettings.previewCheckout;
-  $('paymentInstructions').textContent=`Venmo: ${siteSettings.venmoHandle}`;
+  $('paymentInstructions').textContent='Payment instructions for your selected method will be provided in your order email. Do not send payment before receiving those instructions.';
   $('paymentNote').textContent=siteSettings.paymentNote;
   if(!siteSettings.previewCheckout && !siteSettings.paypalHandle)$('paypalPayment').disabled=true;
   render();
