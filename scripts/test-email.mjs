@@ -18,8 +18,8 @@ export const sampleOrder={
 export const sampleShipment={...sampleOrder,paymentStatus:'paid',fulfillmentStatus:'shipped',status:'shipped',trackingNumber:'0000000000000000000000'};
 export const sampleStockNotice={productName:'KPV',strength:'10mg',stockQuantity:10,threshold:10,createdAt:'2026-10-22T19:00:00.000Z'};
 export function buildTestMessages(group='orders'){
-  if(!['orders','alerts'].includes(group))throw new Error('Choose orders or alerts for the local email test.');
-  const templates=group==='alerts'?[renderShippingEmail(sampleShipment,{test:true}),renderLowStockEmail(sampleStockNotice,{test:true})]:renderOrderEmails(sampleOrder,{test:true});
+  if(!['orders','alerts','payments'].includes(group))throw new Error('Choose orders, alerts or payments for the local email test.');
+  const templates=group==='payments'?['venmo','paypal'].map(method=>{const order={...sampleOrder,paymentMethod:method,paymentInstructions:{handle:method==='venmo'?'@SAMPLE-VENMO-DO-NOT-PAY':'sample-paypal@example.com'}};const customer=renderOrderEmails(order,{test:true})[0];return {...customer,subject:`[TEST] ${method==='venmo'?'Venmo':'PayPal'} customer order preview`};}):group==='alerts'?[renderShippingEmail(sampleShipment,{test:true}),renderLowStockEmail(sampleStockNotice,{test:true})]:renderOrderEmails(sampleOrder,{test:true});
   return templates.map(({kind,...content})=>({from:TEST_FROM,to:[TEST_RECIPIENT],...content}));}
 
 // This sender deliberately cannot accept arbitrary recipients, orders, or CC/BCC.
@@ -60,7 +60,7 @@ export function readHiddenKey(input=process.stdin,output=process.stdout){
 
 async function main(){
   const args=process.argv.slice(2);
-  if(args.length!==1||!['--preview','--send','--send-alerts'].includes(args[0])){
+  if(args.length!==1||!['--preview','--send','--send-alerts','--send-payment-previews'].includes(args[0])){
     console.log('Preview without sending: node scripts/test-email.mjs --preview\nSend order samples: node scripts/test-email.mjs --send\nSend shipping and stock samples: node scripts/test-email.mjs --send-alerts');return;
   }
   if(args[0]==='--preview'){
@@ -72,9 +72,9 @@ async function main(){
     }
     console.log('Preview files created. No email was sent and no API key is needed.\n'+directory);return;
   }
-  const group=args[0]==='--send-alerts'?'alerts':'orders';
-  console.log(`Sending TWO ${group==='alerts'?'shipping/low-stock':'order'} sample emails only to ${TEST_RECIPIENT}.\nNo order, stock, payment, or customer record will change.`);
+  const group=args[0]==='--send-payment-previews'?'payments':args[0]==='--send-alerts'?'alerts':'orders';
+  console.log(`Sending TWO ${group==='payments'?'customer payment':group==='alerts'?'shipping/low-stock':'order'} sample emails only to ${TEST_RECIPIENT}.\nNo order, stock, payment, or customer record will change.`);
   let apiKey=await readHiddenKey();
-  try{const ids=await sendTestEmails(apiKey,{group});const labels=group==='alerts'?['Shipping confirmation','Low-stock alert']:['Customer confirmation','Admin alert'];console.log('Resend accepted both emails for delivery. Check your Inbox and Spam folders.\n'+labels[0]+' ID: '+ids[0]+'\n'+labels[1]+' ID: '+ids[1]);}finally{apiKey='';}
+  try{const ids=await sendTestEmails(apiKey,{group});const labels=group==='payments'?['Venmo customer preview','PayPal customer preview']:group==='alerts'?['Shipping confirmation','Low-stock alert']:['Customer confirmation','Admin alert'];console.log('Resend accepted both emails for delivery. Check your Inbox and Spam folders.\n'+labels[0]+' ID: '+ids[0]+'\n'+labels[1]+' ID: '+ids[1]);}finally{apiKey='';}
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){main().catch(error=>{console.error(error.message);process.exitCode=1;});}

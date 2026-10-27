@@ -55,7 +55,7 @@ test('shipping and stock samples are separately selectable and can only reach th
   assert.match(messages[0].subject,/Shipping update/);assert.match(messages[1].subject,/Low stock/);
   assert.match(messages[0].text,/sample tracking number/);assert.match(messages[1].text,/No inventory was changed/);
   let calls=0;await sendTestEmails(fakeKey,{group:'alerts',fetchImpl:async(url,options)=>{calls++;assert.deepEqual(JSON.parse(options.body),messages);return {ok:true,json:async()=>({data:[{id:'shipping-test'},{id:'stock-test'}]})};}});assert.equal(calls,1);
-  await assert.rejects(sendTestEmails(fakeKey,{group:'customers',fetchImpl:async()=>{calls++;}}),/Choose orders or alerts/);assert.equal(calls,1);
+  await assert.rejects(sendTestEmails(fakeKey,{group:'customers',fetchImpl:async()=>{calls++;}}),/Choose orders, alerts or payments/);assert.equal(calls,1);
 });
 test('shipping emails require paid/shipped status and include only the validated USPS tracking URL',()=>{
   const email=renderShippingEmail(sampleShipment,{test:true});const link='https://tools.usps.com/go/TrackConfirmAction?tLabels='+sampleShipment.trackingNumber;
@@ -78,4 +78,11 @@ test('customer payment email includes only the selected payment method account',
   const customer=renderOrderEmails(order,{test:true})[0];
   assert.ok(customer.text.includes(handle));assert.ok(customer.html.includes(handle));assert.ok(!customer.text.includes(other));assert.ok(!customer.html.includes(other));
  }
+});
+
+test('payment preview batch contains two customer emails with separate sample accounts and only the test recipient',()=>{
+ const messages=buildTestMessages('payments');assert.equal(messages.length,2);
+ for(const message of messages){assert.deepEqual(message.to,[TEST_RECIPIENT]);assert.match(message.subject,/\[TEST\]/);assert.match(message.text,/Do not send payment/);assert.doesNotMatch(JSON.stringify(message),/@Mark-Williams-1389|TacticalAminos@gmail.com/);}
+ assert.match(messages[0].text,/@SAMPLE-VENMO-DO-NOT-PAY/);assert.doesNotMatch(messages[0].text,/sample-paypal@example.com/);
+ assert.match(messages[1].text,/sample-paypal@example.com/);assert.doesNotMatch(messages[1].text,/@SAMPLE-VENMO/);
 });
