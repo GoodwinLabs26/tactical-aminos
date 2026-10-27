@@ -1,10 +1,11 @@
 import { products } from './catalog.js';
+import {isProductReady,productPriceCents} from './product-availability.js';
 import { createAdminService } from './functions/admin-service.js';
 import { createReportsService } from './functions/reports-service.js';
 import { reportWindow, timestampMs } from './reports-core.js';
 const docs=new Map();
 const now=()=>new Date().toISOString();
-for(const product of products)docs.set(`products/${product.id}`,{...product,priceCents:Math.round(product.price*100),stockQuantity:product.id==='bpc157'?8:12,lowStockThreshold:3,revision:0});
+for(const product of products)docs.set(`products/${product.id}`,{...product,priceCents:productPriceCents(product),published:isProductReady(product),stockQuantity:product.id==='bpc157'?8:12,lowStockThreshold:3,revision:0});
 const member={name:'Sample Customer',email:'customer@example.com',ageConfirmed:true,createdAt:now()};
 const affiliate={...member,name:'Sample Affiliate',email:'affiliate@example.com'};
 docs.set('users/demo-customer',member);docs.set('users/demo-affiliate',affiliate);docs.set('config/admin',{uid:'demo-admin'});

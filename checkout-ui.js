@@ -1,3 +1,4 @@
+import {isProductReady,productPriceCents} from './product-availability.js';
 import { calculateQuote, validateCustomer } from './shared/checkout-core.js';
 import { siteSettings } from './site-settings.js';
 
@@ -6,7 +7,7 @@ const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&':'&
 const dollars = cents => new Intl.NumberFormat('en-US', { style:'currency', currency:'USD' }).format(cents / 100);
 export function initCheckout({ products: initialProducts, getService, onCatalog }) {
   let products = initialProducts, user = null, memberProfile = null, cart = new Map(), promotion = 'first', promo = null, firstOrderEligible = true, quote = null, serverQuote = null, sending = false, historyGeneration = 0;
-  const records = () => products.map(product => ({ ...product, priceCents: product.priceCents ?? Math.round(product.price * 100), bulkEligible: product.bulkEligible ?? true, compoundKey: product.compoundKey || product.name.toLowerCase() }));
+  const records = () => products.map(product => ({ ...product, priceCents: productPriceCents(product), published:isProductReady(product), bulkEligible: product.bulkEligible ?? true, compoundKey: product.compoundKey || product.name.toLowerCase() }));
   const lines = () => [...cart].map(([productId, quantity]) => ({productId, quantity}));
   const feedback = (text, success = false) => { $('checkoutMessage').textContent = text; $('checkoutMessage').classList.toggle('success',success); };
   const savedKey = () => `ta-cart-v2:${user?.uid}`;
@@ -42,6 +43,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
     if (!user || memberProfile?.ageConfirmed !== true) { location.hash='shop'; return; }
     const product = products.find(item => item.id === productId);
     if (!product || !Number.isInteger(quantity) || quantity < 1) return;
+    if(!isProductReady(product)){$('cartFeedback').textContent='This product needs confirmed details before it can be ordered.';return;}
     const maximum = Number.isInteger(product.stockQuantity) ? Math.min(product.stockQuantity,100) : 100;
     const target = (cart.get(productId) || 0) + quantity;
     if (target > maximum) { $('cartFeedback').textContent = maximum === 0 ? 'This product is out of stock.' : `Only ${maximum} vials can be added for this product.`; return; }
@@ -163,7 +165,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
     if(changed){
       historyGeneration++;cart=new Map();promo=null;serverQuote=null;promotion='first';firstOrderEligible=true;
       $('checkoutForm').reset();$('checkoutResult').hidden=true;$('cartFeedback').textContent='';feedback('');
-      if(user){try{const saved=JSON.parse(sessionStorage.getItem(savedKey()) || '[]');for(const line of saved){if((!siteSettings.previewCheckout || products.some(product=>product.id===line.productId))&&typeof line.productId==='string'&&Number.isInteger(line.quantity)&&line.quantity>0&&line.quantity<=100)cart.set(line.productId,line.quantity);}}catch{}}
+      if(user){try{const saved=JSON.parse(sessionStorage.getItem(savedKey()) || '[]');for(const line of saved){if((!siteSettings.previewCheckout || products.some(product=>product.id===line.productId&&isProductReady(product)))&&typeof line.productId==='string'&&Number.isInteger(line.quantity)&&line.quantity>0&&line.quantity<=100)cart.set(line.productId,line.quantity);}}catch{}}
     }
     if(user && !$('shippingName').value)$('shippingName').value=nextProfile?.name || user.displayName || '';
     render();
@@ -174,7 +176,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
         const [catalog,stats]=await Promise.all([api.getLiveCatalog(),api.getCustomerStats(user.uid)]);
         if(generation!==historyGeneration)return;
         products=catalog.products.map(product=>({...product,price:product.priceCents/100}));
-        for(const id of cart.keys())if(!products.some(product=>product.id===id))cart.delete(id);
+        for(const id of cart.keys())if(!products.some(product=>product.id===id&&isProductReady(product)))cart.delete(id);
         firstOrderEligible=stats.firstOrderClaimed!==true && !(stats.submittedOrderCount>0) && !(stats.paidOrderCount>0);
         if(!firstOrderEligible && promotion==='first')promotion='none';
         onCatalog(products);saveCart();render();

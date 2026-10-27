@@ -6,7 +6,7 @@ export function groupProducts(products) {
   const groups=new Map();
   for(const product of products){
     const family=families.get(product.id),key=family?'family:'+family.id:'sku:'+product.id;
-    if(!groups.has(key))groups.set(key,{id:family?.id||product.id,name:family?.name||product.name,description:family?.description||product.description||'',image:family?.image||'',sections:family?.sections||[],variants:[]});
+    if(!groups.has(key))groups.set(key,{id:family?.id||product.id,name:family?.name||product.name,description:family?.description||product.description||'',image:family?.image||'',sections:family?.sections||[],aliases:family?.aliases||[],variants:[]});
     groups.get(key).variants.push(product);
   }
   for(const group of groups.values())if(group.variants.length>1)group.variants.sort((a,b)=>a.price-b.price);
@@ -14,7 +14,7 @@ export function groupProducts(products) {
 }
 export function matchingVariants(group,{category='all',query=''}={}){
   const search=query.trim().toLowerCase();
-  return group.variants.filter(product=>(category==='all'||product.category===category)&&`${product.name} ${product.strength}`.toLowerCase().includes(search));
+  return group.variants.filter(product=>(category==='all'||product.category===category)&&`${product.name} ${product.strength} ${(group.aliases||[]).join(' ')}`.toLowerCase().includes(search));
 }
 export function selectVariant(group,selectedId,matching=group.variants){
   return matching.find(product=>product.id===selectedId)||matching.find(product=>product.stockQuantity!==0)||matching[0]||group.variants[0];
