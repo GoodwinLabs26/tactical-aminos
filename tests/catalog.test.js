@@ -5,7 +5,7 @@ import {groupProducts,matchingVariants,selectVariant} from '../catalog-view.js';
 
 test('D2 has one display family while original strength SKUs and prices remain separate',()=>{
   const original=structuredClone(products),groups=groupProducts(products),d2=groups.filter(group=>group.name==='D2');
-  assert.equal(d2.length,1);assert.equal(groups.length,products.length-7);
+  assert.equal(d2.length,1);assert.equal(groups.length,products.length-11);
   assert.deepEqual(d2[0].variants.map(product=>[product.id,product.strength,product.price]),[['d2-30','30mg',150],['d2-60','60mg',240]]);
   assert.match(d2[0].description,/39-amino-acid/);assert.match(d2[0].description,/GIP .*GLP-1/);assert.equal(d2[0].image,'assets/d2-product.png');assert.deepEqual(products,original);
   assert.equal(groups.filter(group=>group.name==='R3').length,1);
@@ -62,12 +62,12 @@ test('GHK-Cu groups two confirmed strengths while prices, stock and existing fam
 });
 
 
-test('MOTS-C has two confirmed strength SKUs and stock states with no invented description',()=>{
+test('MOTS-C retains its prices and stock states with the supplied research description',()=>{
   const records=products.map(product=>({...product,stockQuantity:product.id==='mots-c-10'?0:5}));
   const groups=groupProducts(records),mots=groups.find(group=>group.id==='mots-c');
   assert.equal(groups.filter(group=>group.name==='MOTS-C').length,1);
   assert.deepEqual(mots.variants.map(product=>[product.id,product.strength,product.price]),[['mots-c-10','10mg',48],['mots-c-40','40mg',95]]);
-  assert.equal(mots.image,'assets/mots-c-product.png');assert.equal(mots.description,'');assert.deepEqual(mots.sections,[]);
+  assert.equal(mots.image,'assets/mots-c-product.png');assert.match(mots.description,/16-amino-acid/);assert.match(mots.sections[0].items[0],/Laboratory and animal/);
   assert.equal(selectVariant(mots).id,'mots-c-40');assert.equal(selectVariant(mots,'mots-c-10').stockQuantity,0);
   assert.deepEqual(matchingVariants(mots,{query:'MOTS-C 40mg'}).map(product=>product.id),['mots-c-40']);
   assert.equal(matchingVariants(mots,{category:'compounds'}).length,2);
@@ -75,13 +75,13 @@ test('MOTS-C has two confirmed strength SKUs and stock states with no invented d
 });
 
 
-test('Epithalon retains two confirmed strength prices and independent stock without invented copy',()=>{
+test('Epithalon includes the added 10mg option and retains independent stock',()=>{
   const records=products.map(product=>({...product,stockQuantity:product.id==='epithalon-40'?0:5}));
   const groups=groupProducts(records),epithalon=groups.find(group=>group.id==='epithalon');
   assert.equal(groups.filter(group=>group.name==='Epithalon').length,1);
-  assert.deepEqual(epithalon.variants.map(product=>[product.id,product.strength,product.price]),[['epithalon-40','40mg',70],['epithalon-50','50mg',95]]);
-  assert.equal(epithalon.image,'assets/epithalon-product.png');assert.equal(epithalon.description,'');assert.deepEqual(epithalon.sections,[]);
-  assert.equal(selectVariant(epithalon).id,'epithalon-50');assert.equal(selectVariant(epithalon,'epithalon-40').stockQuantity,0);
-  assert.deepEqual(matchingVariants(epithalon,{query:'Epithalon 50mg'}).map(product=>product.id),['epithalon-50']);assert.equal(matchingVariants(epithalon,{category:'compounds'}).length,2);
+  assert.deepEqual(epithalon.variants.map(product=>[product.id,product.strength,product.price]),[['epithalon-10','10mg',30],['epithalon-40','40mg',70],['epithalon-50','50mg',95]]);
+  assert.equal(epithalon.image,'assets/epithalon-product.png');assert.match(epithalon.description,/four-amino-acid/);assert.equal(epithalon.sections.length,1);
+  assert.equal(selectVariant(epithalon).id,'epithalon-10');assert.equal(selectVariant(epithalon,'epithalon-40').stockQuantity,0);
+  assert.deepEqual(matchingVariants(epithalon,{query:'Epithalon 50mg'}).map(product=>product.id),['epithalon-50']);assert.equal(matchingVariants(epithalon,{category:'compounds'}).length,3);
   assert.equal(groups.find(group=>group.id==='mots-c').variants.length,2);assert.equal(groups.find(group=>group.id==='nad').variants.length,3);
 });

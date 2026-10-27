@@ -15,7 +15,7 @@ test('batch strengths/prices and original SKU identities match the supplied cata
  'cjc-ipa':['5/5mg',55],'cjc-nodac':['10mg',50],'cjc-dac':['5mg',50],'ipamorelin':['10mg',55],
  'tesamorelin':['10mg',70],'melanotan1':['10mg',35],'melanotan2':['10mg',35],
  'pt141':['10mg',40],'klow':['80mg',100],'aod9604':['5mg',54],'glutathione':['1500mg',75],
- 'lipo-c':['10mL',40],'5amino1q':['50mg',110],'dsip':['10mg',null],'selank':['10mg',48],
+ 'lipo-c':['10mL',40],'5amino1q':['50mg',110],'dsip':['10mg',55],'selank':['10mg',48],
  'semax':['10mg',38],'pinealon':['10mg',30],'adamax':['10mg',45],'l-carnitine':['1200mg',30]
  };
  for(const [id,[strength,price]]of Object.entries(expected)){const product=products.find(item=>item.id===id);assert.ok(product,id);assert.equal(product.strength,strength,id);assert.equal(product.price,price,id);}
@@ -23,9 +23,9 @@ test('batch strengths/prices and original SKU identities match the supplied cata
  assert.equal(groupProducts(products).length,37);assert.equal(products.length,48);
  for(const family of productFamilies){assert.ok(family.description,family.id);assert.ok(family.image,family.id);for(const id of family.variantIds)assert.ok(products.some(product=>product.id===id),id);}
 });
-test('missing prices and specifications are never treated as a zero price or an orderable product',()=>{
- const pending=products.filter(item=>item.pendingDetails?.length);assert.equal(pending.length,12);
- assert.equal(productPriceCents(products.find(item=>item.id==='dsip')),null);assert.equal(productPendingLabel(products.find(item=>item.id==='dsip')),'Price pending');
+test('all supplied catalog listings have confirmed prices',()=>{
+ const pending=products.filter(item=>item.pendingDetails?.length);assert.equal(pending.length,0);assert.equal(products.find(item=>item.id==="5amino1q").name,"5-Amino-1Q");
+ assert.equal(productPriceCents(products.find(item=>item.id==='dsip')),5500);assert.equal(productPendingLabel(products.find(item=>item.id==='dsip')),'');
  for(const product of pending){assert.equal(isProductReady(product),false,product.id);assert.ok(productPendingLabel(product));}
  for(const product of products.filter(item=>!item.pendingDetails?.length)){assert.equal(isProductReady(product),true,product.id);assert.ok(productPriceCents(product)>0);}
  assert.equal(productPriceCents({price:0}),null);assert.equal(productPriceCents({price:null}),null);assert.equal(productPriceCents({priceCents:null,price:40}),null);

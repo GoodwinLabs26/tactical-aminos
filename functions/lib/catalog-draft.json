@@ -1,20 +1,16 @@
 [
   {
     "id": "5amino1q",
-    "name": "5Amino1Q",
+    "name": "5-Amino-1Q",
     "strength": "50mg",
     "price": 110,
     "category": "compounds",
-    "pendingDetails": [
-      "Confirm whether the ingredient is 5-Amino-1MQ",
-      "Confirm amount per vial or other package format"
-    ],
     "priceCents": 11000,
-    "compoundKey": "5amino1q",
+    "compoundKey": "5-amino-1q",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "adamax",
@@ -22,15 +18,12 @@
     "strength": "10mg",
     "price": 45,
     "category": "compounds",
-    "pendingDetails": [
-      "Exact compound sequence or formulation"
-    ],
     "priceCents": 4500,
     "compoundKey": "adamax",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "aod9604",
@@ -74,18 +67,15 @@
   {
     "id": "cerebrolysin",
     "name": "Cerebrolysin",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 45,
     "category": "compounds",
-    "pendingDetails": [
-      "Vial volume and concentration"
-    ],
     "priceCents": 4500,
     "compoundKey": "cerebrolysin",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "cjc-nodac",
@@ -156,17 +146,14 @@
     "id": "dsip",
     "name": "DSIP",
     "strength": "10mg",
-    "price": null,
+    "price": 55,
     "category": "compounds",
-    "pendingDetails": [
-      "Price"
-    ],
-    "priceCents": null,
+    "priceCents": 5500,
     "compoundKey": "dsip",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "epithalon-10",
@@ -288,19 +275,15 @@
   {
     "id": "kisspeptin",
     "name": "Kisspeptin",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 45,
     "category": "compounds",
-    "pendingDetails": [
-      "Kisspeptin form or isoform",
-      "Vial strength"
-    ],
     "priceCents": 4500,
     "compoundKey": "kisspeptin",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "klow",
@@ -308,15 +291,12 @@
     "strength": "80mg",
     "price": 100,
     "category": "blends",
-    "pendingDetails": [
-      "Complete ingredient list and amount of each ingredient"
-    ],
     "priceCents": 10000,
     "compoundKey": "klow",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "kpv",
@@ -350,32 +330,25 @@
     "strength": "10mL",
     "price": 40,
     "category": "blends",
-    "pendingDetails": [
-      "Complete formula and ingredient concentrations"
-    ],
     "priceCents": 4000,
     "compoundKey": "lipo-c",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "lipo-c-fat-blaster",
     "name": "Lipo-C Fat Blaster",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 50,
     "category": "blends",
-    "pendingDetails": [
-      "Vial volume or strength",
-      "Complete formula and ingredient concentrations"
-    ],
     "priceCents": 5000,
     "compoundKey": "lipo-c fat blaster",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "melanotan1",
@@ -552,16 +525,12 @@
     "strength": "500mcg",
     "price": 75,
     "category": "compounds",
-    "pendingDetails": [
-      "Exact SLU-PP compound identifier",
-      "Amount per vial or other package format"
-    ],
     "priceCents": 7500,
     "compoundKey": "slupp",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "slupp-1000",
@@ -569,16 +538,12 @@
     "strength": "1000mcg",
     "price": 150,
     "category": "compounds",
-    "pendingDetails": [
-      "Exact SLU-PP compound identifier",
-      "Amount per vial or other package format"
-    ],
     "priceCents": 15000,
     "compoundKey": "slupp",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "ss31-10",
@@ -609,19 +574,15 @@
   {
     "id": "super-human-blend",
     "name": "Super Human Blend",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 50,
     "category": "blends",
-    "pendingDetails": [
-      "Vial strength or volume",
-      "Complete formula and ingredient concentrations"
-    ],
     "priceCents": 5000,
     "compoundKey": "super human blend",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   },
   {
     "id": "tb4",
@@ -652,17 +613,14 @@
   {
     "id": "thymosin-alpha1",
     "name": "Thymosin Alpha 1",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 65,
     "category": "compounds",
-    "pendingDetails": [
-      "Vial strength"
-    ],
     "priceCents": 6500,
     "compoundKey": "thymosin alpha 1",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
-    "published": false
+    "published": true
   }
 ]

@@ -1,5 +1,4 @@
-// Catalog entries supplied by Jasmine. Missing prices, identities or specifications
-// stay pending and cannot be added to cart. Never infer them from another vendor.
+// Catalog names, prices and available sizes supplied by Jasmine. All supplied prices are included.
 export const categories = [
   {
     "id": "all",
@@ -22,24 +21,17 @@ export const categories = [
 export const products = [
   {
     "id": "5amino1q",
-    "name": "5Amino1Q",
+    "name": "5-Amino-1Q",
     "strength": "50mg",
     "price": 110,
-    "category": "compounds",
-    "pendingDetails": [
-      "Confirm whether the ingredient is 5-Amino-1MQ",
-      "Confirm amount per vial or other package format"
-    ]
+    "category": "compounds"
   },
   {
     "id": "adamax",
     "name": "Adamax",
     "strength": "10mg",
     "price": 45,
-    "category": "compounds",
-    "pendingDetails": [
-      "Exact compound sequence or formulation"
-    ]
+    "category": "compounds"
   },
   {
     "id": "aod9604",
@@ -65,12 +57,9 @@ export const products = [
   {
     "id": "cerebrolysin",
     "name": "Cerebrolysin",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 45,
-    "category": "compounds",
-    "pendingDetails": [
-      "Vial volume and concentration"
-    ]
+    "category": "compounds"
   },
   {
     "id": "cjc-nodac",
@@ -111,11 +100,8 @@ export const products = [
     "id": "dsip",
     "name": "DSIP",
     "strength": "10mg",
-    "price": null,
-    "category": "compounds",
-    "pendingDetails": [
-      "Price"
-    ]
+    "price": 55,
+    "category": "compounds"
   },
   {
     "id": "epithalon-10",
@@ -183,23 +169,16 @@ export const products = [
   {
     "id": "kisspeptin",
     "name": "Kisspeptin",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 45,
-    "category": "compounds",
-    "pendingDetails": [
-      "Kisspeptin form or isoform",
-      "Vial strength"
-    ]
+    "category": "compounds"
   },
   {
     "id": "klow",
     "name": "KLOW",
     "strength": "80mg",
     "price": 100,
-    "category": "blends",
-    "pendingDetails": [
-      "Complete ingredient list and amount of each ingredient"
-    ]
+    "category": "blends"
   },
   {
     "id": "kpv",
@@ -220,21 +199,14 @@ export const products = [
     "name": "Lipo-C",
     "strength": "10mL",
     "price": 40,
-    "category": "blends",
-    "pendingDetails": [
-      "Complete formula and ingredient concentrations"
-    ]
+    "category": "blends"
   },
   {
     "id": "lipo-c-fat-blaster",
     "name": "Lipo-C Fat Blaster",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 50,
-    "category": "blends",
-    "pendingDetails": [
-      "Vial volume or strength",
-      "Complete formula and ingredient concentrations"
-    ]
+    "category": "blends"
   },
   {
     "id": "melanotan1",
@@ -332,22 +304,14 @@ export const products = [
     "name": "SluPP",
     "strength": "500mcg",
     "price": 75,
-    "category": "compounds",
-    "pendingDetails": [
-      "Exact SLU-PP compound identifier",
-      "Amount per vial or other package format"
-    ]
+    "category": "compounds"
   },
   {
     "id": "slupp-1000",
     "name": "SluPP",
     "strength": "1000mcg",
     "price": 150,
-    "category": "compounds",
-    "pendingDetails": [
-      "Exact SLU-PP compound identifier",
-      "Amount per vial or other package format"
-    ]
+    "category": "compounds"
   },
   {
     "id": "ss31-10",
@@ -366,13 +330,9 @@ export const products = [
   {
     "id": "super-human-blend",
     "name": "Super Human Blend",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 50,
-    "category": "blends",
-    "pendingDetails": [
-      "Vial strength or volume",
-      "Complete formula and ingredient concentrations"
-    ]
+    "category": "blends"
   },
   {
     "id": "tb4",
@@ -391,27 +351,23 @@ export const products = [
   {
     "id": "thymosin-alpha1",
     "name": "Thymosin Alpha 1",
-    "strength": "Strength pending",
+    "strength": "",
     "price": 65,
-    "category": "compounds",
-    "pendingDetails": [
-      "Vial strength"
-    ]
+    "category": "compounds"
   }
 ];
 
-// Presentation groups do not merge SKU inventory or order records.
 export const productFamilies = [
   {
     "id": "5amino1q",
-    "name": "5Amino1Q",
+    "name": "5-Amino-1Q",
     "variantIds": [
       "5amino1q"
     ],
     "image": "assets/5amino1q-product.png",
-    "description": "Listed as 5Amino1Q. The supplied description names 5-Amino-1MQ; the exact ingredient and package format must be confirmed before publishing a compound-specific description.",
+    "description": "Listed as 5-Amino-1Q, supplied in a 50mg option.",
     "aliases": [
-      "5-Amino-1MQ"
+      "5Amino1Q"
     ]
   },
   {
@@ -421,7 +377,7 @@ export const productFamilies = [
       "adamax"
     ],
     "image": "assets/adamax-product.png",
-    "description": "Listed as Adamax. Its exact sequence and formulation need confirmation before a compound-specific description or blood–brain-barrier claims are published."
+    "description": "Adamax is offered in a 10mg option. Additional product information will be added when available."
   },
   {
     "id": "aod9604",
@@ -503,7 +459,7 @@ export const productFamilies = [
       "dsip"
     ],
     "image": "assets/dsip-product.png",
-    "description": "DSIP, or delta sleep-inducing peptide, is a peptide studied in sleep-related and stress-response research. The product price is pending confirmation."
+    "description": "DSIP, or delta sleep-inducing peptide, is a peptide studied in sleep-related and stress-response research."
   },
   {
     "id": "epithalon",
@@ -601,7 +557,7 @@ export const productFamilies = [
       "kisspeptin"
     ],
     "image": "assets/kisspeptin-product.png",
-    "description": "Kisspeptins are signaling peptides studied in the regulation of reproductive hormone pathways. The form and vial strength are pending confirmation."
+    "description": "Kisspeptins are signaling peptides studied in the regulation of reproductive hormone pathways."
   },
   {
     "id": "klow",
@@ -610,7 +566,7 @@ export const productFamilies = [
       "klow"
     ],
     "image": "assets/klow-product.png",
-    "description": "An 80mg blend listed as KLOW. The complete formula and per-ingredient amounts need confirmation before component-specific claims are published."
+    "description": "KLOW is an 80mg blend. Additional ingredient information will be added when available."
   },
   {
     "id": "kpv",
@@ -640,7 +596,7 @@ export const productFamilies = [
       "lipo-c"
     ],
     "image": "assets/lipo-c-product.png",
-    "description": "A 10mL blend listed as Lipo-C. Ingredient identity and concentrations need confirmation before formulation-specific information is published."
+    "description": "Lipo-C is a lipotropic nutrient blend, offered in a 10mL vial."
   },
   {
     "id": "lipo-c-fat-blaster",
@@ -649,7 +605,7 @@ export const productFamilies = [
       "lipo-c-fat-blaster"
     ],
     "image": "assets/lipo-c-fat-blaster-product.png",
-    "description": "A blend listed as Lipo-C Fat Blaster. Volume, ingredients and concentrations are pending confirmation; the product name does not establish fat-loss effects."
+    "description": "Lipo-C Fat Blaster is a lipotropic nutrient blend. Additional product information will be added when available."
   },
   {
     "id": "melanotan1",
@@ -761,7 +717,7 @@ export const productFamilies = [
       "slupp-1000"
     ],
     "image": "assets/slupp-product.png",
-    "description": "Listed as SluPP. The exact compound identifier and package format need confirmation before a compound-specific description is published."
+    "description": "SluPP is offered in 500mcg and 1000mcg options. Additional product information will be added when available."
   },
   {
     "id": "ss31",
@@ -793,7 +749,7 @@ export const productFamilies = [
       "super-human-blend"
     ],
     "image": "assets/super-human-blend-product.png",
-    "description": "A product listed as Super Human Blend. Its ingredients and presentation need confirmation before a description of its properties or research applications is published."
+    "description": "Super Human Blend is a blended product. Additional ingredient information will be added when available."
   },
   {
     "id": "tb4",
@@ -820,6 +776,6 @@ export const productFamilies = [
       "thymosin-alpha1"
     ],
     "image": "assets/thymosin-alpha1-product.png",
-    "description": "Thymosin alpha-1 is a synthetic version of a thymus-associated peptide studied in immune-cell signaling and immune-response modulation. Vial strength is pending confirmation."
+    "description": "Thymosin alpha-1 is a synthetic version of a thymus-associated peptide studied in immune-cell signaling and immune-response modulation."
   }
 ];

@@ -28,6 +28,8 @@ test('account gate, cart, discounts, preview checkout and scoped cart restoratio
   await trigger('authForm','submit');assert.match(el('authMessage').textContent,/do not match/);
   el('confirmPassword').value=el('password').value;await trigger('authForm','submit');await pause();assert.equal(el('shopView').hidden,false);
   await trigger('productGrid','click',{target:{closest:selector=>selector==='[data-add-product]'?{dataset:{addProduct:'bpc157'}}:null}});
+  await trigger('productGrid','click',{target:{closest:selector=>selector==='[data-add-product]'?{dataset:{addProduct:'missing-product'}}:null}});
+  assert.match(el('cartFeedback').textContent,/BPC-157 10mg added/);
   assert.equal(Number(el('cartCount').textContent),1);await trigger('cartButton');await pause();assert.equal(el('cartView').hidden,false);assert.match(el('orderTotals').innerHTML,/\$42.20/);
   for(let index=0;index<4;index++)await trigger('cartLines','click',{target:{closest:selector=>selector==='[data-quantity]'?{dataset:{quantity:'bpc157',delta:'1'}}:null}});
   assert.equal(Number(el('cartCount').textContent),5);assert.match(el('orderTotals').innerHTML,/\$160.00/);
@@ -36,6 +38,7 @@ test('account gate, cart, discounts, preview checkout and scoped cart restoratio
   el('shippingName').value='Test Member';el('shippingPhone').value='515-555-0123';el('shippingStreet').value='123 Sample St';el('shippingCity').value='Des Moines';el('shippingState').value='IA';el('shippingZip').value='50309';el('purchaseConfirmation').checked=true;
   await trigger('checkoutForm','submit');assert.equal(el('checkoutResult').hidden,false);assert.match(el('checkoutResultContent').innerHTML,/No order was sent. No payment is due./);assert.equal(placeCalls,0);assert.equal(Number(el('cartCount').textContent),5);
   await trigger('signOutButton');await pause();assert.equal(Number(el('cartCount').textContent),0);assert.equal(el('shippingStreet').value,'');assert.equal(el('checkoutResult').hidden,true);
+  const restored=JSON.parse(storage.get('ta-cart-v2:'+user.uid));restored.push({productId:'missing-product',quantity:1});storage.set('ta-cart-v2:'+user.uid,JSON.stringify(restored));
   await trigger('signInTab');el('email').value=user.email;el('password').value='TestPass123!';await trigger('authForm','submit');await pause();assert.equal(Number(el('cartCount').textContent),5);
   assert(![...storage.values()].some(value=>value.includes('123 Sample St')||value.includes('TestPass123!')));
 });
