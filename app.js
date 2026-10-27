@@ -250,7 +250,7 @@ $('productGrid').addEventListener('click',event=>{
   const variant=event.target.closest('[data-variant-id]');
   if(variant){selectedVariants.set(variant.dataset.familyId,variant.dataset.variantId);renderProducts();[...document.querySelectorAll('#productGrid [data-variant-id]')].find(button=>button.dataset.variantId===variant.dataset.variantId)?.focus();return;}
   const add=event.target.closest('[data-add-product]');
-  if(add){checkoutController?.addItem(add.dataset.addProduct);return;}
+  if(add){checkoutController?.addItem(add.dataset.addProduct,1,add);return;}
   const button=event.target.closest('[data-product-id]');
   if(!button||!currentUser||!profile?.ageConfirmed)return;
   renderProductDialog(button.dataset.productId);$('productDialog').showModal();
@@ -261,7 +261,7 @@ $('productDialogContent').addEventListener('click',event=>{
   if(variant){const quantity=$('detailQuantity').value;renderProductDialog(variant.dataset.variantId,quantity);[...document.querySelectorAll('#productDialogContent [data-variant-id]')].find(button=>button.dataset.variantId===variant.dataset.variantId)?.focus();renderProducts();return;}
   const button=event.target.closest('[data-add-product]');
   if(!button)return;
-  checkoutController?.addItem(button.dataset.addProduct,Number($('detailQuantity').value));$('productDialog').close();renderProducts();
+  if(checkoutController?.addItem(button.dataset.addProduct,Number($('detailQuantity').value),button)){$('productDialog').close();renderProducts();}
 });
 $('productDialog').addEventListener('click', event => { if (event.target === $('productDialog')) $('productDialog').close(); });
 $('year').textContent = new Date().getFullYear();

@@ -38,7 +38,13 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
       $('orderTotals').innerHTML = `<div><span>Product subtotal</span><strong>${dollars(quote.subtotalCents)}</strong></div>${quote.discounts.map(discount => `<div class="savings"><span>${escape(discount.label)}</span><strong>−${dollars(discount.amountCents)}</strong></div>`).join('')}${quote.discountCapCents > 0 ? `<div><span>Discount cap adjustment</span><strong>${dollars(quote.discountCapCents)}</strong></div>` : ''}<div><span>USPS shipping</span><strong>${dollars(quote.shippingCents)}</strong></div><div class="grand-total"><span>Total</span><strong>${dollars(quote.totalCents)}</strong></div>`;
     } catch (error) { quote = null; feedback(error.message); $('orderTotals').textContent='Total unavailable. Review your cart quantities.'; $('placeOrderButton').disabled = true; }
   }
-  function addItem(productId, quantity = 1) {
+  let cartFeedbackTimer;
+  function showCartFeedback(message) {
+    const notice=$('cartFeedback');
+    clearTimeout(cartFeedbackTimer);notice.textContent=message;
+    cartFeedbackTimer=setTimeout(()=>{notice.textContent='';},4500);
+  }
+  function addItem(productId, quantity = 1, button = null) {
     if (sending) return;
     if (!user || memberProfile?.ageConfirmed !== true) { location.hash='shop'; return; }
     const product = products.find(item => item.id === productId);
@@ -48,7 +54,12 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
     const target = (cart.get(productId) || 0) + quantity;
     if (target > maximum) { $('cartFeedback').textContent = maximum === 0 ? 'This product is out of stock.' : `Only ${maximum} vials can be added for this product.`; return; }
     cart.set(productId,target); saveCart();invalidate();
-    $('cartFeedback').textContent = `${product.name} ${product.strength} added to your cart.`;
+    showCartFeedback(`✓ ${quantity > 1 ? quantity + ' × ' : ''}${product.name} ${product.strength} added to your cart.`);
+    if(button){
+      clearTimeout(button.cartResetTimer);button.textContent='Added ✓';button.classList.add('cart-added');
+      button.cartResetTimer=setTimeout(()=>{button.textContent='Add to cart';button.classList.remove('cart-added');},1800);
+    }
+    return true;
   }
   $('cartButton').addEventListener('click', () => { location.hash='cart'; render(); });
   $('cartLines').addEventListener('click', event => {
@@ -164,7 +175,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
     user=nextUser;memberProfile=nextProfile;
     if(changed){
       historyGeneration++;cart=new Map();promo=null;serverQuote=null;promotion='first';firstOrderEligible=true;
-      $('checkoutForm').reset();$('checkoutResult').hidden=true;$('cartFeedback').textContent='';feedback('');
+      clearTimeout(cartFeedbackTimer);$('checkoutForm').reset();$('checkoutResult').hidden=true;$('cartFeedback').textContent='';feedback('');
       if(user){try{const saved=JSON.parse(sessionStorage.getItem(savedKey()) || '[]');for(const line of saved){if((!siteSettings.previewCheckout || products.some(product=>product.id===line.productId&&isProductReady(product)))&&typeof line.productId==='string'&&Number.isInteger(line.quantity)&&line.quantity>0&&line.quantity<=100)cart.set(line.productId,line.quantity);}}catch{}}
     }
     if(user && !$('shippingName').value)$('shippingName').value=nextProfile?.name || user.displayName || '';
