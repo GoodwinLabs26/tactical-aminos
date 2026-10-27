@@ -2,3 +2,8 @@
 .calc-reading .units,.calc-reading .volume,.calc-facts strong{min-width:0;overflow-wrap:anywhere}.calc-facts span{flex-shrink:0}
 
 .calc-dose-yield{border:1px solid #cbdcff;background:#edf3ff;border-radius:9px;padding:22px;margin-top:24px}.calc-dose-yield h3{font-size:16px;letter-spacing:0}.calc-dose-total{font-size:17px;margin:14px 0;color:var(--ink);overflow-wrap:anywhere}.calc-dose-total strong{color:var(--blue);font-size:38px;line-height:1.2;letter-spacing:-1px}.calc-dose-yield>p:not(.calc-dose-total){font-size:13px;line-height:1.7;margin:10px 0 0}.calc-dose-yield .calc-dose-basis{color:var(--muted);font-size:12px!important}
+
+/* Supporting calculator text uses the same readable scale as the shop. */
+.calculator-step .input-hint,.calc-scale-note,.calculator-note,.calculator-basics p{font-size:14px;line-height:1.7}
+.calc-reading p,.calc-facts div,.calc-formula,.calc-dose-yield>p:not(.calc-dose-total){font-size:16px;line-height:1.7}
+.calc-dose-yield .calc-dose-basis{font-size:14px!important}

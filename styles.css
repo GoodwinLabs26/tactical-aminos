@@ -19,3 +19,26 @@
 #cartFeedback.cart-feedback:empty{display:none;}
 button.cart-added{background:#176c45;color:#fff;border-color:#176c45;}
 @media(max-width:600px){#cartFeedback.cart-feedback{bottom:18px;padding:14px 18px;}}
+
+/* Readable customer-facing copy on desktop and mobile. */
+:root{--muted:#566174}
+.product-description,.product-card.has-product-photo .product-description{font-size:16px;line-height:1.7}
+.product-copy h2{font-size:18px;line-height:1.45;min-height:0;overflow-wrap:anywhere}
+.product-copy .eyebrow{font-size:11px}
+.product-card-bottom strong{font-size:17px}
+.product-card-bottom{flex-wrap:wrap}
+.button-small{font-size:14px;min-height:44px;padding:10px 12px}
+.variant-button,.product-card.has-product-photo .variant-button{font-size:14px;min-height:44px}
+.variant-button small,.selected-strength,.product-price-range span{font-size:14px}
+.product-price-range{font-size:18px}
+.stock-tag,.strength-tag{font-size:12px}
+.small,.small-label,.check-label,.form-message,.catalog-note,.auth-intro,.auth-back,.auth-story p:last-child,.disclaimer,.dialog-disclaimer{font-size:14px;line-height:1.7}
+label,.auth-tabs button,.password-field button{font-size:14px}
+input:not([type=checkbox]){font-size:16px}
+.button,.inline-link{font-size:14px}
+.hero-description,.lead,.intro>p:not(.eyebrow),.placeholder-copy p,.narrow>p:not(.eyebrow),.contact-details p,dialog p,.product-detail-section ul{font-size:16px;line-height:1.75}
+.feature-strip strong{font-size:15px}.feature-strip p{font-size:14px;line-height:1.7}
+.footer-bottom,.footer-top>a:last-child{font-size:13px}
+.chip{font-size:14px;min-height:40px}
+.product-detail-section li{overflow-wrap:anywhere}
+@media(max-width:700px){.catalog-toolbar{flex-wrap:wrap}.catalog-note strong{white-space:normal}.footer-bottom{flex-wrap:wrap}.product-copy{padding:18px 16px}}
