@@ -4,11 +4,11 @@ import {products} from '../catalog.js';
 import {groupProducts,matchingVariants,selectVariant} from '../catalog-view.js';
 
 test('D2 has one display family while original strength SKUs and prices remain separate',()=>{
-  const original=structuredClone(products),groups=groupProducts(products),d2=groups.filter(group=>group.name==='D2');
+  const original=structuredClone(products),groups=groupProducts(products),d2=groups.filter(group=>group.name==='TA-2TZ');
   assert.equal(d2.length,1);assert.equal(groups.length,products.length-11);
   assert.deepEqual(d2[0].variants.map(product=>[product.id,product.strength,product.price]),[['d2-30','30mg',150],['d2-60','60mg',240]]);
-  assert.match(d2[0].description,/39-amino-acid/);assert.match(d2[0].description,/GIP .*GLP-1/);assert.equal(d2[0].image,'assets/d2-product.png');assert.deepEqual(products,original);
-  assert.equal(groups.filter(group=>group.name==='R3').length,1);
+  assert.match(d2[0].description,/39-amino-acid/);assert.match(d2[0].description,/GLP-1 and GIP/);assert.equal(d2[0].image,'assets/d2-product.png');assert.deepEqual(products,original);
+  assert.equal(groups.filter(group=>group.name==='TA-3RT').length,1);
 });
 test('D2 selection and stock availability use each variant independently, including zero-stock choices',()=>{
   const records=products.map(product=>({...product,stockQuantity:product.id==='d2-30'?0:8}));
@@ -29,7 +29,7 @@ test('R3 shares one card while strength prices, zero stock, search and D2 remain
   const records=products.map(product=>({...product,stockQuantity:product.id==='r3-20'?0:6}));
   const groups=groupProducts(records),r3=groups.find(group=>group.id==='r3');
   assert.deepEqual(r3.variants.map(product=>[product.id,product.strength,product.price]),[['r3-20','20mg',145],['r3-30','30mg',200]]);
-  assert.equal(r3.image,'assets/r3-product.png');assert.equal(r3.description,'An investigational, once-weekly injectable peptide (a chain of amino acids).');
+  assert.equal(r3.image,'assets/r3-product.png');assert.match(r3.description,/GLP-1, GIP, and glucagon/);
   assert.equal(selectVariant(r3).id,'r3-30');assert.equal(selectVariant(r3,'r3-20').stockQuantity,0);
   assert.deepEqual(matchingVariants(r3,{query:'R3 30mg'}).map(product=>product.id),['r3-30']);
   assert.equal(matchingVariants(r3,{category:'regulators'}).length,2);assert.equal(matchingVariants(r3,{category:'compounds'}).length,0);

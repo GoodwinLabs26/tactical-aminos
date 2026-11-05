@@ -54,7 +54,7 @@ export const initializeDraftCatalog = onCall(options, async request => {
     batch.create(db.doc(`products/${id}`), record);
     created++;
   }
-  if(!settings)batch.create(db.doc('config/store'),{checkoutEnabled:false,venmoHandle:'@Mark-Williams-1389',paypalHandle:''});
+  if(!settings)batch.create(db.doc('config/store'),{checkoutEnabled:false,venmoHandle:'@Mark-Williams-1389',paypalHandle:'tacticalaminos@gmail.com',paypalMerchantId:'UFYAF6QJ57VLN'});
   if(created || !settings)await batch.commit();
   return { created, message:'Draft catalog prepared with zero stock. Ordering remains off until actual inventory and store settings are ready.' };
 });

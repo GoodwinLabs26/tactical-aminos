@@ -37,3 +37,12 @@ test('seed records preserve all strengths, zero inventory, confirmed cents and p
  const pending=seed.filter(item=>item.published===false);
  for(const record of pending){assert.throws(()=>calculateQuote({lines:[{productId:record.id,quantity:1}],promotion:'none'},[{...record,stockQuantity:100}],{}),/unavailable/);}
 });
+
+test('Mark updates preserve original SKU IDs/prices, add full descriptions and retain legacy-name search',()=>{
+ for(const [id,name,legacy] of [['d2','TA-2TZ','D2'],['r3','TA-3RT','R3']]){
+  const group=groupProducts(products).find(g=>g.id===id);assert.equal(group.name,name);assert.equal(group.descriptionParagraphs.length,2);assert.ok(group.variants.every(p=>p.name===name));assert.ok(group.aliases.includes(legacy));
+ }
+ for(const id of ['d2','r3','bpc-tb','cjc-ipa','tesamorelin','melanotan1','melanotan2','pt141','klow','glutathione']){const f=productFamilies.find(f=>f.id===id);assert.equal(f.descriptionParagraphs.length,2,id);assert.ok(f.researchTagline);assert.ok(f.researchDisclaimer);}
+ assert.equal(products.find(p=>p.id==='tb4').name,'TB-4');
+ const klow=productFamilies.find(f=>f.id==='klow');assert.match(klow.description,/GHK-Cu \(50 mg\)/);assert.match(klow.description,/KPV \(10 mg\)/);
+});
