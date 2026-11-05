@@ -85,3 +85,14 @@ test('Epithalon includes the added 10mg option and retains independent stock',()
   assert.deepEqual(matchingVariants(epithalon,{query:'Epithalon 50mg'}).map(product=>product.id),['epithalon-50']);assert.equal(matchingVariants(epithalon,{category:'compounds'}).length,3);
   assert.equal(groups.find(group=>group.id==='mots-c').variants.length,2);assert.equal(groups.find(group=>group.id==='nad').variants.length,3);
 });
+
+test('renamed product families map each strength to its own bottle artwork',()=>{
+  const groups=groupProducts(products);
+  for(const [family,prefix,sizes] of [['d2','ta-2tz',[30,60]],['r3','ta-3rt',[20,30]]]){
+    const group=groups.find(item=>item.id===family);
+    for(const size of sizes){
+      const selected=selectVariant(group,`${family}-${size}`);
+      assert.equal(group.variantImages[selected.id],`assets/${prefix}-${size}-product.png`);
+    }
+  }
+});

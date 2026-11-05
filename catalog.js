@@ -464,6 +464,10 @@ export const productFamilies = [
       "d2-60"
     ],
     "image": "assets/d2-product.png",
+    "variantImages": {
+      "d2-30": "assets/ta-2tz-30-product.png",
+      "d2-60": "assets/ta-2tz-60-product.png"
+    },
     "description": "TA-2TZ is an advanced 39-amino-acid synthetic peptide designed for dual activation of the GLP-1 and GIP receptors, two critical pathways involved in metabolic regulation and energy balance. Its molecular structure incorporates modified amino acid residues and a C20 fatty diacid side chain that promotes albumin binding, enhances molecular stability, and extends biological activity.",
     "subtitle": "Dual-Receptor Metabolic Research Peptide",
     "descriptionParagraphs": [
@@ -748,6 +752,10 @@ export const productFamilies = [
       "r3-30"
     ],
     "image": "assets/r3-product.png",
+    "variantImages": {
+      "r3-20": "assets/ta-3rt-20-product.png",
+      "r3-30": "assets/ta-3rt-30-product.png"
+    },
     "description": "TA-3RT is an advanced 39-amino-acid synthetic peptide engineered for simultaneous activation of three key metabolic receptors: GLP-1, GIP, and glucagon (GCGR). Its specialized molecular architecture incorporates modified amino acid residues and a C20 fatty diacid side chain designed to enhance structural stability and extend biological activity.",
     "subtitle": "Triple-Receptor Metabolic Research Peptide",
     "descriptionParagraphs": [
