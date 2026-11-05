@@ -28,6 +28,11 @@ test('account gate, cart, discounts, preview checkout and scoped cart restoratio
   await trigger('signUpTab');el('fullName').value='Test Member';el('email').value=user.email;el('password').value='TestPass123!';el('confirmPassword').value='Different!';el('ageConfirmed').checked=true;
   await trigger('authForm','submit');assert.match(el('authMessage').textContent,/do not match/);
   el('confirmPassword').value=el('password').value;await trigger('authForm','submit');await pause();assert.equal(el('shopView').hidden,false);
+  el('productSort').value='price-low';await trigger('productSort','change');
+  assert.ok(el('productGrid').innerHTML.indexOf('data-product-family="igf1-lr3"')<el('productGrid').innerHTML.indexOf('data-product-family="d2"'));
+  el('productSort').value='price-high';await trigger('productSort','change');
+  assert.ok(el('productGrid').innerHTML.indexOf('data-product-family="d2"')<el('productGrid').innerHTML.indexOf('data-product-family="igf1-lr3"'));
+  el('productSort').value='name';await trigger('productSort','change');
   await trigger('productGrid','click',{target:{closest:selector=>selector==='[data-add-product]'?{...element('add-bpc157'),dataset:{addProduct:'bpc157'}}:null}});
   await trigger('productGrid','click',{target:{closest:selector=>selector==='[data-add-product]'?{dataset:{addProduct:'missing-product'}}:null}});
   assert.match(el('cartFeedback').textContent,/BPC-157 10mg added/);
