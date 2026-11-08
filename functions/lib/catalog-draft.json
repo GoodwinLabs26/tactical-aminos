@@ -1,12 +1,12 @@
 [
   {
     "id": "5amino1q",
-    "name": "5-Amino-1Q",
+    "name": "5-Amino-1MQ",
     "strength": "50mg",
     "price": 110,
     "category": "compounds",
     "priceCents": 11000,
-    "compoundKey": "5-amino-1q",
+    "compoundKey": "5-amino-1mq",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
@@ -275,7 +275,7 @@
   {
     "id": "kisspeptin",
     "name": "Kisspeptin",
-    "strength": "",
+    "strength": "10mg",
     "price": 45,
     "category": "compounds",
     "priceCents": 4500,
@@ -574,7 +574,7 @@
   {
     "id": "super-human-blend",
     "name": "Super Human Blend",
-    "strength": "",
+    "strength": "10mL",
     "price": 50,
     "category": "blends",
     "priceCents": 5000,

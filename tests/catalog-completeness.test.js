@@ -24,7 +24,7 @@ test('batch strengths/prices and original SKU identities match the supplied cata
  for(const family of productFamilies){assert.ok(family.description,family.id);assert.ok(family.image,family.id);for(const id of family.variantIds)assert.ok(products.some(product=>product.id===id),id);}
 });
 test('all supplied catalog listings have confirmed prices',()=>{
- const pending=products.filter(item=>item.pendingDetails?.length);assert.equal(pending.length,0);assert.equal(products.find(item=>item.id==="5amino1q").name,"5-Amino-1Q");
+ const pending=products.filter(item=>item.pendingDetails?.length);assert.equal(pending.length,0);assert.equal(products.find(item=>item.id==="5amino1q").name,"5-Amino-1MQ");
  assert.equal(productPriceCents(products.find(item=>item.id==='dsip')),5500);assert.equal(productPendingLabel(products.find(item=>item.id==='dsip')),'');
  for(const product of pending){assert.equal(isProductReady(product),false,product.id);assert.ok(productPendingLabel(product));}
  for(const product of products.filter(item=>!item.pendingDetails?.length)){assert.equal(isProductReady(product),true,product.id);assert.ok(productPriceCents(product)>0);}

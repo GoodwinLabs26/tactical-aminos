@@ -21,7 +21,7 @@ export const categories = [
 export const products = [
   {
     "id": "5amino1q",
-    "name": "5-Amino-1Q",
+    "name": "5-Amino-1MQ",
     "strength": "50mg",
     "price": 110,
     "category": "compounds"
@@ -169,7 +169,7 @@ export const products = [
   {
     "id": "kisspeptin",
     "name": "Kisspeptin",
-    "strength": "",
+    "strength": "10mg",
     "price": 45,
     "category": "compounds"
   },
@@ -330,7 +330,7 @@ export const products = [
   {
     "id": "super-human-blend",
     "name": "Super Human Blend",
-    "strength": "",
+    "strength": "10mL",
     "price": 50,
     "category": "blends"
   },
@@ -360,15 +360,23 @@ export const products = [
 export const productFamilies = [
   {
     "id": "5amino1q",
-    "name": "5-Amino-1Q",
+    "name": "5-Amino-1MQ",
     "variantIds": [
       "5amino1q"
     ],
     "image": "assets/5amino1q-product.png",
-    "description": "Listed as 5-Amino-1Q, supplied in a 50mg option.",
+    "description": "5-Amino-1MQ (5-Amino-1-methylquinolinium) is an advanced synthetic small-molecule compound engineered to investigate metabolic regulation, cellular energy balance, and adipose tissue biology. Its specialized molecular structure selectively inhibits nicotinamide N-methyltransferase (NNMT), an enzyme involved in nicotinamide metabolism, NAD+ availability, and cellular methylation pathways.",
     "aliases": [
-      "5Amino1Q"
-    ]
+      "5Amino1Q",
+      "5-Amino-1Q"
+    ],
+    "subtitle": "Advanced Metabolic Optimization & Cellular Energy Research Compound",
+    "descriptionParagraphs": [
+      "5-Amino-1MQ (5-Amino-1-methylquinolinium) is an advanced synthetic small-molecule compound engineered to investigate metabolic regulation, cellular energy balance, and adipose tissue biology. Its specialized molecular structure selectively inhibits nicotinamide N-methyltransferase (NNMT), an enzyme involved in nicotinamide metabolism, NAD+ availability, and cellular methylation pathways.",
+      "Through its targeted inhibition of NNMT, 5-Amino-1MQ is investigated for its potential influence on lipid metabolism, adipocyte function, cellular NAD+ regulation, and metabolic efficiency. Preclinical studies have demonstrated changes in adipose tissue accumulation, fat-cell size, and metabolic signaling, making this compound a compelling research platform for exploring metabolic flexibility, energy homeostasis, and age-related metabolic dysfunction."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "adamax",
@@ -592,7 +600,14 @@ export const productFamilies = [
       "kisspeptin"
     ],
     "image": "assets/kisspeptin-product.png",
-    "description": "Kisspeptins are signaling peptides studied in the regulation of reproductive hormone pathways."
+    "description": "Kisspeptin is an advanced synthetic peptide modeled after naturally occurring neuropeptides encoded by the KISS1 gene, designed to investigate hormonal signaling, reproductive function, and neuroendocrine regulation. Its specialized molecular structure targets the kisspeptin receptor (KISS1R/GPR54), a critical signaling pathway responsible for activating gonadotropin-releasing hormone (GnRH) neurons within the hypothalamus.",
+    "subtitle": "Advanced Hormonal Regulation & Reproductive Research Peptide",
+    "descriptionParagraphs": [
+      "Kisspeptin is an advanced synthetic peptide modeled after naturally occurring neuropeptides encoded by the KISS1 gene, designed to investigate hormonal signaling, reproductive function, and neuroendocrine regulation. Its specialized molecular structure targets the kisspeptin receptor (KISS1R/GPR54), a critical signaling pathway responsible for activating gonadotropin-releasing hormone (GnRH) neurons within the hypothalamus.",
+      "Through its influence on the hypothalamic-pituitary-gonadal (HPG) axis, Kisspeptin is investigated for its role in luteinizing hormone (LH) and follicle-stimulating hormone (FSH) secretion, testosterone and estrogen regulation, reproductive signaling, and hormonal homeostasis. Its distinctive receptor-targeting properties provide researchers with a sophisticated platform for exploring endocrine function, reproductive physiology, fertility-related mechanisms, and the complex biological processes associated with hormonal regulation."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "klow",
@@ -638,7 +653,29 @@ export const productFamilies = [
       "lipo-c"
     ],
     "image": "assets/lipo-c-product.png",
-    "description": "Lipo-C is a lipotropic nutrient blend, offered in a 10mL vial."
+    "description": "Lipo-C is an advanced eight-component research formulation combining amino acids, lipotropic nutrients, and essential B vitamins to investigate lipid metabolism, mitochondrial energy production, and cellular metabolic function. This specialized blend incorporates L-Carnitine, L-Arginine, Methionine, Inositol, Choline, Vitamin B6, Vitamin B5, and Vitamin B12, each contributing distinct biochemical functions associated with nutrient metabolism and cellular energy regulation.",
+    "subtitle": "Advanced Lipotropic & Metabolic Energy Research Blend",
+    "descriptionParagraphs": [
+      "Lipo-C is an advanced eight-component research formulation combining amino acids, lipotropic nutrients, and essential B vitamins to investigate lipid metabolism, mitochondrial energy production, and cellular metabolic function. This specialized blend incorporates L-Carnitine, L-Arginine, Methionine, Inositol, Choline, Vitamin B6, Vitamin B5, and Vitamin B12, each contributing distinct biochemical functions associated with nutrient metabolism and cellular energy regulation.",
+      "Through its combination of fatty acid transport mechanisms, methylation pathways, nitric oxide signaling, and vitamin-dependent metabolic processes, Lipo-C provides researchers with a comprehensive platform for exploring lipid utilization, mitochondrial bioenergetics, liver lipid metabolism, and metabolic homeostasis. Its multi-component formulation supports the investigation of interconnected pathways involved in cellular energy production and metabolic efficiency."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "sections": [
+      {
+        "title": "Research Formulation",
+        "items": [
+          "L-Carnitine — 20 mg: Mitochondrial fatty acid transport and energy metabolism.",
+          "L-Arginine — 20 mg: Nitric oxide synthesis and vascular signaling.",
+          "Methionine — 25 mg: Methylation pathways and lipid metabolism.",
+          "Inositol — 50 mg: Cellular signaling and insulin-related metabolic pathways.",
+          "Choline — 50 mg: Phospholipid synthesis and hepatic lipid transport.",
+          "Vitamin B6 (Pyridoxine) — 25 mg: Amino acid metabolism and enzymatic activity.",
+          "Vitamin B5 (Dexpanthenol) — 25 mg: Coenzyme A production and cellular energy metabolism.",
+          "Vitamin B12 (Methylcobalamin) — 1 mg: Methylation reactions and cellular metabolic function."
+        ]
+      }
+    ]
   },
   {
     "id": "lipo-c-fat-blaster",
@@ -775,7 +812,14 @@ export const productFamilies = [
       "selank"
     ],
     "image": "assets/selank-product.png",
-    "description": "Selank is a synthetic peptide investigated in research on anxiety-related signaling, stress responses and neuroregulation. The description does not establish treatment or cognitive-enhancement effects."
+    "description": "Selank is an advanced synthetic heptapeptide composed of seven amino acid residues, engineered to investigate neurological signaling, stress regulation, and cognitive function. Derived from tuftsin, a naturally occurring immunomodulatory peptide, its specialized molecular structure incorporates a Pro-Gly-Pro sequence designed to improve enzymatic stability and extend biological activity.",
+    "subtitle": "Advanced Cognitive & Neuroendocrine Research Peptide",
+    "descriptionParagraphs": [
+      "Selank is an advanced synthetic heptapeptide composed of seven amino acid residues, engineered to investigate neurological signaling, stress regulation, and cognitive function. Derived from tuftsin, a naturally occurring immunomodulatory peptide, its specialized molecular structure incorporates a Pro-Gly-Pro sequence designed to improve enzymatic stability and extend biological activity.",
+      "Through its proposed influence on GABAergic neurotransmission, neuropeptide signaling, and immune-related pathways, Selank is investigated for its potential role in stress-response regulation, anxiety-related signaling, cognitive processing, and neuroendocrine balance. Its distinctive molecular properties provide researchers with a sophisticated platform for exploring neuronal resilience, neurotransmitter activity, emotional regulation, and the complex biological mechanisms associated with neurological homeostasis."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "semax",
@@ -784,7 +828,14 @@ export const productFamilies = [
       "semax"
     ],
     "image": "assets/semax-product.png",
-    "description": "Semax is a synthetic peptide based on an ACTH fragment and studied in neurobiology and cellular stress-response research. This listing does not establish stroke-treatment or cognitive benefits."
+    "description": "Semax is an advanced synthetic heptapeptide composed of seven amino acid residues, engineered to investigate neurological signaling, cognitive function, and neuroprotective mechanisms. Derived from a modified fragment of adrenocorticotropic hormone (ACTH), its specialized molecular structure incorporates a Pro-Gly-Pro sequence designed to enhance enzymatic stability and support biological activity within the central nervous system.",
+    "subtitle": "Advanced Cognitive & Neuroprotective Research Peptide",
+    "descriptionParagraphs": [
+      "Semax is an advanced synthetic heptapeptide composed of seven amino acid residues, engineered to investigate neurological signaling, cognitive function, and neuroprotective mechanisms. Derived from a modified fragment of adrenocorticotropic hormone (ACTH), its specialized molecular structure incorporates a Pro-Gly-Pro sequence designed to enhance enzymatic stability and support biological activity within the central nervous system.",
+      "Through its influence on brain-derived neurotrophic factor (BDNF), nerve growth factor (NGF), and TrkB-associated signaling pathways, Semax is investigated for its potential role in synaptic plasticity, neuronal resilience, learning and memory processes, and cellular responses to neurological stress. Its distinctive neurotrophic properties provide researchers with a sophisticated platform for exploring cognitive signaling, neuronal adaptation, neuroprotection, and the molecular mechanisms associated with brain health and neurological function."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "slupp",
@@ -804,20 +855,21 @@ export const productFamilies = [
       "ss31-50"
     ],
     "image": "assets/ss31-product.png",
-    "description": "SS-31, also known as elamipretide or Bendavia, is a synthetic tetrapeptide studied for interactions with cardiolipin in the inner mitochondrial membrane.",
-    "sections": [
-      {
-        "title": "Research focus",
-        "items": [
-          "Research examines cardiolipin-associated membrane organization, electron transport and ATP synthesis.",
-          "Oxidative-stress studies investigate mitochondrial reactive-oxygen-species pathways. Research findings do not establish equivalent outcomes for this preparation."
-        ]
-      }
-    ],
+    "description": "SS-31 is an advanced synthetic tetrapeptide composed of four amino acid residues, engineered to investigate mitochondrial function, cellular energy production, and the biological mechanisms associated with mitochondrial protection. Its specialized aromatic-cationic molecular structure enables targeted interaction with cardiolipin, an essential phospholipid located within the inner mitochondrial membrane that plays a critical role in maintaining mitochondrial integrity and energy production.",
     "aliases": [
       "Elamipretide",
       "Bendavia"
-    ]
+    ],
+    "variantImages": {
+      "ss31-50": "assets/ss31-50-product.png"
+    },
+    "subtitle": "Advanced Mitochondrial Protection & Cellular Energy Research Peptide",
+    "descriptionParagraphs": [
+      "SS-31 is an advanced synthetic tetrapeptide composed of four amino acid residues, engineered to investigate mitochondrial function, cellular energy production, and the biological mechanisms associated with mitochondrial protection. Its specialized aromatic-cationic molecular structure enables targeted interaction with cardiolipin, an essential phospholipid located within the inner mitochondrial membrane that plays a critical role in maintaining mitochondrial integrity and energy production.",
+      "Through its interaction with cardiolipin and mitochondrial electron transport pathways, SS-31 is investigated for its influence on ATP synthesis, oxidative stress regulation, mitochondrial membrane stability, and cellular bioenergetics. Its distinctive mitochondrial-targeting properties provide researchers with a sophisticated platform for exploring skeletal and cardiac muscle metabolism, age-related mitochondrial dysfunction, cellular resilience, and longevity-associated biological pathways."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "super-human-blend",
@@ -826,7 +878,31 @@ export const productFamilies = [
       "super-human-blend"
     ],
     "image": "assets/super-human-blend-product.png",
-    "description": "Super Human Blend is a blended product. Additional ingredient information will be added when available."
+    "description": "SUPER Human Blend is an advanced nine-component amino acid research formulation engineered to investigate cellular energy production, nitric oxide signaling, muscle metabolism, and physiological recovery pathways. This specialized 865 mg blend combines L-Arginine, L-Ornithine, L-Citrulline, L-Lysine, L-Glutamine, L-Proline, L-Taurine, L-Carnitine, and N-Acetyl Cysteine (NAC), integrating complementary biochemical compounds into a comprehensive metabolic research platform.",
+    "subtitle": "Advanced Performance, Recovery & Metabolic Research Formula",
+    "descriptionParagraphs": [
+      "SUPER Human Blend is an advanced nine-component amino acid research formulation engineered to investigate cellular energy production, nitric oxide signaling, muscle metabolism, and physiological recovery pathways. This specialized 865 mg blend combines L-Arginine, L-Ornithine, L-Citrulline, L-Lysine, L-Glutamine, L-Proline, L-Taurine, L-Carnitine, and N-Acetyl Cysteine (NAC), integrating complementary biochemical compounds into a comprehensive metabolic research platform.",
+      "Through its combined involvement in nitric oxide synthesis, mitochondrial fatty acid transport, protein metabolism, antioxidant defense, and cellular repair mechanisms, SUPER Human Blend provides researchers with a multi-pathway platform for exploring exercise-related metabolic responses, skeletal muscle physiology, vascular signaling, and cellular resilience. Its diverse amino acid profile makes it a compelling formulation for investigating the interconnected biological processes associated with energy utilization, tissue maintenance, and metabolic homeostasis."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "sections": [
+      {
+        "title": "Research Formulation",
+        "items": [
+          "L-Arginine — 110 mg: Nitric oxide production, vascular signaling, and protein metabolism.",
+          "L-Ornithine — 110 mg: Urea cycle activity, ammonia metabolism, and nitrogen balance.",
+          "L-Citrulline — 120 mg: Arginine recycling, nitric oxide synthesis, and vascular physiology.",
+          "L-Lysine — 70 mg: Protein synthesis, collagen formation, and connective tissue maintenance.",
+          "L-Glutamine — 40 mg: Cellular nitrogen transport, intestinal cell metabolism, and immune cell energy pathways.",
+          "L-Proline — 60 mg: Collagen biosynthesis, extracellular matrix formation, and connective tissue biology.",
+          "L-Taurine — 60 mg: Cellular osmoregulation, calcium signaling, and antioxidant-associated pathways.",
+          "L-Carnitine — 220 mg: Mitochondrial fatty acid transport, lipid metabolism, and cellular energy production.",
+          "NAC (N-Acetyl Cysteine) — 75 mg: Glutathione precursor availability, cellular redox balance, and oxidative stress regulation.",
+          "Total Active Compounds: 865 mg"
+        ]
+      }
+    ]
   },
   {
     "id": "tb4",
