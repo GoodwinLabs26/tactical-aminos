@@ -9,7 +9,7 @@ import {calculateQuote} from '../shared/checkout-core.js';
 test('batch strengths/prices and original SKU identities match the supplied catalog',()=>{
  const expected={
  'epithalon-10':['10mg',30],'epithalon-40':['40mg',70],'epithalon-50':['50mg',95],
- 'ss31-10':['10mg',49],'ss31-50':['50mg',125],'igf1-lr3-01':['0.1mg',20],'igf1-lr3-1':['1mg',60],
+ 'ss31-50':['50mg',125],'igf1-lr3-01':['0.1mg',20],'igf1-lr3-1':['1mg',60],
  'slupp-500':['500mcg',75],'slupp-1000':['1000mcg',150],
  'bpc-tb':['5/5mg',55],'bpc157':['10mg',38],'tb4':['10mg',50],'kpv':['10mg',45],
  'cjc-ipa':['5/5mg',55],'cjc-nodac':['10mg',50],'cjc-dac':['5mg',50],'ipamorelin':['10mg',55],
@@ -20,7 +20,7 @@ test('batch strengths/prices and original SKU identities match the supplied cata
  };
  for(const [id,[strength,price]]of Object.entries(expected)){const product=products.find(item=>item.id===id);assert.ok(product,id);assert.equal(product.strength,strength,id);assert.equal(product.price,price,id);}
  assert.equal(new Set(products.map(item=>item.id)).size,products.length);
- assert.equal(groupProducts(products).length,37);assert.equal(products.length,48);
+ assert.equal(groupProducts(products).length,37);assert.equal(products.length,47);
  for(const family of productFamilies){assert.ok(family.description,family.id);assert.ok(family.image,family.id);for(const id of family.variantIds)assert.ok(products.some(product=>product.id===id),id);}
 });
 test('all supplied catalog listings have confirmed prices',()=>{

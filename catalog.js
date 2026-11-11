@@ -314,13 +314,6 @@ export const products = [
     "category": "compounds"
   },
   {
-    "id": "ss31-10",
-    "name": "SS-31",
-    "strength": "10mg",
-    "price": 49,
-    "category": "compounds"
-  },
-  {
     "id": "ss31-50",
     "name": "SS-31",
     "strength": "50mg",
@@ -385,7 +378,14 @@ export const productFamilies = [
       "adamax"
     ],
     "image": "assets/adamax-product.png",
-    "description": "Adamax is offered in a 10mg option. Additional product information will be added when available."
+    "description": "Adamax is an emerging synthetic neuropeptide research compound commonly described as a modified analog of Semax, developed for investigation into neurological signaling, cognitive function, and cellular neuroprotection. Its proposed molecular modifications have attracted research interest for their potential influence on peptide stability, molecular interactions, and neurobiological activity.",
+    "subtitle": "Advanced Cognitive & Neuroprotective Research Peptide",
+    "descriptionParagraphs": [
+      "Adamax is an emerging synthetic neuropeptide research compound commonly described as a modified analog of Semax, developed for investigation into neurological signaling, cognitive function, and cellular neuroprotection. Its proposed molecular modifications have attracted research interest for their potential influence on peptide stability, molecular interactions, and neurobiological activity.",
+      "As a Semax-related research compound, Adamax is of interest for exploring neurotrophic signaling pathways, including BDNF-associated mechanisms, synaptic plasticity, neuronal resilience, and cellular responses to neurological stress. Its investigational profile provides researchers with a platform for examining cognitive signaling, neurological adaptation, and the molecular mechanisms associated with brain function and neuroprotection."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "aod9604",
@@ -394,7 +394,14 @@ export const productFamilies = [
       "aod9604"
     ],
     "image": "assets/aod9604-product.png",
-    "description": "AOD9604 is a synthetic peptide fragment derived from human growth hormone. It is studied in preclinical lipid-metabolism research; this does not establish fat-loss benefits or an absence of adverse effects."
+    "description": "AOD9604 is a synthetic peptide fragment derived from human growth hormone. It is studied in preclinical lipid-metabolism research; this does not establish fat-loss benefits or an absence of adverse effects.",
+    "subtitle": "Advanced Fat Metabolism & Lipolytic Research Peptide",
+    "descriptionParagraphs": [
+      "AOD-9604 is an advanced synthetic 16-amino-acid peptide derived from a modified C-terminal fragment of human growth hormone (hGH), engineered to investigate lipid metabolism, adipose tissue regulation, and metabolic signaling. Its specialized molecular structure incorporates an additional tyrosine residue and a stabilizing disulfide bridge, providing a targeted platform for exploring fat metabolism independently of the broader growth-promoting functions of full-length growth hormone.",
+      "Through its proposed influence on lipolysis (fat breakdown), lipogenesis (fat storage), and fatty acid oxidation, AOD-9604 has attracted research interest for its potential interactions with adipocyte metabolism and cellular energy regulation. Its distinctive molecular properties provide researchers with a specialized platform for investigating adipose tissue biology, metabolic homeostasis, lipid utilization, and energy balance."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "bpc157",
@@ -403,7 +410,14 @@ export const productFamilies = [
       "bpc157"
     ],
     "image": "assets/bpc157-product.png",
-    "description": "BPC-157 is a synthetic peptide investigated in preclinical studies of tissue-repair, gastrointestinal and vascular signaling pathways. These findings do not establish healing benefits from this preparation in people."
+    "description": "BPC-157 is a synthetic peptide investigated in preclinical studies of tissue-repair, gastrointestinal and vascular signaling pathways. These findings do not establish healing benefits from this preparation in people.",
+    "subtitle": "Advanced Tissue Repair Research Peptide",
+    "descriptionParagraphs": [
+      "BPC-157 is a synthetic 15-amino-acid peptide extensively investigated in preclinical models for its potential role in tissue protection, cellular repair, and regenerative signaling. Its molecular structure has attracted research interest for its interactions with angiogenic pathways, fibroblast activity, collagen formation, and inflammatory responses.",
+      "Through its influence on multiple biological signaling pathways, BPC-157 is studied for its potential involvement in tendon and ligament remodeling, skeletal muscle repair, gastrointestinal tissue integrity, and vascular responses to injury. Its broad research applications make it a compelling compound for exploring tissue regeneration, cellular resilience, and recovery mechanisms."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "bpc-tb",
@@ -437,7 +451,14 @@ export const productFamilies = [
       "cjc-nodac"
     ],
     "image": "assets/cjc-nodac-product.png",
-    "description": "A short-acting synthetic growth hormone-releasing hormone analog commonly listed as modified GRF(1–29). It is studied for GHRH-receptor signaling."
+    "description": "A short-acting synthetic growth hormone-releasing hormone analog commonly listed as modified GRF(1–29). It is studied for GHRH-receptor signaling.",
+    "subtitle": "Advanced Growth Hormone Signaling Research Peptide",
+    "descriptionParagraphs": [
+      "CJC-1295 No DAC is a synthetic 29-amino-acid peptide engineered to investigate the body’s natural growth hormone-releasing pathways. As a modified growth hormone-releasing hormone (GHRH) analog, its molecular structure incorporates four strategic amino acid substitutions designed to improve enzymatic resistance and molecular stability while maintaining targeted activity at pituitary GHRH receptors.",
+      "Unlike extended-duration analogs, CJC-1295 No DAC lacks the Drug Affinity Complex (DAC), allowing researchers to investigate shorter-duration receptor activation and pulsatile growth hormone signaling. Its specialized mechanism makes it a compelling compound for studying endogenous growth hormone secretion, IGF-1 regulation, endocrine signaling, protein metabolism, and physiological growth pathways."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "cjc-ipa",
@@ -462,7 +483,14 @@ export const productFamilies = [
       "cjc-dac"
     ],
     "image": "assets/cjc-dac-product.png",
-    "description": "A synthetic GHRH analog with a Drug Affinity Complex modification designed to extend its duration of action. It is studied in growth-hormone and IGF-1 secretion research."
+    "description": "A synthetic GHRH analog with a Drug Affinity Complex modification designed to extend its duration of action. It is studied in growth-hormone and IGF-1 secretion research.",
+    "subtitle": "Extended-Release Growth Hormone Research Peptide",
+    "descriptionParagraphs": [
+      "CJC-1295 With DAC is an advanced 30-amino-acid synthetic peptide engineered for sustained activation of growth hormone-releasing hormone (GHRH) receptors. Its specialized molecular structure incorporates four strategic amino acid substitutions and a Drug Affinity Complex (DAC), designed to enhance enzymatic resistance, promote albumin binding, and significantly extend biological activity.",
+      "Through its prolonged receptor signaling mechanism, CJC-1295 With DAC is investigated for its influence on endogenous growth hormone secretion, IGF-1 regulation, endocrine signaling, protein metabolism, and cellular growth pathways. Its extended-duration molecular architecture provides researchers with a sophisticated platform for studying sustained hormonal activity, metabolic regulation, and growth hormone dynamics."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "d2",
@@ -495,7 +523,14 @@ export const productFamilies = [
       "dsip"
     ],
     "image": "assets/dsip-product.png",
-    "description": "DSIP, or delta sleep-inducing peptide, is a peptide studied in sleep-related and stress-response research."
+    "description": "DSIP, or delta sleep-inducing peptide, is a peptide studied in sleep-related and stress-response research.",
+    "subtitle": "Advanced Sleep Regulation & Neuroendocrine Research Peptide",
+    "descriptionParagraphs": [
+      "DSIP (Delta Sleep-Inducing Peptide) is a synthetic nonapeptide composed of nine amino acid residues, investigated for its potential involvement in sleep regulation, neurological signaling, and neuroendocrine activity. Originally identified through research examining delta-wave brain activity, its distinctive molecular structure has attracted scientific interest for its interactions with physiological pathways associated with sleep architecture, circadian rhythms, and stress responses.",
+      "Through its proposed influence on central nervous system activity and neuroendocrine regulation, DSIP is studied for its potential relationship with slow-wave sleep, sleep-wake cycle modulation, stress-related signaling, and physiological recovery mechanisms. Its unique research profile provides scientists with a platform for exploring sleep physiology, neurological homeostasis, and the complex biological processes associated with restorative sleep and cellular resilience."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "epithalon",
@@ -518,7 +553,17 @@ export const productFamilies = [
     ],
     "aliases": [
       "Epitalon"
-    ]
+    ],
+    "subtitle": "Advanced Longevity & Cellular Aging Research Peptide",
+    "descriptionParagraphs": [
+      "Epithalon (Epitalon) is an advanced synthetic tetrapeptide composed of four amino acids—Alanine, Glutamate, Aspartate, and Glycine (AEDG)—engineered to investigate cellular aging, telomere regulation, and longevity-associated biological pathways. Originally developed through research involving pineal gland peptides, its distinctive molecular structure has attracted scientific interest for its potential influence on telomerase activity, cellular maintenance, and age-related physiological processes.",
+      "Through its proposed interactions with telomere-maintenance mechanisms, gene expression, and neuroendocrine signaling, Epithalon is investigated for its potential role in cellular senescence, circadian rhythm regulation, melatonin signaling, and oxidative stress responses. Its unique research profile provides scientists with a sophisticated platform for exploring biological aging, cellular resilience, genomic stability, and the molecular mechanisms associated with longevity."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "variantImages": {
+      "epithalon-50": "assets/epithalon-50-product.png"
+    }
   },
   {
     "id": "ghk-cu",
@@ -544,7 +589,18 @@ export const productFamilies = [
           "Findings from cell cultures, animal models, or specific topical products do not establish equivalent results for this research preparation."
         ]
       }
-    ]
+    ],
+    "subtitle": "Advanced Cellular Regeneration & Collagen Research Peptide",
+    "descriptionParagraphs": [
+      "GHK-Cu is an advanced copper-binding tripeptide composed of three amino acids—Glycine, Histidine, and Lysine—complexed with copper (Cu²⁺). Naturally associated with biological processes involved in tissue maintenance and cellular renewal, its distinctive molecular structure enables interactions with copper-dependent pathways associated with extracellular matrix remodeling, collagen synthesis, and regenerative signaling.",
+      "Through its influence on fibroblast activity, collagen and elastin-related pathways, and inflammatory signaling, GHK-Cu is extensively investigated for its potential role in skin regeneration, tissue remodeling, hair follicle biology, and oxidative stress regulation. Its copper-mediated biological activity provides researchers with a sophisticated platform for exploring cellular resilience, connective tissue integrity, skin aging mechanisms, and regenerative biology."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "variantImages": {
+      "ghk-cu-50": "assets/ghk-cu-50-product.png",
+      "ghk-cu-100": "assets/ghk-cu-100-product.png"
+    }
   },
   {
     "id": "glutathione",
@@ -582,7 +638,17 @@ export const productFamilies = [
     "aliases": [
       "IGF-ILR3",
       "Long Arg3 IGF-1"
-    ]
+    ],
+    "subtitle": "Advanced Cellular Growth & Regenerative Research Peptide",
+    "descriptionParagraphs": [
+      "IGF-1 LR3 is an advanced synthetic 83-amino-acid peptide engineered to investigate cellular growth, protein synthesis, and anabolic signaling pathways. As a modified analog of insulin-like growth factor-1 (IGF-1), its specialized molecular structure incorporates a 13-amino-acid N-terminal extension and an arginine substitution at position three, designed to reduce binding to IGF-binding proteins (IGFBPs) and increase biological availability in experimental systems.",
+      "Through its targeted interaction with the IGF-1 receptor (IGF-1R), IGF-1 LR3 is investigated for its influence on PI3K/Akt/mTOR and MAPK signaling pathways, cellular proliferation, protein metabolism, and skeletal muscle biology. Its distinctive receptor-binding properties provide researchers with a sophisticated platform for exploring muscle cell differentiation, tissue remodeling, cellular regeneration, and the molecular mechanisms associated with growth regulation and anabolic activity."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "variantImages": {
+      "igf1-lr3-1": "assets/igf1-lr3-1-product.png"
+    }
   },
   {
     "id": "ipamorelin",
@@ -591,7 +657,14 @@ export const productFamilies = [
       "ipamorelin"
     ],
     "image": "assets/ipamorelin-product.png",
-    "description": "Ipamorelin is a synthetic pentapeptide classified as a growth-hormone secretagogue. Research examines its activity at the ghrelin receptor and its effects on growth-hormone release."
+    "description": "Ipamorelin is a synthetic pentapeptide classified as a growth-hormone secretagogue. Research examines its activity at the ghrelin receptor and its effects on growth-hormone release.",
+    "subtitle": "Advanced Growth Hormone Secretagogue Research Peptide",
+    "descriptionParagraphs": [
+      "Ipamorelin is an advanced synthetic pentapeptide composed of five amino acid residues, engineered to selectively stimulate endogenous growth hormone (GH) secretion. As a growth hormone secretagogue, its molecular structure targets the ghrelin receptor (GHS-R1a), activating a distinct endocrine signaling pathway involved in pituitary growth hormone release.",
+      "Unlike earlier growth hormone-releasing peptides, Ipamorelin exhibits a more selective receptor-mediated response, with research demonstrating GH stimulation and comparatively limited effects on cortisol, ACTH, and prolactin. Its targeted mechanism makes it a compelling compound for investigating pulsatile growth hormone secretion, IGF-1 signaling, protein metabolism, endocrine regulation, and cellular growth pathways."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "kisspeptin",
@@ -684,7 +757,28 @@ export const productFamilies = [
       "lipo-c-fat-blaster"
     ],
     "image": "assets/lipo-c-fat-blaster-product.png",
-    "description": "Lipo-C Fat Blaster is a lipotropic nutrient blend. Additional product information will be added when available."
+    "description": "Lipo-C Fat Blaster is an advanced seven-component research formulation combining high-concentration L-Carnitine, lipotropic nutrients, essential B vitamins, and NADH to investigate fatty acid metabolism, mitochondrial energy production, and cellular metabolic regulation. This specialized blend features 300 mg of L-Carnitine alongside Methionine, Inositol, Choline, Vitamin B6, Vitamin B12, and NADH, creating a multi-pathway platform for metabolic research.",
+    "subtitle": "Advanced Lipotropic & Mitochondrial Energy Research Blend",
+    "descriptionParagraphs": [
+      "Lipo-C Fat Blaster is an advanced seven-component research formulation combining high-concentration L-Carnitine, lipotropic nutrients, essential B vitamins, and NADH to investigate fatty acid metabolism, mitochondrial energy production, and cellular metabolic regulation. This specialized blend features 300 mg of L-Carnitine alongside Methionine, Inositol, Choline, Vitamin B6, Vitamin B12, and NADH, creating a multi-pathway platform for metabolic research.",
+      "Through its complementary biochemical mechanisms, Lipo-C Fat Blaster is designed for investigating mitochondrial fatty acid transport, hepatic lipid metabolism, methylation pathways, and cellular energy production. Its inclusion of NADH, a critical coenzyme involved in mitochondrial electron transport and ATP synthesis, expands research applications into cellular bioenergetics, redox balance, and metabolic homeostasis."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "sections": [
+      {
+        "title": "Research Formulation",
+        "items": [
+          "L-Carnitine — 300 mg: Mitochondrial fatty acid transport and lipid utilization.",
+          "Methionine — 25 mg: Methylation pathways and hepatic lipid metabolism.",
+          "Inositol — 50 mg: Cellular signaling and insulin-related metabolic pathways.",
+          "Choline — 50 mg: Phospholipid synthesis and liver lipid transport.",
+          "Vitamin B12 — 1 mg: Cellular metabolism and red blood cell formation.",
+          "Vitamin B6 — 50 mg: Amino acid metabolism and enzymatic energy pathways.",
+          "NADH — 50 mg: Mitochondrial electron transport, redox reactions, and ATP production."
+        ]
+      }
+    ]
   },
   {
     "id": "melanotan1",
@@ -734,7 +828,16 @@ export const productFamilies = [
           "Laboratory and animal studies examine glucose handling, metabolic stress responses and AMPK-associated pathways. These findings do not establish fat-loss or energy benefits from this preparation in people."
         ]
       }
-    ]
+    ],
+    "descriptionParagraphs": [
+      "MOTS-C is an advanced 16-amino-acid mitochondrial-derived peptide encoded within the 12S ribosomal RNA region of mitochondrial DNA. This naturally occurring signaling molecule plays a role in cellular energy regulation, metabolic homeostasis, and the biological response to metabolic stress. Its distinctive molecular structure has attracted significant research interest for its influence on AMP-activated protein kinase (AMPK), a critical regulator of cellular energy balance.",
+      "Through its interactions with AMPK signaling, glucose metabolism, and mitochondrial-to-nuclear communication pathways, MOTS-C is investigated for its potential influence on insulin sensitivity, lipid utilization, skeletal muscle metabolism, and age-related metabolic changes. Its unique mitochondrial origin provides researchers with a sophisticated platform for exploring cellular bioenergetics, metabolic flexibility, exercise-related adaptations, and longevity-associated signaling mechanisms."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "variantImages": {
+      "mots-c-40": "assets/mots-c-40-product.png"
+    }
   },
   {
     "id": "nad",
@@ -754,7 +857,18 @@ export const productFamilies = [
           "Enzyme activity: NAD+ serves as a substrate for enzymes including sirtuins and PARPs, which participate in cellular regulation, stress responses, and DNA repair pathways."
         ]
       }
-    ]
+    ],
+    "subtitle": "Advanced Cellular Energy & Longevity Research Compound",
+    "descriptionParagraphs": [
+      "NAD+ (Nicotinamide Adenine Dinucleotide) is an essential cellular coenzyme involved in energy metabolism, mitochondrial function, and biological processes associated with cellular maintenance and longevity. Naturally present in virtually every living cell, NAD+ plays a critical role in electron transfer, ATP production, and the regulation of enzymes involved in cellular repair and metabolic homeostasis.",
+      "Through its involvement in sirtuin activation, PARP-mediated DNA repair, and NAD+/NADH redox cycling, NAD+ is extensively investigated for its influence on mitochondrial efficiency, oxidative stress responses, cellular aging, and metabolic regulation. Its fundamental role in cellular bioenergetics makes NAD+ a valuable research compound for exploring longevity-associated pathways, metabolic resilience, and cellular health."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "variantImages": {
+      "nad-500": "assets/nad-500-product.png",
+      "nad-1000": "assets/nad-1000-product.png"
+    }
   },
   {
     "id": "pinealon",
@@ -763,7 +877,14 @@ export const productFamilies = [
       "pinealon"
     ],
     "image": "assets/pinealon-product.png",
-    "description": "Pinealon is a synthetic tripeptide described in bioregulator research. Studies examine cellular stress and neuronal models; these do not establish improvements in cognition, mood, sleep or longevity from this preparation."
+    "description": "Pinealon is a synthetic tripeptide described in bioregulator research. Studies examine cellular stress and neuronal models; these do not establish improvements in cognition, mood, sleep or longevity from this preparation.",
+    "subtitle": "Advanced Neuroprotection & Cognitive Research Peptide",
+    "descriptionParagraphs": [
+      "Pinealon (EDR) is an advanced synthetic tripeptide composed of three amino acids—Glutamate, Aspartate, and Arginine—developed to investigate neurological protection, cellular aging, and neuroregenerative signaling. Originally studied as part of peptide bioregulator research, its compact molecular structure has attracted scientific interest for its potential influence on oxidative stress regulation, neuronal survival, and cellular gene expression.",
+      "Through its proposed interactions with intracellular signaling pathways, including ERK1/2 activity and mechanisms associated with reactive oxygen species (ROS), Pinealon is investigated for its potential role in neuronal resilience, cognitive function, cellular stress responses, and age-related neurological changes. Its distinctive molecular properties provide researchers with a specialized platform for exploring neuroprotection, cellular homeostasis, brain aging, and the biological mechanisms associated with neurological longevity."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "pt141",
@@ -851,18 +972,14 @@ export const productFamilies = [
     "id": "ss31",
     "name": "SS-31",
     "variantIds": [
-      "ss31-10",
       "ss31-50"
     ],
-    "image": "assets/ss31-product.png",
+    "image": "assets/ss31-50-product.png",
     "description": "SS-31 is an advanced synthetic tetrapeptide composed of four amino acid residues, engineered to investigate mitochondrial function, cellular energy production, and the biological mechanisms associated with mitochondrial protection. Its specialized aromatic-cationic molecular structure enables targeted interaction with cardiolipin, an essential phospholipid located within the inner mitochondrial membrane that plays a critical role in maintaining mitochondrial integrity and energy production.",
     "aliases": [
       "Elamipretide",
       "Bendavia"
     ],
-    "variantImages": {
-      "ss31-50": "assets/ss31-50-product.png"
-    },
     "subtitle": "Advanced Mitochondrial Protection & Cellular Energy Research Peptide",
     "descriptionParagraphs": [
       "SS-31 is an advanced synthetic tetrapeptide composed of four amino acid residues, engineered to investigate mitochondrial function, cellular energy production, and the biological mechanisms associated with mitochondrial protection. Its specialized aromatic-cationic molecular structure enables targeted interaction with cardiolipin, an essential phospholipid located within the inner mitochondrial membrane that plays a critical role in maintaining mitochondrial integrity and energy production.",
@@ -936,6 +1053,13 @@ export const productFamilies = [
       "thymosin-alpha1"
     ],
     "image": "assets/thymosin-alpha1-product.png",
-    "description": "Thymosin alpha-1 is a synthetic version of a thymus-associated peptide studied in immune-cell signaling and immune-response modulation."
+    "description": "Thymosin alpha-1 is a synthetic version of a thymus-associated peptide studied in immune-cell signaling and immune-response modulation.",
+    "subtitle": "Advanced Immune Modulation & Cellular Defense Research Peptide",
+    "descriptionParagraphs": [
+      "Thymosin Alpha-1 (TA1) is an advanced synthetic 28-amino-acid peptide modeled after a naturally occurring thymic protein fragment involved in immune system regulation and cellular defense. Its specialized molecular structure has attracted extensive research interest for its influence on T-cell maturation, dendritic cell activity, and the coordination of innate and adaptive immune responses.",
+      "Through its interactions with Toll-like receptor (TLR) signaling, cytokine regulation, and immune cell activation pathways, Thymosin Alpha-1 is investigated for its potential role in immune surveillance, inflammatory balance, antiviral defense mechanisms, and age-related immune function. Its distinctive immunomodulatory properties provide researchers with a sophisticated platform for exploring immune resilience, cellular defense signaling, immune homeostasis, and the complex biological processes associated with healthy immune system function."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   }
 ];

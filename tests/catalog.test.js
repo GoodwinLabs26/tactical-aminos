@@ -5,7 +5,7 @@ import {groupProducts,matchingVariants,selectVariant} from '../catalog-view.js';
 
 test('D2 has one display family while original strength SKUs and prices remain separate',()=>{
   const original=structuredClone(products),groups=groupProducts(products),d2=groups.filter(group=>group.name==='TA-2TZ');
-  assert.equal(d2.length,1);assert.equal(groups.length,products.length-11);
+  assert.equal(d2.length,1);assert.equal(groups.length,products.length-10);
   assert.deepEqual(d2[0].variants.map(product=>[product.id,product.strength,product.price]),[['d2-30','30mg',150],['d2-60','60mg',240]]);
   assert.match(d2[0].description,/39-amino-acid/);assert.match(d2[0].description,/GLP-1 and GIP/);assert.equal(d2[0].image,'assets/d2-product.png');assert.deepEqual(products,original);
   assert.equal(groups.filter(group=>group.name==='TA-3RT').length,1);

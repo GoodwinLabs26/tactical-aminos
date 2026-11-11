@@ -546,19 +546,6 @@
     "published": true
   },
   {
-    "id": "ss31-10",
-    "name": "SS-31",
-    "strength": "10mg",
-    "price": 49,
-    "category": "compounds",
-    "priceCents": 4900,
-    "compoundKey": "ss-31",
-    "bulkEligible": true,
-    "stockQuantity": 0,
-    "lowStockThreshold": 10,
-    "published": true
-  },
-  {
     "id": "ss31-50",
     "name": "SS-31",
     "strength": "50mg",
