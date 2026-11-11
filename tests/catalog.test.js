@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {products} from '../catalog.js';
-import {groupProducts,matchingVariants,selectVariant} from '../catalog-view.js';
+import {groupProducts,matchingVariants,selectVariant,selectCardArtworkVariant} from '../catalog-view.js';
 
 test('D2 has one display family while original strength SKUs and prices remain separate',()=>{
   const original=structuredClone(products),groups=groupProducts(products),d2=groups.filter(group=>group.name==='TA-2TZ');
@@ -93,6 +93,18 @@ test('renamed product families map each strength to its own bottle artwork',()=>
     for(const size of sizes){
       const selected=selectVariant(group,`${family}-${size}`);
       assert.equal(group.variantImages[selected.id],`assets/${prefix}-${size}-product.png`);
+    }
+  }
+});
+
+test('every option in the four updated families uses its matching vial photo',()=>{
+  const groups=groupProducts(products);
+  for(const family of ['igf1-lr3','nad','mots-c','epithalon']){
+    const group=groups.find(item=>item.id===family);
+    for(const variant of group.variants){
+      const selected=selectVariant(group,variant.id);
+      assert.equal(group.variantImages[selected.id],`assets/${variant.id}-product.png`);
+      assert.equal(selectCardArtworkVariant(group,selected).id,variant.id);
     }
   }
 });

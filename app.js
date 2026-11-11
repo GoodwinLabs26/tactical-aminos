@@ -3,7 +3,7 @@ import { categories, products as previewProducts } from './catalog.js';
 import { initCheckout } from './checkout-ui.js';
 import { siteSettings } from './site-settings.js';
 import { initCalculator } from './calculator.js';
-import {groupProducts,matchingVariants,selectVariant} from './catalog-view.js';
+import {groupProducts,matchingVariants,selectVariant,selectCardArtworkVariant} from './catalog-view.js';
 const selectedVariants=new Map();
 
 let products = siteSettings.previewCheckout ? previewProducts : [];
@@ -232,7 +232,7 @@ function renderProducts() {
   $('productGrid').innerHTML=filtered.map(({group,matching})=>{
     const product=selectVariant(group,selectedVariants.get(group.id),selectedVariants.has(group.id)?group.variants:matching);selectedVariants.set(group.id,product.id);
     const prices=group.variants.map(variant=>productPriceCents(variant)).filter(value=>value!==null).map(value=>value/100),minimum=Math.min(...prices),maximum=Math.max(...prices);
-    return `<article class="product-card ${group.image?'has-product-photo':''}" data-product-family="${escape(group.id)}"><button type="button" class="product-art product-art-link ${group.image?'has-photo':''}" data-product-id="${escape(product.id)}" aria-label="View ${escape(group.name)}">${productArt(group,product)}</button><div class="product-copy"><p class="eyebrow">${escape(categories.find(item=>item.id===product.category)?.name||'Research compounds')}</p><h2><button class="product-name-link" data-product-id="${escape(product.id)}">${escape(group.name)}</button></h2><p class="shop-card-price">${prices.length?money(minimum)+(minimum!==maximum?' – '+money(maximum):''):'Price pending'}</p><p class="shop-card-options">${group.variants.length>1?`${group.variants.length} strength options`:escape(product.strength)||'Single option'}</p><button class="button product-select" data-product-id="${escape(product.id)}">Select options</button></div></article>`;
+    return `<article class="product-card ${group.image?'has-product-photo':''}" data-product-family="${escape(group.id)}"><button type="button" class="product-art product-art-link ${group.image?'has-photo':''}" data-product-id="${escape(product.id)}" aria-label="View ${escape(group.name)}">${productArt(group,selectCardArtworkVariant(group,product,matching))}</button><div class="product-copy"><p class="eyebrow">${escape(categories.find(item=>item.id===product.category)?.name||'Research compounds')}</p><h2><button class="product-name-link" data-product-id="${escape(product.id)}">${escape(group.name)}</button></h2><p class="shop-card-price">${prices.length?money(minimum)+(minimum!==maximum?' – '+money(maximum):''):'Price pending'}</p><p class="shop-card-options">${group.variants.length>1?`${group.variants.length} strength options`:escape(product.strength)||'Single option'}</p><button class="button product-select" data-product-id="${escape(product.id)}">Select options</button></div></article>`;
   }).join('');
   $('categoryButtons').innerHTML=categories.map(item=>`<button class="chip ${category===item.id?'selected':''}" data-category="${item.id}" aria-pressed="${category===item.id}">${escape(item.name)}</button>`).join('');
 }

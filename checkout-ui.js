@@ -185,7 +185,8 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
       getService().then(async api=>{
         const [catalog,stats]=await Promise.all([api.getLiveCatalog(),api.getCustomerStats(user.uid)]);
         if(generation!==historyGeneration)return;
-        products=catalog.products.map(product=>({...product,price:product.priceCents/100}));
+        // Older Firebase catalogs can still return the retired standalone SKU.
+        products=catalog.products.filter(product=>product.id!=='tb4').map(product=>({...product,price:product.priceCents/100}));
         for(const id of cart.keys())if(!products.some(product=>product.id===id&&isProductReady(product)))cart.delete(id);
         firstOrderEligible=stats.firstOrderClaimed!==true && !(stats.submittedOrderCount>0) && !(stats.paidOrderCount>0);
         if(!firstOrderEligible && promotion==='first')promotion='none';

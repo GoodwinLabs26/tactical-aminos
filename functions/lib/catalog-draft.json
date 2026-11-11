@@ -572,19 +572,6 @@
     "published": true
   },
   {
-    "id": "tb4",
-    "name": "TB-4",
-    "strength": "10mg",
-    "price": 50,
-    "category": "compounds",
-    "priceCents": 5000,
-    "compoundKey": "tb-4",
-    "bulkEligible": true,
-    "stockQuantity": 0,
-    "lowStockThreshold": 10,
-    "published": true
-  },
-  {
     "id": "tesamorelin",
     "name": "Tesamorelin",
     "strength": "10mg",

@@ -19,3 +19,10 @@ export function matchingVariants(group,{category='all',query=''}={}){
 export function selectVariant(group,selectedId,matching=group.variants){
   return matching.find(product=>product.id===selectedId)||matching.find(product=>product.stockQuantity!==0)||matching[0]||group.variants[0];
 }
+
+// Cards advertise the product family. Prefer supplied artwork among the
+// strengths matching the search, without changing the selected SKU.
+export function selectCardArtworkVariant(group, selected, matching=group.variants){
+  if(matching.some(variant=>variant.id===selected.id)&&group.variantImages[selected.id])return selected;
+  return matching.find(variant=>group.variantImages[variant.id])||selected;
+}

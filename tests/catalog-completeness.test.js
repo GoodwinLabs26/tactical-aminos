@@ -11,7 +11,7 @@ test('batch strengths/prices and original SKU identities match the supplied cata
  'epithalon-10':['10mg',30],'epithalon-40':['40mg',70],'epithalon-50':['50mg',95],
  'ss31-50':['50mg',125],'igf1-lr3-01':['0.1mg',20],'igf1-lr3-1':['1mg',60],
  'slupp-500':['500mcg',75],'slupp-1000':['1000mcg',150],
- 'bpc-tb':['5/5mg',55],'bpc157':['10mg',38],'tb4':['10mg',50],'kpv':['10mg',45],
+ 'bpc-tb':['5/5mg',55],'bpc157':['10mg',38],'kpv':['10mg',45],
  'cjc-ipa':['5/5mg',55],'cjc-nodac':['10mg',50],'cjc-dac':['5mg',50],'ipamorelin':['10mg',55],
  'tesamorelin':['10mg',70],'melanotan1':['10mg',35],'melanotan2':['10mg',35],
  'pt141':['10mg',40],'klow':['80mg',100],'aod9604':['5mg',54],'glutathione':['1500mg',75],
@@ -20,7 +20,7 @@ test('batch strengths/prices and original SKU identities match the supplied cata
  };
  for(const [id,[strength,price]]of Object.entries(expected)){const product=products.find(item=>item.id===id);assert.ok(product,id);assert.equal(product.strength,strength,id);assert.equal(product.price,price,id);}
  assert.equal(new Set(products.map(item=>item.id)).size,products.length);
- assert.equal(groupProducts(products).length,37);assert.equal(products.length,47);
+ assert.equal(groupProducts(products).length,36);assert.equal(products.length,46);
  for(const family of productFamilies){assert.ok(family.description,family.id);assert.ok(family.image,family.id);for(const id of family.variantIds)assert.ok(products.some(product=>product.id===id),id);}
 });
 test('all supplied catalog listings have confirmed prices',()=>{
@@ -43,6 +43,7 @@ test('Mark updates preserve original SKU IDs/prices, add full descriptions and r
   const group=groupProducts(products).find(g=>g.id===id);assert.equal(group.name,name);assert.equal(group.descriptionParagraphs.length,2);assert.ok(group.variants.every(p=>p.name===name));assert.ok(group.aliases.includes(legacy));
  }
  for(const id of ['d2','r3','bpc-tb','cjc-ipa','tesamorelin','melanotan1','melanotan2','pt141','klow','glutathione']){const f=productFamilies.find(f=>f.id===id);assert.equal(f.descriptionParagraphs.length,2,id);assert.ok(f.researchTagline);assert.ok(f.researchDisclaimer);}
- assert.equal(products.find(p=>p.id==='tb4').name,'TB-4');
+ assert.ok(!products.some(p=>p.id==='tb4'));
+ assert.ok(!productFamilies.some(f=>f.id==='tb4'||f.variantIds.includes('tb4')));
  const klow=productFamilies.find(f=>f.id==='klow');assert.match(klow.description,/GHK-Cu \(50 mg\)/);assert.match(klow.description,/KPV \(10 mg\)/);
 });

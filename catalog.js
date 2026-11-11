@@ -328,13 +328,6 @@ export const products = [
     "category": "blends"
   },
   {
-    "id": "tb4",
-    "name": "TB-4",
-    "strength": "10mg",
-    "price": 50,
-    "category": "compounds"
-  },
-  {
     "id": "tesamorelin",
     "name": "Tesamorelin",
     "strength": "10mg",
@@ -562,6 +555,8 @@ export const productFamilies = [
     "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
     "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
     "variantImages": {
+      "epithalon-10": "assets/epithalon-10-product.png",
+      "epithalon-40": "assets/epithalon-40-product.png",
       "epithalon-50": "assets/epithalon-50-product.png"
     }
   },
@@ -647,6 +642,7 @@ export const productFamilies = [
     "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
     "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
     "variantImages": {
+      "igf1-lr3-01": "assets/igf1-lr3-01-product.png",
       "igf1-lr3-1": "assets/igf1-lr3-1-product.png"
     }
   },
@@ -836,6 +832,7 @@ export const productFamilies = [
     "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
     "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
     "variantImages": {
+      "mots-c-10": "assets/mots-c-10-product.png",
       "mots-c-40": "assets/mots-c-40-product.png"
     }
   },
@@ -866,6 +863,7 @@ export const productFamilies = [
     "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
     "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
     "variantImages": {
+      "nad-250": "assets/nad-250-product.png",
       "nad-500": "assets/nad-500-product.png",
       "nad-1000": "assets/nad-1000-product.png"
     }
@@ -1020,15 +1018,6 @@ export const productFamilies = [
         ]
       }
     ]
-  },
-  {
-    "id": "tb4",
-    "name": "TB-4",
-    "variantIds": [
-      "tb4"
-    ],
-    "image": "assets/tb4-product.png",
-    "description": "Thymosin beta-4 is an actin-binding peptide studied in cell migration, blood-vessel formation and extracellular-matrix remodeling."
   },
   {
     "id": "tesamorelin",
