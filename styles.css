@@ -125,3 +125,7 @@ input:not([type=checkbox]){font-size:16px}
 @media(max-width:480px){.shop-results .product-grid{grid-template-columns:1fr}.shop-result-count{width:100%}.shop-sort{margin-left:0;width:100%}.shop-sort select{width:100%;max-width:none}.brand-logo{width:180px}.header .header-actions{width:100%;justify-content:space-between}.header nav{gap:22px}.product-purchase h2{font-size:27px}.announcement{font-size:10px}.shop-results .product-copy h2{min-height:0}}
 
 .product-subtitle{font-size:16px;line-height:1.7;color:var(--muted);margin:12px 0 18px}.product-research-tagline{font-weight:700;color:var(--blue)}.product-research-disclaimer{font-style:italic;color:var(--muted)}
+
+/* The signed-out header shows the brand and Member sign in. */
+.header #memberNav[hidden] { display: none; }
+.hero-buttons { flex-wrap: wrap; }

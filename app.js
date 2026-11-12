@@ -40,7 +40,7 @@ const firebaseReady = import('./firebase-service.js').then(module => {
 }).catch(error => {
   serviceError = error;
   sessionReady = true;
-  if (['#shop','#account','#auth','#cart','#calculator'].includes(location.hash)) route();
+  if (['#shop','#account','#auth','#cart'].includes(location.hash)) route();
   return null;
 });
 
@@ -77,7 +77,7 @@ function showView(view) {
 }
 function route() {
   const key = location.hash.slice(1) || 'home';
-  if (['shop', 'account', 'cart', 'calculator'].includes(key)) {
+  if (['shop', 'account', 'cart'].includes(key)) {
     wantedRoute = key;
     if (!sessionReady) { showView('auth'); message('authMessage', 'Connecting to your account…'); return; }
     if (!currentUser) { showView('auth'); message('authMessage', serviceError ? authError(serviceError) : ''); return; }
@@ -91,6 +91,7 @@ function route() {
   showView(views.includes(key) ? key : 'home');
 }
 function updateAccount() {
+  $('memberNav').hidden = !currentUser;
   $('accountButton').textContent = currentUser ? 'My account ↗' : 'Member sign in ↗';
   $('signOutButton').hidden = !currentUser;
   $('accountName').textContent = profile?.name || currentUser?.displayName || 'member';

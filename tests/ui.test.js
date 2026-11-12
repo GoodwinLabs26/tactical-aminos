@@ -24,10 +24,16 @@ test('account gate, cart, discounts, preview checkout and scoped cart restoratio
   const pause=()=>new Promise(resolve=>setTimeout(resolve,10));await pause();
   assert.doesNotMatch(elements.get('paymentInstructions').textContent,/@Mark-Williams-1389/);
   const el=id=>elements.get(id);const trigger=async(id,type='click',extra={})=>el(id).listeners[type]({preventDefault(){},currentTarget:el(id),...extra});
+  assert.equal(el('memberNav').hidden,true);
+  assert.match(el('accountButton').textContent,/Member sign in/);
+  context.location.hash='#calculator';await pause();
+  assert.equal(el('calculatorView').hidden,false);assert.equal(el('authView').hidden,true);
+  context.location.hash='#about';await pause();
+  assert.equal(el('aboutView').hidden,false);assert.equal(el('memberNav').hidden,true);
   await openShop[0].listeners.click();await pause();assert.equal(el('authView').hidden,false);assert.equal(el('shopView').hidden,true);
   await trigger('signUpTab');el('fullName').value='Test Member';el('email').value=user.email;el('password').value='TestPass123!';el('confirmPassword').value='Different!';el('ageConfirmed').checked=true;
   await trigger('authForm','submit');assert.match(el('authMessage').textContent,/do not match/);
-  el('confirmPassword').value=el('password').value;await trigger('authForm','submit');await pause();assert.equal(el('shopView').hidden,false);
+  el('confirmPassword').value=el('password').value;await trigger('authForm','submit');await pause();assert.equal(el('shopView').hidden,false);assert.equal(el('memberNav').hidden,false);
   el('productSort').value='price-low';await trigger('productSort','change');
   assert.ok(el('productGrid').innerHTML.indexOf('data-product-family="igf1-lr3"')<el('productGrid').innerHTML.indexOf('data-product-family="d2"'));
   el('productSort').value='price-high';await trigger('productSort','change');
@@ -44,7 +50,7 @@ test('account gate, cart, discounts, preview checkout and scoped cart restoratio
   el('promoCode').value='TEST10';await trigger('applyPromoButton');assert.match(el('orderTotals').innerHTML,/\$160.00/);assert(!el('orderTotals').innerHTML.includes('First order'));
   el('shippingName').value='Test Member';el('shippingPhone').value='515-555-0123';el('shippingStreet').value='123 Sample St';el('shippingCity').value='Des Moines';el('shippingState').value='IA';el('shippingZip').value='50309';el('purchaseConfirmation').checked=true;
   await trigger('checkoutForm','submit');assert.equal(el('checkoutResult').hidden,false);assert.match(el('checkoutResultContent').innerHTML,/No order was sent. No payment is due./);assert.equal(placeCalls,0);assert.equal(Number(el('cartCount').textContent),5);
-  await trigger('signOutButton');await pause();assert.equal(Number(el('cartCount').textContent),0);assert.equal(el('shippingStreet').value,'');assert.equal(el('checkoutResult').hidden,true);
+  await trigger('signOutButton');await pause();assert.equal(el('memberNav').hidden,true);assert.equal(Number(el('cartCount').textContent),0);assert.equal(el('shippingStreet').value,'');assert.equal(el('checkoutResult').hidden,true);
   const restored=JSON.parse(storage.get('ta-cart-v2:'+user.uid));restored.push({productId:'missing-product',quantity:1});storage.set('ta-cart-v2:'+user.uid,JSON.stringify(restored));
   await trigger('signInTab');el('email').value=user.email;el('password').value='TestPass123!';await trigger('authForm','submit');await pause();assert.equal(Number(el('cartCount').textContent),5);
   assert(![...storage.values()].some(value=>value.includes('123 Sample St')||value.includes('TestPass123!')));
