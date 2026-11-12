@@ -7,3 +7,41 @@
 .calculator-step .input-hint,.calc-scale-note,.calculator-note,.calculator-basics p{font-size:14px;line-height:1.7}
 .calc-reading p,.calc-facts div,.calc-formula,.calc-dose-yield>p:not(.calc-dose-total){font-size:16px;line-height:1.7}
 .calc-dose-yield .calc-dose-basis{font-size:14px!important}
+
+.calculator-community {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  margin-top: 32px;
+  padding: clamp(20px, 4vw, 34px);
+  border: 1px solid #c7d9f2;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 94% 0%, #dceaff 0%, transparent 55%),
+    linear-gradient(112deg, #f7faff, #e9f1ff);
+  color: var(--ink);
+}
+.calculator-community-copy { flex: 1 1 340px; min-width: 0; }
+.calculator-community-copy .eyebrow { margin: 0 0 8px; color: #244da8; }
+.calculator-community-copy h2 { margin: 0; font-size: clamp(25px, 4vw, 36px); }
+.calculator-community-copy p:last-child { margin: 8px 0 0; color: var(--muted); line-height: 1.6; }
+.calculator-community-link {
+  display: inline-flex;
+  min-height: 44px;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: #173d91;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+.calculator-community-link:hover { background: #102c6d; color: #fff; }
+.calculator-community-link:focus-visible { outline: 3px solid #244da8; outline-offset: 4px; }
+@media (max-width: 480px) {
+  .calculator-community-link { width: 100%; }
+}
