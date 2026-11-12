@@ -45,7 +45,21 @@
     <section id="shopView" class="page-view wrap catalog-page" hidden>
       <div class="section-heading"><div><p class="eyebrow">RESEARCH CATALOG · MEMBER ACCESS</p><h1>Shop the catalog.</h1><p>Compounds, blends, and laboratory essentials.</p></div><span class="small-label">TACTICAL AMINOS / CATALOG</span></div>
       <div class="catalog-note"><strong>Catalog preview</strong><span>Test checkout only. No orders or payments will be submitted.</span></div>
-      <div class="shop-layout"><aside class="shop-sidebar" aria-label="Shop navigation"><h2>Shop</h2><div class="shop-category-panel"><h3>Categories</h3><div id="categoryButtons" class="category-buttons" aria-label="Product categories"></div></div><a class="shop-help" href="#contact">Need help?</a></aside><div class="shop-results"><div class="shop-toolbar"><span id="productCount" class="shop-result-count" role="status" aria-live="polite"></span><div class="shop-sort"><label class="sr-only" for="productSort">Sort products</label><select id="productSort"><option value="name">Name: A–Z</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select></div><div class="shop-search"><label class="sr-only" for="productSearch">Search products</label><input id="productSearch" class="search-input" type="search" placeholder="Search product name or strength…"></div></div><div id="productGrid" class="product-grid"></div><p id="emptySearch" class="empty-state" hidden>No products match your search. Try another name or category.</p></div></div>
+      <div class="shop-layout"><aside class="shop-sidebar" aria-label="Shop navigation"><h2>Shop</h2><div class="shop-category-panel"><h3>Categories</h3><div id="categoryButtons" class="category-buttons" aria-label="Product categories"></div></div><a class="shop-help" href="#contact">Need help?</a>
+      <section class="calculator-community skool-banner skool-banner--sidebar" aria-labelledby="shopCommunityTitle">
+        <div class="calculator-community-copy">
+          <p class="eyebrow">TACTICAL AMINOS COMMUNITY</p>
+          <h2 id="shopCommunityTitle">Join the Skool</h2>
+          <p>Peptide Tactical Playbook</p>
+        </div>
+        <svg class="skool-orbit" viewBox="0 0 180 120" aria-hidden="true" focusable="false">
+          <path class="skool-orbit-lines" d="M90 60 31 29m59 31 60-34M90 60l-52 36m52-36 57 36M31 29l119-3  -3 70H38Z"/>
+          <path class="skool-orbit-core" d="M90 36 111 48v24L90 84 69 72V48Z"/>
+          <path class="skool-orbit-people" d="M79 70v-2a6 6 0 0 1 6-6h5a6 6 0 0 1 6 6v2m3-7a5 5 0 0 1 4 5v2m-12-15a4 4 0 1 1-8 0 4 4 0 0 1 8 0zm6-3a4 4 0 0 1 0 8"/>
+          <g class="skool-orbit-nodes"><circle cx="31" cy="29" r="7"/><circle cx="150" cy="26" r="6"/><circle cx="38" cy="96" r="5"/><circle cx="147" cy="96" r="8"/></g>
+        </svg>
+        <a class="calculator-community-link" href="https://www.skool.com/the-peptide-tactical-playbook-7972" target="_blank" rel="noopener noreferrer" aria-label="Explore the Peptide Tactical Playbook community on Skool (opens in a new tab)">Explore community <span aria-hidden="true">↗</span></a>
+      </section></aside><div class="shop-results"><div class="shop-toolbar"><span id="productCount" class="shop-result-count" role="status" aria-live="polite"></span><div class="shop-sort"><label class="sr-only" for="productSort">Sort products</label><select id="productSort"><option value="name">Name: A–Z</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select></div><div class="shop-search"><label class="sr-only" for="productSearch">Search products</label><input id="productSearch" class="search-input" type="search" placeholder="Search product name or strength…"></div></div><div id="productGrid" class="product-grid"></div><p id="emptySearch" class="empty-state" hidden>No products match your search. Try another name or category.</p></div></div>
     </section>
     <section id="calculatorView" class="page-view wrap calculator-page" hidden>
       <div class="calculator-intro"><p class="eyebrow">MEMBER RESEARCH TOOL</p><h1>A clearer calculation.</h1><p>Enter the amounts from your own research plan to calculate the corresponding volume on a U-100 syringe scale.</p></div>
@@ -60,12 +74,18 @@
         <div id="calculatorGraphic" class="syringe-graphic"></div><p class="calc-scale-note">U-100 scale only. Illustration is not to scale; actual syringe markings vary.</p><div id="calcDoseYield" class="calc-dose-yield" hidden role="status" aria-live="polite"><h3>Full doses in this vial</h3><p class="calc-dose-total"><strong id="calcDoseCount"></strong> <span id="calcDoseCountUnit"></span></p><p id="calcDoseRemainder"></p><p id="calcDoseBasis" class="calc-dose-basis"></p></div><p class="calculator-note">This tool converts amounts you enter; it does not recommend a dose. It assumes the final solution volume equals the water entered. Products are for laboratory research only, not human or animal use.</p>
       </section></div>
       <div class="calculator-basics"><div><h3>mg and mcg</h3><p>1 mg = 1,000 mcg. Each amount has its own unit selector.</p></div><div><h3>Capacity and scale</h3><p>A smaller U-100 syringe holds less volume. It does not change the number of units in 1 mL.</p></div><div><h3>Review your inputs</h3><p>Changing an amount clears the previous result. Calculations above the selected capacity do not show a fill marker.</p></div></div>
-      <section class="calculator-community" aria-labelledby="calculatorCommunityTitle">
+      <section class="calculator-community skool-banner" aria-labelledby="calculatorCommunityTitle">
         <div class="calculator-community-copy">
           <p class="eyebrow">TACTICAL AMINOS COMMUNITY</p>
           <h2 id="calculatorCommunityTitle">Join the Skool</h2>
           <p>Connect with the Peptide Tactical Playbook community on Skool.</p>
         </div>
+        <svg class="skool-orbit" viewBox="0 0 180 120" aria-hidden="true" focusable="false">
+          <path class="skool-orbit-lines" d="M90 60 31 29m59 31 60-34M90 60l-52 36m52-36 57 36M31 29l119-3  -3 70H38Z"/>
+          <path class="skool-orbit-core" d="M90 36 111 48v24L90 84 69 72V48Z"/>
+          <path class="skool-orbit-people" d="M79 70v-2a6 6 0 0 1 6-6h5a6 6 0 0 1 6 6v2m3-7a5 5 0 0 1 4 5v2m-12-15a4 4 0 1 1-8 0 4 4 0 0 1 8 0zm6-3a4 4 0 0 1 0 8"/>
+          <g class="skool-orbit-nodes"><circle cx="31" cy="29" r="7"/><circle cx="150" cy="26" r="6"/><circle cx="38" cy="96" r="5"/><circle cx="147" cy="96" r="8"/></g>
+        </svg>
         <a class="calculator-community-link" href="https://www.skool.com/the-peptide-tactical-playbook-7972" target="_blank" rel="noopener noreferrer" aria-label="Explore the Peptide Tactical Playbook community on Skool (opens in a new tab)">Explore community <span aria-hidden="true">↗</span></a>
       </section>
     </section>

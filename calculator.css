@@ -45,3 +45,53 @@
 @media (max-width: 480px) {
   .calculator-community-link { width: 100%; }
 }
+
+.skool-banner {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  gap: 14px 24px;
+  background: radial-gradient(ellipse at 66% 40%, #d3ebff 0%, transparent 65%),
+    linear-gradient(115deg, #f5fbff, #e5efff);
+}
+.skool-banner::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(circle, #5585b85c 1px, transparent 1.6px) 0 0 / 22px 22px;
+  opacity: .3;
+  mask-image: linear-gradient(100deg, transparent, #000);
+}
+.skool-banner::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, #ffffffa8 50%, transparent 65%);
+  transform: translateX(-100%);
+}
+.skool-banner .calculator-community-copy { flex-basis: 285px; }
+.skool-orbit { width: 145px; max-width: 100%; height: auto; color: #3169b1; }
+.skool-orbit-lines { fill: none; stroke: currentColor; stroke-width: 1.25; opacity: .42; }
+.skool-orbit-core { fill: #f6fbff; stroke: currentColor; stroke-width: 1.7; }
+.skool-orbit-people { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
+.skool-orbit-nodes { fill: #edfaff; stroke: #4674ba; stroke-width: 1.6; }
+.skool-banner--sidebar { display: grid; margin-top: 12px; padding: 18px; gap: 12px; text-align: center; }
+.skool-banner--sidebar .calculator-community-copy .eyebrow { font-size: 10px; letter-spacing: .12em; }
+.skool-banner--sidebar .calculator-community-copy h2 { font-size: clamp(20px, 2.4vw, 26px); letter-spacing: -.55px; }
+.skool-banner--sidebar .calculator-community-copy p:last-child { font-size: 13px; }
+.skool-banner--sidebar .skool-orbit { width: 108px; justify-self: center; }
+.skool-banner--sidebar .calculator-community-link { width: 100%; padding-inline: 10px; font-size: 13px; }
+@media (max-width: 700px) {
+  .skool-banner:not(.skool-banner--sidebar) .skool-orbit { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skool-banner::after { animation: skool-sweep 3.6s .25s ease-in-out both; }
+  .skool-orbit { animation: skool-drift 4.6s ease-in-out both; }
+  .skool-banner .calculator-community-link span { transition: transform .2s ease; }
+  .skool-banner .calculator-community-link:is(:hover, :focus-visible) span { transform: translate(2px, -2px); }
+}
+@keyframes skool-sweep { to { transform: translateX(100%); } }
+@keyframes skool-drift { 45% { transform: translateY(-6px) rotate(3deg); } }
