@@ -521,12 +521,12 @@
   },
   {
     "id": "slupp-500",
-    "name": "SluPP",
+    "name": "SLU-PP-332",
     "strength": "500mcg",
     "price": 75,
     "category": "compounds",
     "priceCents": 7500,
-    "compoundKey": "slupp",
+    "compoundKey": "slu-pp-332",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
@@ -534,12 +534,12 @@
   },
   {
     "id": "slupp-1000",
-    "name": "SluPP",
+    "name": "SLU-PP-332",
     "strength": "1000mcg",
     "price": 150,
     "category": "compounds",
     "priceCents": 15000,
-    "compoundKey": "slupp",
+    "compoundKey": "slu-pp-332",
     "bulkEligible": true,
     "stockQuantity": 0,
     "lowStockThreshold": 10,
@@ -596,5 +596,21 @@
     "stockQuantity": 0,
     "lowStockThreshold": 10,
     "published": true
+  },
+  {
+    "id": "tb500",
+    "name": "TB-500",
+    "strength": "",
+    "price": null,
+    "category": "compounds",
+    "pendingDetails": [
+      "Strength and price"
+    ],
+    "priceCents": null,
+    "compoundKey": "tb-500",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": false
   }
 ]

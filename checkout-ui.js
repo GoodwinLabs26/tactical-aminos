@@ -1,3 +1,4 @@
+import {productPackageUnit} from './catalog.js';
 import {isProductReady,productPriceCents} from './product-availability.js';
 import { calculateQuote, validateCustomer } from './shared/checkout-core.js';
 import { siteSettings } from './site-settings.js';
@@ -28,7 +29,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
       const product = products.find(item => item.id === line.productId);
       if (!product) return '';
       const priceCents = product.priceCents ?? Math.round(product.price * 100);
-      return `<article class="cart-line"><div><h3>${escape(product.name)} <span>${escape(product.strength)}</span></h3><p>${dollars(priceCents)} per vial</p><button class="inline-link small" data-remove="${product.id}">Remove</button></div><div class="quantity-control"><button type="button" data-quantity="${product.id}" data-delta="-1" aria-label="Decrease ${escape(product.name)} quantity">−</button><input type="number" min="1" max="100" step="1" value="${line.quantity}" data-quantity-input="${product.id}" aria-label="${escape(product.name)} quantity"><button type="button" data-quantity="${product.id}" data-delta="1" aria-label="Increase ${escape(product.name)} quantity">+</button></div><strong>${dollars(priceCents * line.quantity)}</strong></article>`;
+      return `<article class="cart-line"><div><h3>${escape(product.name)} <span>${escape(product.strength)}</span></h3><p>${dollars(priceCents)} per ${productPackageUnit(product.id)}</p><button class="inline-link small" data-remove="${product.id}">Remove</button></div><div class="quantity-control"><button type="button" data-quantity="${product.id}" data-delta="-1" aria-label="Decrease ${escape(product.name)} quantity">−</button><input type="number" min="1" max="100" step="1" value="${line.quantity}" data-quantity-input="${product.id}" aria-label="${escape(product.name)} quantity"><button type="button" data-quantity="${product.id}" data-delta="1" aria-label="Increase ${escape(product.name)} quantity">+</button></div><strong>${dollars(priceCents * line.quantity)}</strong></article>`;
     }).join('');
     if (!cart.size) { quote = null; return; }
     try {

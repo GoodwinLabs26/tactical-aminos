@@ -301,14 +301,14 @@ export const products = [
   },
   {
     "id": "slupp-500",
-    "name": "SluPP",
+    "name": "SLU-PP-332",
     "strength": "500mcg",
     "price": 75,
     "category": "compounds"
   },
   {
     "id": "slupp-1000",
-    "name": "SluPP",
+    "name": "SLU-PP-332",
     "strength": "1000mcg",
     "price": 150,
     "category": "compounds"
@@ -340,6 +340,16 @@ export const products = [
     "strength": "",
     "price": 65,
     "category": "compounds"
+  },
+  {
+    "id": "tb500",
+    "name": "TB-500",
+    "strength": "",
+    "price": null,
+    "category": "compounds",
+    "pendingDetails": [
+      "Strength and price"
+    ]
   }
 ];
 
@@ -394,7 +404,15 @@ export const productFamilies = [
       "Through its proposed influence on lipolysis (fat breakdown), lipogenesis (fat storage), and fatty acid oxidation, AOD-9604 has attracted research interest for its potential interactions with adipocyte metabolism and cellular energy regulation. Its distinctive molecular properties provide researchers with a specialized platform for investigating adipose tissue biology, metabolic homeostasis, lipid utilization, and energy balance."
     ],
     "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
-    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "sections": [
+      {
+        "title": "Product Concentration",
+        "items": [
+          "5 mg per vial"
+        ]
+      }
+    ]
   },
   {
     "id": "bpc157",
@@ -713,6 +731,21 @@ export const productFamilies = [
     "description": "L-Carnitine is a naturally occurring amino-acid derivative involved in transporting long-chain fatty acids into mitochondria for energy metabolism. Its biochemical role does not establish weight-loss effects from this preparation.",
     "aliases": [
       "L-Carnatine"
+    ],
+    "subtitle": "Advanced Fat Metabolism & Mitochondrial Energy Research Compound",
+    "descriptionParagraphs": [
+      "L-Carnitine is a naturally occurring amino acid-derived compound essential to mitochondrial fatty acid transport, cellular energy production, and metabolic regulation. Synthesized from the amino acids lysine and methionine, its specialized molecular structure facilitates the transport of long-chain fatty acids into mitochondria, where they undergo beta-oxidation to support adenosine triphosphate (ATP) production.",
+      "Through its involvement in the carnitine shuttle system, fatty acid oxidation, and acetyl-CoA metabolism, L-Carnitine is extensively investigated for its influence on lipid utilization, skeletal muscle bioenergetics, mitochondrial efficiency, and metabolic flexibility. Its fundamental role in cellular energy metabolism provides researchers with a sophisticated platform for exploring exercise-related metabolic adaptations, oxidative stress regulation, muscular energy demands, and cellular resilience."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "sections": [
+      {
+        "title": "Product Configuration",
+        "items": [
+          "10 mL vial"
+        ]
+      }
     ]
   },
   {
@@ -958,13 +991,34 @@ export const productFamilies = [
   },
   {
     "id": "slupp",
-    "name": "SluPP",
+    "name": "SLU-PP-332",
     "variantIds": [
       "slupp-500",
       "slupp-1000"
     ],
     "image": "assets/slupp-product.png",
-    "description": "SluPP is offered in 500mcg and 1000mcg options. Additional product information will be added when available."
+    "description": "SLU-PP-332 is a small molecule studied in preclinical research on oxidative metabolism.",
+    "subtitle": "Advanced Exercise Mimetic & Metabolic Performance Research Compound",
+    "descriptionParagraphs": [
+      "SLU-PP-332 is an advanced synthetic small-molecule compound engineered to investigate exercise-related metabolic adaptations, mitochondrial function, and cellular energy regulation. Its specialized molecular structure acts as a pan-agonist of estrogen-related receptors (ERRα, ERRβ, and ERRγ), with particularly strong activity at ERRα, a nuclear receptor involved in regulating oxidative metabolism and skeletal muscle energy utilization.",
+      "Through its activation of ERR signaling pathways, SLU-PP-332 is investigated for its influence on mitochondrial respiration, fatty acid oxidation, energy expenditure, and oxidative skeletal muscle adaptations. Preclinical research has demonstrated exercise-like metabolic responses, including enhanced endurance and increased lipid utilization in animal models. Its distinctive receptor-targeting properties provide researchers with a sophisticated platform for exploring metabolic flexibility, muscle bioenergetics, mitochondrial efficiency, and exercise-associated cellular signaling."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use.",
+    "sections": [
+      {
+        "title": "500 mcg Product Configuration",
+        "items": [
+          "60 count · 500 mcg each"
+        ]
+      }
+    ],
+    "aliases": [
+      "SluPP"
+    ],
+    "variantImages": {
+      "slupp-500": "assets/slupp-500-product.png"
+    }
   },
   {
     "id": "ss31",
@@ -1050,5 +1104,18 @@ export const productFamilies = [
     ],
     "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
     "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
+  },
+  {
+    "id": "tb500",
+    "name": "TB-500",
+    "variantIds": [
+      "tb500"
+    ],
+    "image": "",
+    "description": "Standalone TB-500. Strength, price, and product photo are pending."
   }
 ];
+
+export function productPackageUnit(productId) {
+  return productId.startsWith('slupp-') ? 'bottle' : 'vial';
+}
