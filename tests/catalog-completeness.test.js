@@ -21,10 +21,10 @@ test('batch strengths/prices and original SKU identities match the supplied cata
  for(const [id,[strength,price]]of Object.entries(expected)){const product=products.find(item=>item.id===id);assert.ok(product,id);assert.equal(product.strength,strength,id);assert.equal(product.price,price,id);}
  assert.equal(new Set(products.map(item=>item.id)).size,products.length);
  assert.equal(groupProducts(products).length,37);assert.equal(products.length,47);
- for(const family of productFamilies){assert.ok(family.description,family.id);if(family.id!=='tb500')assert.ok(family.image,family.id);for(const id of family.variantIds)assert.ok(products.some(product=>product.id===id),id);}
+ for(const family of productFamilies){assert.ok(family.description,family.id);assert.ok(family.image,family.id);for(const id of family.variantIds)assert.ok(products.some(product=>product.id===id),id);}
 });
 test('all supplied catalog listings have confirmed prices',()=>{
- const pending=products.filter(item=>item.pendingDetails?.length);assert.deepEqual(pending.map(p=>p.id),['tb500']);assert.equal(products.find(item=>item.id==="5amino1q").name,"5-Amino-1MQ");
+ const pending=products.filter(item=>item.pendingDetails?.length);assert.deepEqual(pending.map(p=>[p.id,p.strength,p.price]),[['tb500','10mg',null]]);assert.equal(products.find(item=>item.id==="5amino1q").name,"5-Amino-1MQ");
  assert.equal(productPriceCents(products.find(item=>item.id==='dsip')),5500);assert.equal(productPendingLabel(products.find(item=>item.id==='dsip')),'');
  for(const product of pending){assert.equal(isProductReady(product),false,product.id);assert.ok(productPendingLabel(product));}
  for(const product of products.filter(item=>!item.pendingDetails?.length)){assert.equal(isProductReady(product),true,product.id);assert.ok(productPriceCents(product)>0);}

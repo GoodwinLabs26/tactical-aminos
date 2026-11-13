@@ -344,11 +344,11 @@ export const products = [
   {
     "id": "tb500",
     "name": "TB-500",
-    "strength": "",
+    "strength": "10mg",
     "price": null,
     "category": "compounds",
     "pendingDetails": [
-      "Strength and price"
+      "Price"
     ]
   }
 ];
@@ -719,7 +719,14 @@ export const productFamilies = [
       "kpv"
     ],
     "image": "assets/kpv-product.png",
-    "description": "KPV is the tripeptide lysine-proline-valine, derived from the alpha-MSH sequence. It is studied in cell and animal models of inflammatory signaling, including intestinal and skin-related pathways."
+    "description": "KPV is a synthetic tripeptide composed of three amino acids—Lysine, Proline, and Valine—derived from the C-terminal sequence of alpha-melanocyte-stimulating hormone (α-MSH). This compact molecular structure has attracted significant preclinical research interest for its potential influence on inflammatory signaling, immune regulation, and cellular protection.",
+    "subtitle": "Advanced Inflammation & Cellular Defense Research Peptide",
+    "descriptionParagraphs": [
+      "KPV is a synthetic tripeptide composed of three amino acids—Lysine, Proline, and Valine—derived from the C-terminal sequence of alpha-melanocyte-stimulating hormone (α-MSH). This compact molecular structure has attracted significant preclinical research interest for its potential influence on inflammatory signaling, immune regulation, and cellular protection.",
+      "Through its interactions with NF-κB and MAPK signaling pathways, KPV is investigated for its ability to modulate pro-inflammatory cytokine activity and cellular responses to inflammation. Research applications include gastrointestinal barrier biology, intestinal inflammation, epithelial tissue integrity, and skin-related inflammatory mechanisms. Its targeted molecular activity makes KPV a compelling compound for exploring immune signaling, tissue homeostasis, and cellular resilience."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   },
   {
     "id": "l-carnitine",
@@ -1111,8 +1118,15 @@ export const productFamilies = [
     "variantIds": [
       "tb500"
     ],
-    "image": "",
-    "description": "Standalone TB-500. Strength, price, and product photo are pending."
+    "image": "assets/tb500-product.png",
+    "description": "TB-500 is a synthetic peptide associated with the actin-regulating region of thymosin beta-4, a naturally occurring protein involved in cellular movement, tissue maintenance, and regenerative signaling. Its molecular architecture has attracted research interest for its potential influence on cytoskeletal dynamics, cell migration, angiogenic activity, and tissue remodeling.",
+    "subtitle": "Advanced Cellular Repair & Regeneration Research Peptide",
+    "descriptionParagraphs": [
+      "TB-500 is a synthetic peptide associated with the actin-regulating region of thymosin beta-4, a naturally occurring protein involved in cellular movement, tissue maintenance, and regenerative signaling. Its molecular architecture has attracted research interest for its potential influence on cytoskeletal dynamics, cell migration, angiogenic activity, and tissue remodeling.",
+      "Through its interaction with biological pathways associated with cellular repair, TB-500 is investigated in preclinical research for its potential role in connective tissue regeneration, skeletal muscle repair mechanisms, tendon and ligament biology, and inflammatory signaling. Its distinctive molecular properties make it a valuable research compound for exploring cellular resilience, tissue recovery pathways, and regenerative biology."
+    ],
+    "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
+    "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
   }
 ];
 

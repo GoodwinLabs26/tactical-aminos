@@ -600,11 +600,11 @@
   {
     "id": "tb500",
     "name": "TB-500",
-    "strength": "",
+    "strength": "10mg",
     "price": null,
     "category": "compounds",
     "pendingDetails": [
-      "Strength and price"
+      "Price"
     ],
     "priceCents": null,
     "compoundKey": "tb-500",
