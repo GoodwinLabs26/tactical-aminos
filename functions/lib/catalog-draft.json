@@ -599,5 +599,47 @@
     "stockQuantity": 0,
     "lowStockThreshold": 10,
     "published": false
+  },
+  {
+    "id": "bac-water-10",
+    "name": "Tactical Aminos BAC Water",
+    "strength": "10mL",
+    "price": 10,
+    "category": "supplies",
+    "priceCents": 1000,
+    "compoundKey": "tactical aminos bac water",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": true
+  },
+  {
+    "id": "hospira-bac-30",
+    "name": "Hospira BAC Water",
+    "strength": "30mL",
+    "price": 30,
+    "category": "supplies",
+    "priceCents": 3000,
+    "compoundKey": "hospira bac water",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": true
+  },
+  {
+    "id": "starter-pack",
+    "name": "Starter Pack",
+    "strength": "10mL BAC + needle supplies",
+    "price": 15,
+    "category": "supplies",
+    "pendingDetails": [
+      "Needle type and quantity"
+    ],
+    "priceCents": 1500,
+    "compoundKey": "starter pack",
+    "bulkEligible": true,
+    "stockQuantity": 0,
+    "lowStockThreshold": 10,
+    "published": false
   }
 ]

@@ -15,6 +15,10 @@ export const categories = [
   {
     "id": "blends",
     "name": "Blends"
+  },
+  {
+    "id": "supplies",
+    "name": "Supplies"
   }
 ];
 
@@ -342,6 +346,30 @@ export const products = [
     "category": "compounds",
     "pendingDetails": [
       "Price"
+    ]
+  },
+  {
+    "id": "bac-water-10",
+    "name": "Tactical Aminos BAC Water",
+    "strength": "10mL",
+    "price": 10,
+    "category": "supplies"
+  },
+  {
+    "id": "hospira-bac-30",
+    "name": "Hospira BAC Water",
+    "strength": "30mL",
+    "price": 30,
+    "category": "supplies"
+  },
+  {
+    "id": "starter-pack",
+    "name": "Starter Pack",
+    "strength": "10mL BAC + needle supplies",
+    "price": 15,
+    "category": "supplies",
+    "pendingDetails": [
+      "Needle type and quantity"
     ]
   }
 ];
@@ -1111,6 +1139,33 @@ export const productFamilies = [
     ],
     "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
     "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
+  },
+  {
+    "id": "bac-water-10",
+    "name": "Tactical Aminos BAC Water",
+    "variantIds": [
+      "bac-water-10"
+    ],
+    "image": "assets/bac-water-10-product.png",
+    "description": "Tactical Aminos BAC Water in a 10mL vial. Temporary illustrative product image; final packaging will be confirmed."
+  },
+  {
+    "id": "hospira-bac-30",
+    "name": "Hospira BAC Water",
+    "variantIds": [
+      "hospira-bac-30"
+    ],
+    "image": "assets/hospira-bac-30-product.png",
+    "description": "Hospira BAC Water in a 30mL vial. Product photo coming soon; the current image is a temporary placeholder."
+  },
+  {
+    "id": "starter-pack",
+    "name": "Starter Pack",
+    "variantIds": [
+      "starter-pack"
+    ],
+    "image": "assets/starter-pack-product.png",
+    "description": "Includes one Tactical Aminos 10mL BAC Water vial and needle supplies. Needle type and exact quantity are awaiting confirmation. The image is illustrative; this pack is unavailable to order until the contents are confirmed."
   }
 ];
 

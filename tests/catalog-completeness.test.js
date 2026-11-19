@@ -20,7 +20,7 @@ test('batch strengths/prices and original SKU identities match the supplied cata
  };
  for(const [id,[strength,price]]of Object.entries(expected)){const product=products.find(item=>item.id===id);assert.ok(product,id);assert.equal(product.strength,strength,id);assert.equal(product.price,price,id);}
  assert.equal(new Set(products.map(item=>item.id)).size,products.length);
- assert.equal(groupProducts(products).length,36);assert.equal(products.length,46);
+ assert.equal(groupProducts(products).length,39);assert.equal(products.length,49);
  for(const family of productFamilies){assert.ok(family.description,family.id);assert.ok(family.image,family.id);for(const id of family.variantIds)assert.ok(products.some(product=>product.id===id),id);}
 });
 test('all supplied catalog listings have confirmed prices',()=>{
