@@ -187,7 +187,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
         const [catalog,stats]=await Promise.all([api.getLiveCatalog(),api.getCustomerStats(user.uid)]);
         if(generation!==historyGeneration)return;
         // Older Firebase catalogs can still return the retired standalone SKU.
-        products=catalog.products.filter(product=>product.id!=='tb4').map(product=>({...product,price:product.priceCents/100}));
+        products=catalog.products.filter(product=>!['tb4','cerebrolysin'].includes(product.id)).map(product=>({...product,price:product.priceCents/100}));
         for(const id of cart.keys())if(!products.some(product=>product.id===id&&isProductReady(product)))cart.delete(id);
         firstOrderEligible=stats.firstOrderClaimed!==true && !(stats.submittedOrderCount>0) && !(stats.paidOrderCount>0);
         if(!firstOrderEligible && promotion==='first')promotion='none';

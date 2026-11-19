@@ -50,16 +50,9 @@ export const products = [
   {
     "id": "bpc-tb",
     "name": "BPC-157 / TB-500",
-    "strength": "5/5mg",
-    "price": 55,
+    "strength": "10/10mg",
+    "price": 80,
     "category": "blends"
-  },
-  {
-    "id": "cerebrolysin",
-    "name": "Cerebrolysin",
-    "strength": "",
-    "price": 45,
-    "category": "compounds"
   },
   {
     "id": "cjc-nodac",
@@ -436,7 +429,7 @@ export const productFamilies = [
     "variantIds": [
       "bpc-tb"
     ],
-    "image": "assets/bpc-tb-product.png",
+    "image": "assets/bpc-tb-10-10-product.png",
     "description": "BPC-157 / TB-500 is a dual-peptide research formulation combining two synthetic compounds investigated for their roles in tissue regeneration, cellular repair, and inflammatory signaling. BPC-157 is a 15-amino-acid peptide studied for its influence on angiogenic pathways, fibroblast activity, and collagen organization. TB-500 is a thymosin beta-4-derived peptide explored for its interactions with actin dynamics and cellular migration.",
     "subtitle": "Advanced Tissue Repair Research Blend",
     "descriptionParagraphs": [
@@ -445,15 +438,6 @@ export const productFamilies = [
     ],
     "researchTagline": "TACTICAL AMINOS | Precision Compounds. Advanced Research.",
     "researchDisclaimer": "For laboratory research use only. Not intended for human or veterinary use."
-  },
-  {
-    "id": "cerebrolysin",
-    "name": "Cerebrolysin",
-    "variantIds": [
-      "cerebrolysin"
-    ],
-    "image": "assets/cerebrolysin-product.png",
-    "description": "Cerebrolysin is a preparation of small peptides and amino acids derived from porcine brain proteins. The exact presentation and concentration need confirmation for this listing."
   },
   {
     "id": "cjc-nodac",
