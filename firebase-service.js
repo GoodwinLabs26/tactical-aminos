@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updateProfile } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, query, where, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updateProfile, EmailAuthProvider, reauthenticateWithCredential, verifyBeforeUpdateEmail, updatePassword } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp, collection, query, where, orderBy, limit, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-functions.js';
 import { firebaseConfig } from './firebase-config.js';
 import { siteSettings } from './site-settings.js';
@@ -39,4 +39,36 @@ export async function confirmMembership(user) {
   const profile = { name: user.displayName || '', email: user.email, ageConfirmed: true, researchOnlyAccepted: true, termsVersion: '2026-10-07', acceptedAt: serverTimestamp(), createdAt: serverTimestamp() };
   await setDoc(doc(db, 'users', user.uid), profile);
   return profile;
+}
+
+function accountUser() {
+  if (!auth.currentUser) throw new Error('Sign in to manage your account.');
+  return auth.currentUser;
+}
+async function confirmPassword(user, password) {
+  await reauthenticateWithCredential(user, EmailAuthProvider.credential(user.email, password));
+  if (auth.currentUser?.uid !== user.uid) throw new Error('Your session changed. Sign in again.');
+}
+export async function changeAccountEmail(email, password) {
+  const user = accountUser();
+  await confirmPassword(user, password);
+  await verifyBeforeUpdateEmail(user, email.trim());
+}
+export async function changeAccountPassword(password, nextPassword) {
+  const user = accountUser();
+  await confirmPassword(user, password);
+  await updatePassword(user, nextPassword);
+}
+export async function getSavedAddress() {
+  const user = accountUser();
+  const snapshot = await getDoc(doc(db, 'customerAddresses', user.uid));
+  return snapshot.exists() ? snapshot.data() : null;
+}
+export async function saveAddress(address) {
+  const user = accountUser();
+  await setDoc(doc(db, 'customerAddresses', user.uid), address);
+}
+export async function removeAddress() {
+  const user = accountUser();
+  await deleteDoc(doc(db, 'customerAddresses', user.uid));
 }

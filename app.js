@@ -1,3 +1,4 @@
+import { initAccountSettings } from './account-settings.js';
 import {isProductReady,productPendingLabel,productPriceCents} from './product-availability.js';
 import { categories, products as previewProducts, productPackageUnit } from './catalog.js';
 import { initCheckout } from './checkout-ui.js';
@@ -8,6 +9,7 @@ const selectedVariants=new Map();
 
 let products = siteSettings.previewCheckout ? previewProducts : [];
 let checkoutController;
+let accountSettings;
 
 const $ = id => document.getElementById(id);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -97,6 +99,7 @@ function updateAccount() {
   $('accountName').textContent = profile?.name || currentUser?.displayName || 'member';
   $('accountEmail').textContent = currentUser?.email || '';
   checkoutController?.updateSession(currentUser, profile);
+  accountSettings?.updateSession(currentUser);
 }
 function setAuthMode(mode) {
   authMode = mode;
@@ -293,6 +296,8 @@ checkoutController = initCheckout({ products, getService: requireService, onCata
 if (!siteSettings.previewCheckout) {
   document.querySelector('.catalog-note').innerHTML='<strong>Member catalog</strong><span>Prices and availability are checked again when you submit your order.</span>';
 }
+accountSettings = initAccountSettings({ getService: requireService });
+if (currentUser) accountSettings.updateSession(currentUser);
 initCalculator();
 setAuthMode('signin');
 renderProducts();
