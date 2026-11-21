@@ -1,7 +1,7 @@
 // Keep true until the order backend and real inventory/payment details are ready.
 // Preview checkout never writes an order or requests payment.
 export const siteSettings = {
-  previewCheckout: !['localhost', '127.0.0.1'].includes(globalThis.location?.hostname),
+  previewCheckout: false,
   functionsRegion: 'us-central1',
   venmoHandle: '@Mark-Williams-1389',
   paypalHandle: 'tacticalaminos@gmail.com',
