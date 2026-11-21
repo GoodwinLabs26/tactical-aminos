@@ -14,3 +14,5 @@ export async function watchDashboardChanges(onChange,onError) {
     if(!snapshot.metadata.fromCache)onChange();
   },onError);
 }
+
+export const promotionsAdmin = async input => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'promotionsAdmin',{timeout:120000})(input)).data;

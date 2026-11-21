@@ -141,3 +141,5 @@ export {manageProductCoa,getProductCoa,setLaunchInventory} from './coa-functions
 
 export {liveOrders,liveProducts,liveCustomers,liveCodes,liveAffiliates,liveNotices} from './admin-live.js';
 
+
+export {promotionsAdmin,promotionUnsubscribe,sendPromotionQueue,addSignupEmailContact} from './promotions.js';
