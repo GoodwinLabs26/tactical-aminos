@@ -7,8 +7,8 @@ function requireMember(uid, profile) {
   if (!uid) throw new CheckoutError('unauthenticated', 'Sign in to place an order.');
   if (!profile || profile.ageConfirmed !== true || profile.researchOnlyAccepted !== true) throw new CheckoutError('permission-denied', 'Confirm your member access before ordering.');
 }
-function validateSettings(settings, paymentMethod) {
-  if (settings?.checkoutEnabled !== true) throw new CheckoutError('failed-precondition', 'The store is not accepting orders yet.');
+function validateSettings(settings, paymentMethod, uid) {
+  if (settings?.checkoutEnabled !== true && !(uid && settings?.checkoutTestUid === uid)) throw new CheckoutError('failed-precondition', 'The store is not accepting orders yet.');
   if (paymentMethod === 'venmo' && !settings.venmoHandle) throw new CheckoutError('failed-precondition', 'Venmo payment details are not configured.');
   if (paymentMethod === 'paypal' && !settings.paypalHandle) throw new CheckoutError('failed-precondition', 'PayPal details are pending. Please choose Venmo.');
 }
@@ -38,7 +38,7 @@ export function createOrderService({ store, timestamp, now = () => Date.now() })
       reader.get(`users/${uid}`), reader.get('config/store'), reader.get(`customerStats/${uid}`), code ? reader.get(`discountCodes/${code}`) : Promise.resolve(null), ...normalized.map(line => reader.get(`products/${line.productId}`))
     ]);
     requireMember(uid, profile);
-    validateSettings(settings);
+    validateSettings(settings, undefined, uid);
     return { settings, stats, promo, records: records.filter(Boolean) };
   }
   return {
@@ -64,14 +64,14 @@ export function createOrderService({ store, timestamp, now = () => Date.now() })
           return { orderId, orderNumber: existing.orderNumber, totalCents: existing.totalCents, paymentInstructions: existing.paymentInstructions, repeated: true };
         }
         const data = await context(transaction, uid, { lines, promotion, code });
-        validateSettings(data.settings, customer.paymentMethod);
+        validateSettings(data.settings, customer.paymentMethod, uid);
         const quote = makeQuote({ lines, promotion, code }, data.records, data.stats, data.promo, now());
         if (quote.quoteId !== input.expectedQuoteId) throw new CheckoutError('failed-precondition', 'Your prices or discount eligibility changed. Review the latest total and try again.');
         const orderNumber = `TA-${orderId.slice(0,10).toUpperCase()}`;
         const paymentInstructions = {
           method: customer.paymentMethod,
           handle: customer.paymentMethod === 'venmo' ? data.settings.venmoHandle : data.settings.paypalHandle,
-          note: 'When sending payment through your selected app, do not include product names in the payment note or memo field.'
+          note: 'When sending payment, please add 🍕 only in the payment note or memo field.'
         };
         const { firstOrderEligible, promo, quoteId, ...totals } = quote;
         transaction.set(`orders/${orderId}`, {

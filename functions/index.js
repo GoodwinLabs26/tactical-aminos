@@ -1,9 +1,16 @@
+import { createHash } from 'node:crypto';
+import { defineSecret, defineString } from 'firebase-functions/params';
+import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
+import { isNewShipment, sendShippingEmail, ShippingEmailRejected } from './shipping-email.js';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { createOrderService } from './order-service.js';
 import { CheckoutError } from './lib/checkout-core.js';
 import draftProducts from './lib/catalog-draft.json' with { type: 'json' };
+
+const shippingResendKey = defineSecret('RESEND_API_KEY');
+const shippingEmailFrom = defineString('SHIPPING_EMAIL_FROM');
 
 initializeApp();
 const db = getFirestore();
@@ -100,3 +107,31 @@ export const reportOrders = onCall(options, async request => {
     return await createReportsService({store:reportStore}).page(request.auth?.uid,request.data||{});
   }catch(error){throw translated(error);}
 });
+
+// Notify customers on the first paid-to-shipped transition, never on tracking edits.
+export const notifyShipment = onDocumentUpdated({
+  ...options, document:'orders/{orderId}', secrets:[shippingResendKey], retry:true
+}, async event => {
+  const before = event.data?.before.data(), after = event.data?.after.data();
+  if (!isNewShipment(before,after)) return;
+  const eventTime = Date.parse(event.time);
+  // Keep retries inside Resend's idempotency window.
+  if (!Number.isFinite(eventTime) || Date.now()-eventTime > 23*60*60*1000) {
+    console.error('Shipping email event expired.', {eventId:event.id});
+    return;
+  }
+  try {
+    await sendShippingEmail(after,{
+      apiKey:shippingResendKey.value(), from:shippingEmailFrom.value(),
+      requestId:'shipping-'+createHash('sha256').update(event.id).digest('hex')
+    });
+  } catch(error) {
+    if (error instanceof ShippingEmailRejected && !error.retryable) {
+      console.error(error.message, {eventId:event.id});
+      return;
+    }
+    throw new Error('Shipping email could not be confirmed; retrying.');
+  }
+});
+
+export { notifyNewOrder, notifyLowStock } from './store-email-triggers.js';

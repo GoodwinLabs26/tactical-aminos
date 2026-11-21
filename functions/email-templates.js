@@ -1,11 +1,11 @@
 // Server/local use only. These templates do not send email or read Firebase.
-export const PAYMENT_NOTE = 'When sending payment through your selected app, do not include product names in the payment note or memo field.';
+export const PAYMENT_NOTE = 'When sending payment, please add 🍕 only in the payment note or memo field.';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const money = cents => new Intl.NumberFormat('en-US', {style:'currency',currency:'USD'}).format(cents / 100);
 const paragraph = text => `<p style="margin:0 0 16px;line-height:1.65">${escape(text)}</p>`;
 
-function frame(title, body, test) {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(title)}</title></head><body style="margin:0;background:#f3f6fc;color:#14213b;font-family:Arial,sans-serif"><table role="presentation" style="width:100%;border-collapse:collapse"><tr><td style="padding:24px 12px"><table role="presentation" style="width:100%;max-width:600px;margin:auto;border-collapse:collapse;background:#fff"><tr><td style="padding:26px 24px;background:#142b65;color:#fff;font-size:22px;font-weight:bold">TACTICAL <span style="color:#91b7ff">AMINOS</span></td></tr><tr><td style="padding:24px;font-size:14px;overflow-wrap:anywhere">${test?'<p style="margin:0 0 22px;padding:14px;background:#fff1d6;color:#6b4200;font-weight:bold;line-height:1.6">TEST EMAIL · SAMPLE DATA<br>Do not send payment or ship anything.</p>':''}<h1 style="font-size:25px;line-height:1.3;margin:0 0 20px">${escape(title)}</h1>${body}</td></tr><tr><td style="padding:18px 24px;border-top:1px solid #e2e7f1;color:#66738a;font-size:12px;line-height:1.6">${test?'Development preview sent only to the Goodwin Labs test inbox. No real records were changed.':'Tactical Aminos · Store notification'}</td></tr></table></td></tr></table></body></html>`;
+function frame(title, body, test, {minimal=false}={}) {
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(title)}</title></head><body style="margin:0;background:#f3f6fc;color:#14213b;font-family:Arial,sans-serif"><table role="presentation" style="width:100%;border-collapse:collapse"><tr><td style="padding:24px 12px"><table role="presentation" style="width:100%;max-width:600px;margin:auto;border-collapse:collapse;background:#fff">${minimal?'':`<tr><td style="padding:26px 24px;background:#142b65;color:#fff;font-size:22px;font-weight:bold">TACTICAL <span style="color:#91b7ff">AMINOS</span></td></tr>`}<tr><td style="padding:24px;font-size:14px;overflow-wrap:anywhere">${test?'<p style="margin:0 0 22px;padding:14px;background:#fff1d6;color:#6b4200;font-weight:bold;line-height:1.6">TEST EMAIL · SAMPLE DATA<br>Do not send payment or ship anything.</p>':''}${minimal?'':`<h1 style="font-size:25px;line-height:1.3;margin:0 0 20px">${escape(title)}</h1>`}${body}</td></tr><tr><td style="padding:18px 24px;border-top:1px solid #e2e7f1;color:#66738a;font-size:12px;line-height:1.6">${test?'Development preview sent only to the Goodwin Labs test inbox. No real records were changed.':'Tactical Aminos · Store notification'}</td></tr></table></td></tr></table></body></html>`;
 }
 
 function validate(order) {
@@ -44,15 +44,17 @@ export function renderOrderEmails(order, {test=false}={}) {
   ];
 }
 
-export function renderShippingEmail(order,{test=false}={}) {
+export function renderShippingEmail(order,{test=false,includeArtwork=false}={}) {
   if(!order || !/^[A-Z0-9_-]{1,60}$/i.test(order.orderNumber||'') || !order.customer?.name)throw new Error('Order number and customer name are required.');
   if(order.paymentStatus!=='paid'||order.fulfillmentStatus!=='shipped'||order.status==='cancelled')throw new Error('Shipping emails require a paid order marked shipped.');
   if(typeof order.trackingNumber!=='string'||!/^[0-9]{10,40}$/.test(order.trackingNumber))throw new Error('A valid USPS tracking number is required.');
-  const title='Your order has been marked shipped';
+  const title='Order deployed!';
   const url=`https://tools.usps.com/go/TrackConfirmAction?tLabels=${encodeURIComponent(order.trackingNumber)}`;
   const sample=test?'This is a sample tracking number. It does not track a real shipment.':'';
-  const body=paragraph(`Hi ${order.customer.name},`)+paragraph(`Order ${order.orderNumber} has been marked shipped with USPS.`)+paragraph('Payment status: Paid')+`<h2 style="font-size:17px;margin:24px 0 12px">USPS tracking number</h2><p style="line-height:1.65;overflow-wrap:anywhere;word-break:break-all">${escape(order.trackingNumber)}</p><p style="margin:22px 0"><a href="${url}" style="display:inline-block;background:#1548ed;color:#fff;padding:14px 20px;border-radius:6px;text-decoration:none;font-weight:bold">View USPS tracking</a></p>`+(test?paragraph(sample):'')+paragraph('USPS tracking may take time to update after the shipping label is created. Check USPS for the latest delivery estimate.');
-  return {kind:'shipping-confirmation',subject:`${test?'[TEST] ':''}Tactical Aminos — Shipping update ${order.orderNumber}`,html:frame(title,body,test),text:`${test?'TEST EMAIL — SAMPLE SHIPMENT. No real shipment was created.\n\n':''}${title}\n\nHi ${order.customer.name},\nOrder ${order.orderNumber} has been marked shipped with USPS.\nPayment status: Paid\n\nUSPS tracking number: ${order.trackingNumber}\nView USPS tracking: ${url}\n${sample}\n\nUSPS tracking may take time to update after the shipping label is created. Check USPS for the latest delivery estimate.`};
+  const artwork=includeArtwork?'<img src="cid:order-deployed" width="550" alt="Tactical Aminos Order Deployed artwork featuring a raccoon with a shipping box" style="display:block;width:100%;max-width:550px;height:auto;margin:0 auto 22px;border:0">':'';
+  const trackingNote='USPS tracking may take time to update after the shipping label is created. Check USPS for the latest delivery estimate.';
+  const body=artwork+`<h2 style="font-size:17px;margin:0 0 12px">USPS tracking number</h2><p style="line-height:1.65;overflow-wrap:anywhere;word-break:break-all">${escape(order.trackingNumber)}</p><p style="margin:22px 0"><a href="${url}" style="display:inline-block;background:#1548ed;color:#fff;padding:14px 20px;border-radius:6px;text-decoration:none;font-weight:bold">Track your package with USPS</a></p>`+(test?paragraph(sample):'')+`<p style="margin:0;line-height:1.65"><strong>${escape(trackingNote)}</strong></p>`;
+  return {kind:'shipping-confirmation',subject:`${test?'[TEST] ':''}Tactical Aminos — Shipping update: Order deployed! ${order.orderNumber}`,html:frame(title,body,test,{minimal:true}),text:`${test?'TEST EMAIL — SAMPLE SHIPMENT. No real shipment was created.\n\n':''}USPS tracking number\n${order.trackingNumber}\nTrack your package with USPS: ${url}\n\n${test?sample+'\n\n':''}${trackingNote}`};
 }
 
 export function renderLowStockEmail(notice,{test=false}={}) {

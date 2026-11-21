@@ -146,7 +146,7 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
         const result=await api.placeOrder({...body,requestId:request.id});
         if (generation!==historyGeneration || user?.uid!==ownerUid) return;
         sessionStorage.removeItem(`ta-request:${ownerUid}`);
-        $('checkoutResultContent').innerHTML=`<p class="eyebrow">ORDER RECEIVED · AWAITING PAYMENT</p><h2>${escape(result.orderNumber)}</h2><p>Order total: <strong>${dollars(result.totalCents)}</strong></p><p>Payment method: <strong>${escape(paymentMethod==='venmo'?'Venmo':'PayPal')}</strong></p><p>This order is unpaid. Payment instructions will be provided in your order email. Do not send payment before receiving those instructions.</p><p>Email delivery is not connected yet.</p>`;
+        $('checkoutResultContent').innerHTML=`<p class="eyebrow">ORDER RECEIVED · AWAITING PAYMENT</p><h2>${escape(result.orderNumber)}</h2><p>Order total: <strong>${dollars(result.totalCents)}</strong></p><p>Payment method: <strong>${escape(paymentMethod==='venmo'?'Venmo':'PayPal')}</strong></p><p>This order is unpaid. Payment instructions will be provided in your order email. Do not send payment before receiving those instructions.</p><p>Check your inbox for your order confirmation and payment instructions. If you do not see it, check Spam or contact us.</p>`;
         cart.clear();saveCart();firstOrderEligible=false;promotion='none';promo=null;serverQuote=null;render();
         loadHistory();
       }

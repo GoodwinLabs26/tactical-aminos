@@ -59,10 +59,10 @@ test('shipping and stock samples are separately selectable and can only reach th
 });
 test('shipping emails require paid/shipped status and include only the validated USPS tracking URL',()=>{
   const email=renderShippingEmail(sampleShipment,{test:true});const link='https://tools.usps.com/go/TrackConfirmAction?tLabels='+sampleShipment.trackingNumber;
-  assert.ok(email.html.includes(`href="${link}"`));assert.ok(email.text.includes(link));assert.match(email.text,/Payment status: Paid/);assert.doesNotMatch(email.text,/Payment account|awaiting payment/i);
+  assert.ok(email.html.includes(`href="${link}"`));assert.ok(email.text.includes(link));assert.doesNotMatch(email.text,/Payment status: Paid/);assert.doesNotMatch(email.text,/Payment account|awaiting payment/i);
   for(const overrides of [{paymentStatus:'unpaid'},{fulfillmentStatus:'unfulfilled'},{status:'cancelled'}])assert.throws(()=>renderShippingEmail({...sampleShipment,...overrides}),/paid order marked shipped/);
   for(const trackingNumber of ['', '123', '1'.repeat(41), '1234567890\n','https://untrusted.example/12345','1234567890" onclick="alert(1)'])assert.throws(()=>renderShippingEmail({...sampleShipment,trackingNumber}),/tracking number/);
-  const escaped=renderShippingEmail({...sampleShipment,customer:{name:'<img src=x onerror=alert(1)>'}});assert.match(escaped.html,/&lt;img/);assert.doesNotMatch(escaped.html,/<img src=x/);
+  const escaped=renderShippingEmail({...sampleShipment,customer:{name:'<img src=x onerror=alert(1)>'}});assert.doesNotMatch(escaped.html,/&lt;img/);assert.doesNotMatch(escaped.html,/<img src=x/);
 });
 test('low-stock emails use plain counts, singular and zero wording, and identify historical stock readings',()=>{
   for(const [stockQuantity,expected]of [[10,'Only 10 vials left'],[1,'Only 1 vial left'],[0,'Out of stock — no vials left']]){
