@@ -6,3 +6,27 @@
 
 /* Original Tactical Aminos artwork. */
 :root{--blue:#003b7e}.admin-header{background:#0b0b0b}.admin-brand-logo{display:block;width:220px;height:auto}.brand small{color:#d0d9e7;text-align:center;font-size:11px}.admin-header>div>a{color:#c4deff}@media(max-width:600px){.admin-header{flex-wrap:wrap}.admin-brand-logo{width:190px}.admin-header>div{flex-wrap:wrap}}
+
+#coaInventoryList form{display:grid;gap:12px;margin:18px 0;padding:20px;border:1px solid #dce4f2;border-radius:12px}#coaInventoryList label{display:grid;gap:6px}#coaInventoryList input{max-width:100%;min-width:0}#launchInventory100{margin:12px 0}#inventoryPanel details{margin-top:24px}#inventoryPanel summary{cursor:pointer;font-weight:bold}
+
+.product-inventory-entry {
+  border-bottom: 1px solid #dce4f2;
+  padding-bottom: 18px;
+}
+.product-coa-controls { margin: 0 0 8px; }
+.product-coa-controls > summary {
+  display: list-item;
+  width: fit-content;
+  padding: 10px 16px;
+  border: 1px solid #dce4f2;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.product-coa-controls form {
+  display: grid;
+  gap: 12px;
+  padding: 18px 0;
+}
+.product-coa-controls label { display: grid; gap: 6px; }
+.product-coa-controls input { max-width: 100%; min-width: 0; }

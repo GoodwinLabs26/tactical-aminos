@@ -37,9 +37,51 @@ function render(){
   const affiliateIds=new Set([...rows('affiliates').map(item=>item.id),...rows('codes').map(code=>code.affiliateUid).filter(Boolean)]);
   $('affiliatesList').innerHTML=[...affiliateIds].map(uid=>{const affiliate=rows('affiliates').find(item=>item.id===uid),customer=rows('customers').find(item=>item.id===uid),codes=rows('codes').filter(item=>item.affiliateUid===uid);return `<article class="record referral-record"><h3>${escape(customer?.name||codes[0]?.affiliateName||uid)}</h3>${customer?.email?`<p class="muted small">${escape(customer.email)}</p>`:''}<div class="referral-numbers"><p><strong>${affiliate?.paidReferralCount||0}</strong> paid referrals</p><p><strong>${money(affiliate?.referredSalesCents)}</strong> referred sales</p></div><p>Codes: ${codes.length?codes.map(code=>`<button class="code-link" data-referral-code="${escape(code.id)}">${escape(code.code)} · ${code.percentOff}% off${code.active?'':' · turned off'}</button>`).join(' '):'No linked codes loaded.'}</p><p class="muted small">Ready to reward this person? Create a separate discount code and share it with them.</p></article>`;}).join('')||'<p class="muted">No referrals to track yet. Create a referral code and choose the customer who will share it.</p>';
   $('customersList').innerHTML=rows('customers').map(customer=>`<article class="record"><h3>${escape(customer.name)}</h3><p>${escape(customer.email)}</p><p class="muted small">Joined ${escape(date(customer.createdAt))} · Member ${customer.ageConfirmed?'confirmed':'not confirmed'}</p></article>`).join('')||'<p class="muted">No customers loaded.</p>';
+  $('coaInventoryList').innerHTML=products.map(product=>`<form class="record" data-coa-product="${escape(product.id)}"><h3>${escape(product.name)} ${escape(product.strength)}</h3><p>${product.coa?escape(product.coa.title)+(product.coa.lot?' · Lot '+escape(product.coa.lot):''):'No COA uploaded'}</p><label>Report title<input name="title" maxlength="120" value="${escape(product.coa?.title||'Certificate of analysis')}" required></label><label>Batch / lot (optional)<input name="lot" maxlength="80" value="${escape(product.coa?.lot||'')}"></label><label>PDF, PNG or JPEG (maximum 4 MB)<input name="pdf" type="file" accept="application/pdf,image/png,image/jpeg,.pdf,.png,.jpg,.jpeg" required></label><button type="submit">${product.coa?'Replace COA':'Upload COA'}</button>${product.coa?`<button type="button" data-remove-coa="${escape(product.id)}">Remove COA</button>`:''}</form>`).join('');
+  attachProductCoaForms();
   $('notificationsList').innerHTML=rows('notifications').map(notice=>`<article class="record"><h3>${escape(notice.productName)} ${escape(notice.strength)}</h3><p class="stock-alert">${notice.stockQuantity===0?'Out of stock — no vials left':`Only ${notice.stockQuantity} ${notice.stockQuantity===1?'vial':'vials'} left`}</p><p class="muted small">${escape(date(notice.createdAt))} · Email not connected</p></article>`).join('')||'<p class="muted">No stock notices yet.</p>';
   document.querySelectorAll('[data-more]').forEach(button=>button.hidden=!data?.[button.dataset.more]?.hasMore);
   lock(busy);
+}
+
+function attachProductCoaForms() {
+  const container = $('coaInventoryList');
+  if (!container) return;
+
+  for (const form of [...container.querySelectorAll('[data-coa-product]')]) {
+    const productId = form.dataset.coaProduct;
+    const stockForm = [...$('inventoryList').querySelectorAll('[data-stock]')]
+      .find(item => item.dataset.stock === productId);
+    if (!stockForm) continue;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'product-inventory-entry';
+    stockForm.before(wrapper);
+    wrapper.append(stockForm);
+
+    const details = document.createElement('details');
+    details.className = 'product-coa-controls';
+    const summary = document.createElement('summary');
+    summary.textContent = 'COA · upload or replace';
+    details.append(summary, form);
+    wrapper.append(details);
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      container.dispatchEvent(new CustomEvent('submit', {
+        detail: { coaForm: form }
+      }));
+    });
+    form.addEventListener('click', event => {
+      const button = event.target.closest('[data-remove-coa]');
+      if (button) container.dispatchEvent(new CustomEvent('click', {
+        detail: { coaRemoveButton: button }
+      }));
+    });
+  }
+
+  const oldDropdown = container.closest('details');
+  if (oldDropdown) oldDropdown.hidden = true;
 }
 async function refresh(){const generation=sessionGeneration;const result=await api.adminCommand('dashboard');if(generation!==sessionGeneration)return;data=result;render();$('dashboard').hidden=false;}
 async function run(action,input){if(busy)return;let saved=false;const generation=sessionGeneration;lock(true);message('Saving…');try{const result=await api.adminCommand(action,input);saved=true;if(generation!==sessionGeneration)return;await refresh();if(generation!==sessionGeneration)return;if(action==='inventory'){const product=rows('products').find(item=>item.id===input.productId);if(product)stockFeedback.set(product.id,{revision:product.revision||0,text:`✓ Stock saved · ${product.stockQuantity} ${product.stockQuantity===1?'vial':'vials'}`});render();}message(result.message,true);if(action==='saveCode')resetCode();}catch(error){if(generation===sessionGeneration){message(error.message||'Unable to save. Try refreshing.');if(action==='inventory'){const status=[...document.querySelectorAll('[data-stock]')].find(form=>form.dataset.stock===input.productId)?.querySelector('.stock-status');if(status){status.textContent=saved?'Stock saved, but the dashboard could not refresh. Click Refresh.':'Not saved. '+(error.message||'Please try again.');status.classList.add('error');}}}}finally{if(generation===sessionGeneration)lock(false);}}
@@ -74,3 +116,24 @@ else{
     auth.watchSession(async next=>{sessionGeneration++;reportsController.reset();const generation=sessionGeneration;user=next;data=null;busy=false;stockFeedback.clear();$('dashboard').hidden=true;$('actionDialog').close();pendingAction=null;resetCode();$('adminPassword').value='';$('signOut').hidden=!user;$('loginPanel').hidden=!!user;message('');if(user){try{await refresh();}catch(error){if(generation===sessionGeneration)message(error.code==='functions/permission-denied'?'This account does not have admin access. Sign out and use the configured admin account.':'The admin backend is not connected yet, or could not be reached. Complete the setup in ADMIN-SETUP.md, then refresh.');}}});
   }catch(error){message('Unable to connect to Firebase. Check your connection and refresh.');}
 }
+
+$('coaInventoryList').addEventListener('submit',async event=>{
+  event.preventDefault();const form=event.detail?.coaForm || event.target.closest('[data-coa-product]');if(!form||busy)return;
+  if(demo)return message('COA uploads are available in the live admin dashboard.');
+  const file=form.elements.pdf.files[0];if(!file||file.size>4*1024*1024)return message('Choose a PDF, PNG or JPEG no larger than 4 MB.');
+  const product=rows('products').find(item=>item.id===form.dataset.coaProduct),generation=sessionGeneration;
+  lock(true);message('Uploading COA…');
+  try{
+    const bytes=new Uint8Array(await file.arrayBuffer());let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
+    if(generation!==sessionGeneration)return;
+    const result=await api.manageProductCoa({action:'upload',productId:product.id,expectedVersion:product.coa?.version||null,title:form.elements.title.value,lot:form.elements.lot.value,base64:btoa(binary)});
+    if(generation!==sessionGeneration)return;await refresh();message(result.message,true);
+  }catch(error){if(generation===sessionGeneration)message(error.message||'Upload failed.');}finally{if(generation===sessionGeneration)lock(false);}
+});
+$('coaInventoryList').addEventListener('click',async event=>{
+  const button=event.detail?.coaRemoveButton || event.target.closest('[data-remove-coa]');if(!button||busy||demo)return;
+  if(!window.confirm('Remove this product’s current COA?'))return;
+  const product=rows('products').find(item=>item.id===button.dataset.removeCoa),generation=sessionGeneration;lock(true);
+  try{const result=await api.manageProductCoa({action:'remove',productId:product.id,expectedVersion:product.coa.version});if(generation!==sessionGeneration)return;await refresh();message(result.message,true);}catch(error){if(generation===sessionGeneration)message(error.message);}finally{if(generation===sessionGeneration)lock(false);}
+});
+

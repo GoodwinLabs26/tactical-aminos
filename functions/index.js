@@ -135,3 +135,5 @@ export const notifyShipment = onDocumentUpdated({
 });
 
 export { notifyNewOrder, notifyLowStock } from './store-email-triggers.js';
+
+export {manageProductCoa,getProductCoa,setLaunchInventory} from './coa-functions.js';

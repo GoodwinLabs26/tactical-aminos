@@ -5,3 +5,5 @@ export const adminCommand = async (action,input={}) => (await httpsCallable(getF
 export const initializeCatalog = async () => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'initializeDraftCatalog')({})).data;
 
 export const reportOrders = async input => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'reportOrders')(input)).data;
+export const manageProductCoa = async input => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'manageProductCoa')(input)).data;
+export const setLaunchInventory = async () => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'setLaunchInventory')({confirmation:'SET ALL STOCK TO 100'})).data;
