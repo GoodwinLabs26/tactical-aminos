@@ -59,6 +59,15 @@ service cloud.firestore {
         && request.resource.data.state.matches('^[A-Z]{2}$')
         && request.resource.data.zip.matches('^[0-9]{5}(-[0-9]{4})?$');
     }
+    // Admins can listen only to this change signal; dashboard data stays behind callables.
+    match /adminLive/dashboard {
+      allow get: if request.auth != null
+        && (get(/databases/$(database)/documents/config/admin).data.uid == request.auth.uid
+          || ('additionalUids' in get(/databases/$(database)/documents/config/admin).data
+            && get(/databases/$(database)/documents/config/admin).data.additionalUids is list
+            && request.auth.uid in get(/databases/$(database)/documents/config/admin).data.additionalUids));
+      allow list, create, update, delete: if false;
+    }
     // Catalog, promotions, config, affiliates, inventory and admin operations
     // are served by the backend. Customers cannot directly edit them.
     match /{document=**} {

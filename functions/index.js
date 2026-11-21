@@ -137,3 +137,5 @@ export const notifyShipment = onDocumentUpdated({
 export { notifyNewOrder, notifyLowStock } from './store-email-triggers.js';
 
 export {manageProductCoa,getProductCoa,setLaunchInventory} from './coa-functions.js';
+
+export {liveOrders,liveProducts,liveCustomers,liveCodes,liveAffiliates,liveNotices} from './admin-live.js';
