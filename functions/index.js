@@ -49,7 +49,7 @@ export const memberCatalog = onCall(options, async request => {
 });
 export const initializeDraftCatalog = onCall(options, async request => {
   const admin = await read('config/admin');
-  if (!request.auth || admin?.uid !== request.auth.uid) throw new HttpsError('permission-denied', 'Only the configured store admin can initialize the catalog.');
+  if (!request.auth || !(admin?.uid === request.auth.uid || (Array.isArray(admin?.additionalUids) && admin.additionalUids.includes(request.auth.uid)))) throw new HttpsError('permission-denied', 'Only the configured store admin can initialize the catalog.');
   const existing = await db.collection('products').get();
   const ids = new Set(existing.docs.map(document => document.id));
   const settings = await read('config/store');

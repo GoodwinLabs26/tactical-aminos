@@ -12,7 +12,7 @@ export function createAdminService({store,timestamp}) {
   async function requireAdmin(reader,uid) {
     if(!uid)fail('Sign in to use the admin dashboard.','unauthenticated');
     const admin=await reader.get('config/admin');
-    if(admin?.uid!==uid)fail('This account does not have admin access.','permission-denied');
+    if(!(admin?.uid===uid || (Array.isArray(admin?.additionalUids) && admin.additionalUids.includes(uid))))fail('This account does not have admin access.','permission-denied');
   }
   async function transaction(uid,callback) {return store.transaction(async tx=>{await requireAdmin(tx,uid);return callback(tx);});}
   return {

@@ -4,7 +4,7 @@ export function createReportsService({store,now=()=>Date.now()}){
  return {async page(uid,input={}){
   if(!uid)throw new CheckoutError('unauthenticated','Sign in to generate reports.');
   const admin=await store.get('config/admin');
-  if(admin?.uid!==uid)throw new CheckoutError('permission-denied','Only the configured admin can generate reports.');
+  if(!(admin?.uid===uid || (Array.isArray(admin?.additionalUids) && admin.additionalUids.includes(uid))))throw new CheckoutError('permission-denied','Only the configured admin can generate reports.');
   let period;try{period=reportWindow(input);}catch(error){if(error instanceof ReportError)throw new CheckoutError('invalid-argument',error.message);throw error;}
   const cutoffMs=input.cutoffMs??now();
   if(!Number.isSafeInteger(cutoffMs)||cutoffMs<0||cutoffMs>now())throw new CheckoutError('invalid-argument','Invalid report cutoff time.');
