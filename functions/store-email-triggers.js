@@ -6,7 +6,7 @@ import { renderOrderEmails, renderLowStockEmail } from './email-templates.js';
 
 const apiKey = defineSecret('RESEND_API_KEY');
 const sender = defineString('SHIPPING_EMAIL_FROM');
-const adminEmail = 'goodwinlabs.co@gmail.com';
+const adminEmail = 'tacticalaminos@gmail.com';
 const options = {
   region: 'us-central1',
   maxInstances: 3,
@@ -150,6 +150,7 @@ async function deliver(event, makeJobs) {
 export const notifyNewOrder = onDocumentCreated({
   ...options, document: 'orders/{orderId}'
 }, event => deliver(event, order => {
+  if (order.shippingTest === true) return [];
   if (!validEmail(order.customer?.email)) {
     throw new Error('Customer email needs review.');
   }

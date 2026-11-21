@@ -123,6 +123,7 @@ export const notifyShipment = onDocumentUpdated({
   try {
     await sendShippingEmail(after,{
       apiKey:shippingResendKey.value(), from:shippingEmailFrom.value(),
+      test:after.shippingTest === true,
       requestId:'shipping-'+createHash('sha256').update(event.id).digest('hex')
     });
   } catch(error) {
@@ -139,3 +140,4 @@ export { notifyNewOrder, notifyLowStock } from './store-email-triggers.js';
 export {manageProductCoa,getProductCoa,setLaunchInventory} from './coa-functions.js';
 
 export {liveOrders,liveProducts,liveCustomers,liveCodes,liveAffiliates,liveNotices} from './admin-live.js';
+
