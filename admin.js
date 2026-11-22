@@ -209,3 +209,42 @@ $('discardLiveEdits').addEventListener('click',async()=>{
   dirtyForms.clear();resetCode();lock(true);
   try{await refresh();liveStatus('Live updates on');liveController?.notify();}catch(error){message(error.message);}finally{lock(false);}
 });
+
+
+// Admin password reset
+$('adminForgotPassword').addEventListener('click', async () => {
+  const email = $('adminEmail');
+  const button = $('adminForgotPassword');
+  const status = $('adminResetMessage');
+  email.value = email.value.trim();
+  status.textContent = '';
+  status.classList.remove('success');
+
+  if (!email.checkValidity()) {
+    status.textContent = 'Enter your account email above first.';
+    email.reportValidity();
+    return;
+  }
+  if (!auth?.resetPassword) {
+    status.textContent = 'Still connecting. Please try again in a moment.';
+    return;
+  }
+
+  button.disabled = true;
+  try {
+    await auth.resetPassword(email.value);
+    status.textContent = 'If an account exists for that email, a password-reset link will be sent. Check Inbox and Spam.';
+    status.classList.add('success');
+  } catch (error) {
+    if (error.code === 'auth/user-not-found') {
+      status.textContent = 'If an account exists for that email, a password-reset link will be sent. Check Inbox and Spam.';
+      status.classList.add('success');
+    } else {
+      status.textContent = error.code === 'auth/too-many-requests'
+        ? 'Too many attempts. Please wait before trying again.'
+        : 'Unable to request a reset email. Please try again shortly.';
+    }
+  } finally {
+    button.disabled = false;
+  }
+});
