@@ -1146,7 +1146,7 @@ export const productFamilies = [
     "variantIds": [
       "bac-water-10"
     ],
-    "image": "assets/bac-water-10-product.png",
+    "image": "assets/bac-water-10-updated.png",
     "description": "Tactical Aminos BAC Water in a 10mL vial. Temporary illustrative product image; final packaging will be confirmed."
   },
   {
@@ -1155,7 +1155,7 @@ export const productFamilies = [
     "variantIds": [
       "hospira-bac-30"
     ],
-    "image": "assets/hospira-bac-30-product.png",
+    "image": "assets/hospira-bac-30-updated.png",
     "description": "Hospira BAC Water in a 30mL vial. Product photo coming soon; the current image is a temporary placeholder."
   },
   {

@@ -112,8 +112,8 @@ export function createAdminService({store,timestamp}) {
         const order=await tx.get(`orders/${orderId}`);if(!order)fail('Order was not found.','not-found');
         if(order.paymentStatus!=='paid'||!order.inventoryDeducted)fail('Record payment before shipping this order.','failed-precondition');
         if(order.fulfillmentStatus==='shipped'&&order.trackingNumber===tracking)return {message:'This tracking number is already saved.',repeated:true};
-        tx.set(`orders/${orderId}`,{...order,status:'shipped',fulfillmentStatus:'shipped',trackingNumber:tracking,shippingCarrier:'USPS',shippedAt:order.shippedAt||timestamp(),updatedAt:timestamp(),shippedBy:uid,trackingEmailStatus:'not-connected'});
-        return {message:'Tracking saved. Email delivery is not connected yet.'};
+        tx.set(`orders/${orderId}`,{...order,status:'shipped',fulfillmentStatus:'shipped',trackingNumber:tracking,shippingCarrier:'USPS',shippedAt:order.shippedAt||timestamp(),updatedAt:timestamp(),shippedBy:uid});
+        return {message:'Tracking saved.'};
       });
     }
   };
