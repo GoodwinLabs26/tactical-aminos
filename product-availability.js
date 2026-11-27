@@ -1,3 +1,4 @@
+import {effectivePriceCents,activeSale} from './shared/sales-core.js';
 // Display/preview guard. The trusted backend also rejects unpublished SKUs.
 export function productPriceCents(product){
   if(!product)return null;
@@ -7,3 +8,6 @@ export function productPriceCents(product){
 }
 export function isProductReady(product){return !!product&&product.published!==false&&productPriceCents(product)!==null&&!(product.pendingDetails?.length);}
 export function productPendingLabel(product){return productPriceCents(product)===null?'Price pending':!isProductReady(product)?'Details pending':'';}
+
+export function productSale(product,now=Date.now()){return activeSale({...product,priceCents:productPriceCents(product)},now);}
+export function productCurrentPriceCents(product,now=Date.now()){return effectivePriceCents({...product,priceCents:productPriceCents(product)},now);}

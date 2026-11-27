@@ -23,6 +23,7 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="announcement"><span>SCIENCE. STRATEGY. PERFORMANCE.</span><span>USPS SHIPPING · $8 FLAT RATE</span><span>MEMBER ACCESS · 21+</span></div>
+  <div class="first-order-banner"><strong>First order? Get 10% off eligible products.</strong><span>Choose First order at checkout. Shipping excluded; sale exclusions apply.</span><button id="currentSalesButton" type="button" hidden>Current sales</button></div>
   <header class="header">
     <a class="wordmark" href="#home" aria-label="Tactical Aminos home"><img class="brand-logo" src="assets/tactical-logo.svg" alt="Tactical Aminos — Science, Strategy, Performance" width="760" height="310"></a>
     <nav id="memberNav" aria-label="Main navigation" hidden><a href="#shop" data-route="shop">Shop</a><a href="#calculator" data-route="calculator">Calculator</a><a href="#about" data-route="about">About</a><a href="#contact" data-route="contact">Contact</a></nav>
@@ -93,6 +94,7 @@
   </main>
   <footer class="footer"><div class="wrap footer-top"><a class="wordmark" href="#home" aria-label="Tactical Aminos home"><img class="brand-logo" src="assets/tactical-logo.svg" alt="Tactical Aminos — Science, Strategy, Performance" width="760" height="310"></a><p>SCIENCE. STRATEGY. PERFORMANCE.</p><a href="mailto:TacticalAminos@gmail.com">TacticalAminos@gmail.com ↗</a></div><div class="wrap disclaimer">For laboratory research only. Not intended for human or animal use. Account access requires confirmation that you are 21 or older.</div><div class="wrap footer-bottom"><span>© <span id="year"></span> Tactical Aminos</span><span><a href="policies.html#shipping">Shipping</a> · <a href="policies.html#returns">Returns & refunds</a> · <a href="policies.html#privacy">Privacy</a> · <a href="policies.html#terms">Terms</a></span></div></footer>
   <dialog id="productDialog" aria-labelledby="productDetailTitle"><button class="dialog-close" id="closeProductDialog" aria-label="Close product details">×</button><div id="productDialogContent"></div></dialog>
+  <dialog id="salesDialog" class="sales-dialog" aria-labelledby="salesDialogTitle"><button id="closeSalesDialog" type="button" class="dialog-close" aria-label="Close current sales">×</button><p class="eyebrow">TACTICAL AMINOS</p><h2 id="salesDialogTitle">Current sales</h2><div id="salesDialogList"></div><button id="salesShopButton" type="button" class="button">Shop the catalog</button></dialog>
   <script type="module" src="app.js"></script>
 </body>
 </html>

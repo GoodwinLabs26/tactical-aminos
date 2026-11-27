@@ -1,8 +1,9 @@
+import {activeSale} from './sales-core.js';
 export class CheckoutError extends Error {
   constructor(code, message) { super(message); this.name = 'CheckoutError'; this.code = code; }
 }
 export const SHIPPING_CENTS = 800;
-export const RULES_VERSION = '2026-10-09';
+export const RULES_VERSION = '2026-11-27-sales';
 export function normalizeLines(input) {
   if (!Array.isArray(input) || input.length < 1 || input.length > 50) throw new CheckoutError('invalid-argument', 'Your cart must contain between 1 and 50 product lines.');
   const seen = new Set();
@@ -12,7 +13,7 @@ export function normalizeLines(input) {
     return { productId: line.productId, quantity: line.quantity };
   }).sort((a, b) => a.productId.localeCompare(b.productId));
 }
-export function calculateQuote(input, productRecords, { firstOrderEligible = true, promo = null, enforceStock = false } = {}) {
+export function calculateQuote(input, productRecords, { firstOrderEligible = true, promo = null, enforceStock = false, now = Date.now() } = {}) {
   const normalized = normalizeLines(input.lines);
   const promotion = input.promotion || 'none';
   if (!['none', 'first', 'code'].includes(promotion)) throw new CheckoutError('invalid-argument', 'Select either first-order discount, one promotional code, or no promotion.');
@@ -22,19 +23,23 @@ export function calculateQuote(input, productRecords, { firstOrderEligible = tru
     if (!product || product.published === false || !Number.isSafeInteger(product.priceCents) || product.priceCents < 1 || product.priceCents > 10000000) throw new CheckoutError('failed-precondition', 'A product is unavailable. Refresh your catalog.');
     if (enforceStock && (!Number.isInteger(product.stockQuantity) || product.stockQuantity < 0)) throw new CheckoutError('failed-precondition', `Inventory is not configured for ${product.name}.`);
     if (Number.isInteger(product.stockQuantity) && product.stockQuantity < line.quantity) throw new CheckoutError('failed-precondition', `${product.name} ${product.strength}: not enough stock for this quantity.`);
-    return { productId: line.productId, name: product.name, strength: product.strength, quantity: line.quantity, unitPriceCents: product.priceCents, lineTotalCents: product.priceCents * line.quantity, bulkEligible: product.bulkEligible === true, compoundKey: product.compoundKey || product.id };
+    const sale=activeSale(product,now),unitPriceCents=sale?.priceCents??product.priceCents;
+    return { productId:line.productId,name:product.name,strength:product.strength,quantity:line.quantity,unitPriceCents,lineTotalCents:unitPriceCents*line.quantity,bulkEligible:product.bulkEligible===true,compoundKey:product.compoundKey||product.id,discountEligible:!sale||sale.allowAdditionalDiscounts,
+      ...(sale?{regularUnitPriceCents:product.priceCents,saleSnapshot:{title:sale.title,priceCents:sale.priceCents,allowAdditionalDiscounts:sale.allowAdditionalDiscounts,startsAtMs:sale.startsAtMs,endsAtMs:sale.endsAtMs}}:{}) };
   });
   const subtotalCents = lines.reduce((sum, line) => sum + line.lineTotalCents, 0);
   const discounts = [];
+  const discountableCents=lines.filter(line=>line.discountEligible).reduce((sum,line)=>sum+line.lineTotalCents,0);
   if (promotion === 'first') {
     if (!firstOrderEligible) throw new CheckoutError('failed-precondition', 'The first-order discount has already been used for this account.');
-    discounts.push({ kind: 'first', label: 'First order · 10%', amountCents: Math.round(subtotalCents * 0.1) });
+    if(discountableCents>0)discounts.push({ kind: 'first', label: 'First order · 10%', amountCents: Math.round(discountableCents * 0.1) });
   }
   if (promotion === 'code') {
     if (!promo || promo.active !== true || !Number.isFinite(promo.percentOff) || promo.percentOff <= 0 || promo.percentOff > 100) throw new CheckoutError('failed-precondition', 'This promotional code is not available.');
-    discounts.push({ kind: 'code', label: `${promo.code} · ${promo.percentOff}%`, amountCents: Math.round(subtotalCents * promo.percentOff / 100) });
+    if(!discountableCents)throw new CheckoutError('failed-precondition','This code cannot be applied: your sale items exclude additional discounts. Choose no promotion to continue.');
+    discounts.push({ kind: 'code', label: `${promo.code} · ${promo.percentOff}%`, amountCents: Math.round(discountableCents * promo.percentOff / 100) });
   }
-  const eligible = lines.filter(line => line.bulkEligible);
+  const eligible = lines.filter(line => line.bulkEligible && line.discountEligible);
   if (new Set(eligible.map(line => line.compoundKey)).size >= 5) {
     discounts.push({ kind: 'mixed', label: '5 distinct compounds · 5%', amountCents: Math.round(eligible.reduce((sum, line) => sum + line.lineTotalCents, 0) * 0.05) });
   }
@@ -45,8 +50,8 @@ export function calculateQuote(input, productRecords, { firstOrderEligible = tru
     else if (line.quantity >= 5) discounts.push({ kind: 'bulk5', productId: line.productId, label: `${line.name} ${line.strength} · 5 vials, 10%`, amountCents: Math.round(line.unitPriceCents * 5 * 0.1) });
   }
   const rawDiscountCents = discounts.reduce((sum, discount) => sum + discount.amountCents, 0);
-  const discountCents = Math.min(subtotalCents, rawDiscountCents);
-  const cleanLines = lines.map(({ bulkEligible, compoundKey, ...line }) => line);
+  const discountCents = Math.min(discountableCents, rawDiscountCents);
+  const cleanLines = lines.map(({ bulkEligible, compoundKey, discountEligible, ...line }) => line);
   return { lines: cleanLines, subtotalCents, discounts, discountCents, discountCapCents: rawDiscountCents - discountCents, shippingCents: SHIPPING_CENTS, totalCents: subtotalCents - discountCents + SHIPPING_CENTS, promotion, rulesVersion: RULES_VERSION };
 }
 export function validateCustomer(input) {

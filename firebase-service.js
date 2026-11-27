@@ -73,3 +73,5 @@ export async function removeAddress() {
   await deleteDoc(doc(db, 'customerAddresses', user.uid));
 }
 export const getProductCoa = async productId => (await httpsCallable(functions,'getProductCoa')({productId})).data;
+
+export const getCurrentSales = async () => (await httpsCallable(functions, 'currentSales')({})).data;

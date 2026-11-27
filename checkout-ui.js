@@ -1,5 +1,5 @@
 import {productPackageUnit} from './catalog.js';
-import {isProductReady,productPriceCents} from './product-availability.js';
+import {isProductReady,productPriceCents,productCurrentPriceCents,productSale} from './product-availability.js';
 import { calculateQuote, validateCustomer } from './shared/checkout-core.js';
 import { siteSettings } from './site-settings.js';
 
@@ -8,6 +8,7 @@ const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&':'&
 const dollars = cents => new Intl.NumberFormat('en-US', { style:'currency', currency:'USD' }).format(cents / 100);
 export function initCheckout({ products: initialProducts, getService, onCatalog }) {
   let products = initialProducts, user = null, memberProfile = null, cart = new Map(), promotion = 'first', promo = null, firstOrderEligible = true, quote = null, serverQuote = null, sending = false, historyGeneration = 0;
+  let catalogSignature=null,catalogLoading=false,catalogLoadToken=0;
   const records = () => products.map(product => ({ ...product, priceCents: productPriceCents(product), published:isProductReady(product), bulkEligible: product.bulkEligible ?? true, compoundKey: product.compoundKey || product.name.toLowerCase() }));
   const lines = () => [...cart].map(([productId, quantity]) => ({productId, quantity}));
   const feedback = (text, success = false) => { $('checkoutMessage').textContent = text; $('checkoutMessage').classList.toggle('success',success); };
@@ -28,8 +29,11 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
     $('cartLines').innerHTML = lines().map(line => {
       const product = products.find(item => item.id === line.productId);
       if (!product) return '';
-      const priceCents = product.priceCents ?? Math.round(product.price * 100);
-      return `<article class="cart-line"><div><h3>${escape(product.name)} <span>${escape(product.strength)}</span></h3><p>${dollars(priceCents)} per ${productPackageUnit(product.id)}</p><button class="inline-link small" data-remove="${product.id}">Remove</button></div><div class="quantity-control"><button type="button" data-quantity="${product.id}" data-delta="-1" aria-label="Decrease ${escape(product.name)} quantity">−</button><input type="number" min="1" max="100" step="1" value="${line.quantity}" data-quantity-input="${product.id}" aria-label="${escape(product.name)} quantity"><button type="button" data-quantity="${product.id}" data-delta="1" aria-label="Increase ${escape(product.name)} quantity">+</button></div><strong>${dollars(priceCents * line.quantity)}</strong></article>`;
+      const verifiedLine=serverQuote?.lines.find(item=>item.productId===line.productId);
+      const priceCents=verifiedLine?.unitPriceCents??productCurrentPriceCents(product);
+      const sale=verifiedLine?.saleSnapshot??productSale(product);
+      const regular=verifiedLine?.regularUnitPriceCents??productPriceCents(product);
+      return `<article class="cart-line"><div><h3>${escape(product.name)} <span>${escape(product.strength)}</span></h3><p>${sale?`<del>${dollars(regular)}</del> `:''}${dollars(priceCents)} per ${productPackageUnit(product.id)}</p>${sale&&!sale.allowAdditionalDiscounts?'<p class="sale-exclusion-note">Sale item · no additional discounts</p>':''}<button class="inline-link small" data-remove="${product.id}">Remove</button></div><div class="quantity-control"><button type="button" data-quantity="${product.id}" data-delta="-1" aria-label="Decrease ${escape(product.name)} quantity">−</button><input type="number" min="1" max="100" step="1" value="${line.quantity}" data-quantity-input="${product.id}" aria-label="${escape(product.name)} quantity"><button type="button" data-quantity="${product.id}" data-delta="1" aria-label="Increase ${escape(product.name)} quantity">+</button></div><strong>${dollars(priceCents * line.quantity)}</strong></article>`;
     }).join('');
     if (!cart.size) { quote = null; return; }
     try {
@@ -174,31 +178,39 @@ export function initCheckout({ products: initialProducts, getService, onCatalog 
     const becameMember=memberProfile?.ageConfirmed!==true && nextProfile?.ageConfirmed===true;
     user=nextUser;memberProfile=nextProfile;
     if(changed){
-      historyGeneration++;cart=new Map();promo=null;serverQuote=null;promotion='first';firstOrderEligible=true;
+      historyGeneration++;catalogLoadToken++;catalogLoading=false;catalogSignature=null;cart=new Map();promo=null;serverQuote=null;promotion='first';firstOrderEligible=true;
       clearTimeout(cartFeedbackTimer);$('checkoutForm').reset();$('checkoutResult').hidden=true;$('cartFeedback').textContent='';feedback('');
       if(user){try{const saved=JSON.parse(sessionStorage.getItem(savedKey()) || '[]');for(const line of saved){if((!siteSettings.previewCheckout || products.some(product=>product.id===line.productId&&isProductReady(product)))&&typeof line.productId==='string'&&Number.isInteger(line.quantity)&&line.quantity>0&&line.quantity<=100)cart.set(line.productId,line.quantity);}}catch{}}
     }
     if(user && !$('shippingName').value)$('shippingName').value=nextProfile?.name || user.displayName || '';
     render();
     if((changed || becameMember) && user && memberProfile?.ageConfirmed)loadHistory();
-    if(!siteSettings.previewCheckout && user && memberProfile?.ageConfirmed && (changed || becameMember)){
-      const generation=historyGeneration;
-      getService().then(async api=>{
-        const [catalog,stats]=await Promise.all([api.getLiveCatalog(),api.getCustomerStats(user.uid)]);
-        if(generation!==historyGeneration)return;
-        // Older Firebase catalogs can still return the retired standalone SKU.
-        products=catalog.products.filter(product=>!['tb4','cerebrolysin'].includes(product.id)).map(product=>({...product,price:product.priceCents/100}));
-        for(const id of cart.keys())if(!products.some(product=>product.id===id&&isProductReady(product)))cart.delete(id);
-        firstOrderEligible=stats.firstOrderClaimed!==true && !(stats.submittedOrderCount>0) && !(stats.paidOrderCount>0);
-        if(!firstOrderEligible && promotion==='first')promotion='none';
-        onCatalog(products);saveCart();render();
-      }).catch(()=>{if(generation===historyGeneration){products=[];cart.clear();onCatalog([]);render();$('cartFeedback').textContent='The catalog is unavailable. Please try again later.';}});
-    }
+    if(!siteSettings.previewCheckout && user && memberProfile?.ageConfirmed && (changed || becameMember))refreshCatalog(true);
   }
+  async function refreshCatalog(initial=false){
+    if(siteSettings.previewCheckout||!user||!memberProfile?.ageConfirmed||catalogLoading||sending)return;
+    catalogLoading=true;const token=++catalogLoadToken,generation=historyGeneration,uid=user.uid;
+    try{
+      const api=await getService();
+      const [catalog,stats]=await Promise.all([api.getLiveCatalog(),api.getCustomerStats(uid)]);
+      if(generation!==historyGeneration||user?.uid!==uid)return;
+      const next=catalog.products.filter(p=>!['tb4','cerebrolysin'].includes(p.id)).map(p=>({...p,price:p.priceCents/100}));
+      const signature=JSON.stringify(next.map(p=>[p.id,productCurrentPriceCents(p),productSale(p),p.stockQuantity]));
+      if(signature!==catalogSignature){serverQuote=null;catalogSignature=signature;}
+      products=next;
+      for(const id of cart.keys())if(!products.some(p=>p.id===id&&isProductReady(p)))cart.delete(id);
+      firstOrderEligible=stats.firstOrderClaimed!==true&&!(stats.submittedOrderCount>0)&&!(stats.paidOrderCount>0);
+      if(!firstOrderEligible&&promotion==='first')promotion='none';
+      onCatalog(products);saveCart();render();
+    }catch(error){
+      if(initial&&generation===historyGeneration){products=[];cart.clear();onCatalog([]);render();$('cartFeedback').textContent='The catalog is unavailable. Please try again later.';}
+    }finally{if(token===catalogLoadToken)catalogLoading=false;}
+  }
+
   $('previewCodeHint').hidden=!siteSettings.previewCheckout;
   $('paymentInstructions').textContent='Payment instructions for your selected method will be provided in your order email. Do not send payment before receiving those instructions.';
   $('paymentNote').textContent=siteSettings.paymentNote;
   if(!siteSettings.previewCheckout && !siteSettings.paypalHandle)$('paypalPayment').disabled=true;
   render();
-  return {addItem,updateSession,render,loadHistory};
+  return {addItem,updateSession,render,loadHistory,refreshCatalog};
 }

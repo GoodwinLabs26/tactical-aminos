@@ -24,7 +24,7 @@ function makeQuote(input, records, stats, promo, now) {
   const code = normalizedCode(input.code);
   const activePromo = input.promotion === 'code' ? validatePromo(promo, code, now) : null;
   const firstOrderEligible = stats?.firstOrderClaimed !== true && !(stats?.submittedOrderCount > 0) && !(stats?.paidOrderCount > 0);
-  const quote = calculateQuote(input, records, { firstOrderEligible, promo: activePromo, enforceStock: true });
+  const quote = calculateQuote(input, records, { firstOrderEligible, promo: activePromo, enforceStock: true, now });
   return { ...quote, firstOrderEligible, promo: activePromo ? { code: activePromo.code, percentOff: activePromo.percentOff } : null, quoteId: hash(quote) };
 }
 // Firestore adapter is injected so order behavior can be tested without live

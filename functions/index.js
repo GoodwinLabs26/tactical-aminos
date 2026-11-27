@@ -44,7 +44,7 @@ export const memberCatalog = onCall(options, async request => {
   const snapshot = await db.collection('products').where('published','==',true).get();
   return { products: snapshot.docs.map(document => {
     const product = document.data();
-    return { id: document.id, name: product.name, strength: product.strength, category: product.category, compoundKey: product.compoundKey, bulkEligible: product.bulkEligible, published: true, priceCents: product.priceCents, stockQuantity: Number.isInteger(product.stockQuantity) ? product.stockQuantity : null };
+    return { id: document.id, name: product.name, strength: product.strength, category: product.category, compoundKey: product.compoundKey, bulkEligible: product.bulkEligible, published: true, priceCents: product.priceCents, sale: product.sale||null, saleRevision: product.saleRevision||0, stockQuantity: Number.isInteger(product.stockQuantity) ? product.stockQuantity : null };
   }) };
 });
 export const initializeDraftCatalog = onCall(options, async request => {
@@ -143,3 +143,5 @@ export {liveOrders,liveProducts,liveCustomers,liveCodes,liveAffiliates,liveNotic
 
 
 export {promotionsAdmin,promotionUnsubscribe,sendPromotionQueue,addSignupEmailContact} from './promotions.js';
+
+export {manageSales,currentSales} from './sales-functions.js';

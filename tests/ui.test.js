@@ -15,7 +15,7 @@ test('account gate, cart, discounts, preview checkout and scoped cart restoratio
   const openShop=[element('openShop')],storage=new Map(),events=new Map();
   let hash='',watcher,profile=null,placeCalls=0;
   const user={uid:'test-user',email:'test@example.com',displayName:'Test Member'};
-  const context=vm.createContext({console,Date,String,Intl,Number,Map,Set,JSON,setTimeout,clearTimeout,location:{get hash(){return hash;},set hash(value){hash=value.startsWith('#')?value:'#'+value;setTimeout(()=>events.get('hashchange')?.(),0);}},sessionStorage:{getItem:key=>storage.get(key) || null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},document:{title:'',getElementById:id=>{assert(elements.has(id),`Missing element ${id}`);return elements.get(id);},querySelector:selector=>selector.includes('paymentMethod')?payments.find(item=>item.checked):element('selector'),querySelectorAll:selector=>selector==='[data-route]'?[]:selector==='[data-open-shop]'?openShop:selector==='input[name="promotion"]'?promotions:selector==='input[name="paymentMethod"]'?payments:[]},window:{addEventListener:(type,fn)=>events.set(type,fn),scrollTo(){}}});
+  const context=vm.createContext({console,Date,String,Intl,Number,Map,Set,JSON,setTimeout,clearTimeout,location:{get hash(){return hash;},set hash(value){hash=value.startsWith('#')?value:'#'+value;setTimeout(()=>events.get('hashchange')?.(),0);}},sessionStorage:{getItem:key=>storage.get(key) || null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},document:{addEventListener(){},title:'',getElementById:id=>{assert(elements.has(id),`Missing element ${id}`);return elements.get(id);},querySelector:selector=>selector.includes('paymentMethod')?payments.find(item=>item.checked):element('selector'),querySelectorAll:selector=>selector==='[data-route]'?[]:selector==='[data-open-shop]'?openShop:selector==='input[name="promotion"]'?promotions:selector==='input[name="paymentMethod"]'?payments:[]},window:{addEventListener:(type,fn)=>events.set(type,fn),scrollTo(){}}});
   const api={watchSession:fn=>{watcher=fn;setTimeout(()=>fn(null),0);},signup:async()=>{await watcher(user);return user;},login:async()=>{await watcher(user);return {user};},logout:async()=>watcher(null),getProfile:async()=>profile,confirmMembership:async()=>{profile={name:'Test Member',ageConfirmed:true,researchOnlyAccepted:true};return profile;},getSavedAddress:async()=>null,saveAddress:async()=>{},removeAddress:async()=>{},resetPassword:async()=>{},placeOrder:async()=>{placeCalls++;}};
   const mock=new vm.SyntheticModule(Object.keys(api),function(){for(const[key,value]of Object.entries(api))this.setExport(key,value);},{context});await mock.link(()=>{});await mock.evaluate();
   const modules=new Map();
@@ -54,4 +54,13 @@ test('account gate, cart, discounts, preview checkout and scoped cart restoratio
   const restored=JSON.parse(storage.get('ta-cart-v2:'+user.uid));restored.push({productId:'missing-product',quantity:1});storage.set('ta-cart-v2:'+user.uid,JSON.stringify(restored));
   await trigger('signInTab');el('email').value=user.email;el('password').value='TestPass123!';await trigger('authForm','submit');await pause();assert.equal(Number(el('cartCount').textContent),5);
   assert(![...storage.values()].some(value=>value.includes('123 Sample St')||value.includes('TestPass123!')));
+  const catalogModule=modules.get(path.join(root,'catalog.js'));
+  const saleProduct=catalogModule.namespace.products.find(p=>p.id==='r3-30');
+  saleProduct.sale={enabled:true,priceCents:16500,startsAtMs:null,endsAtMs:null,title:'Flash sale',allowAdditionalDiscounts:false};
+  await trigger('productSort','change');
+  assert.match(el('productGrid').innerHTML,/30mg sale:.*<del class="regular-price">\$200\.00<\/del>.*\$165\.00/);
+  await trigger('productGrid','click',{target:{closest:s=>s==='[data-add-product]'?{...element('add-sale'),dataset:{addProduct:'r3-30'}}:null}});
+  assert.match(el('cartLines').innerHTML,/<del>\$200\.00<\/del> \$165\.00/);
+  assert.match(el('cartLines').innerHTML,/Sale item · no additional discounts/);
+
 });

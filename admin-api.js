@@ -16,3 +16,5 @@ export async function watchDashboardChanges(onChange,onError) {
 }
 
 export const promotionsAdmin = async input => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'promotionsAdmin',{timeout:120000})(input)).data;
+
+export const manageSales = async input => (await httpsCallable(getFunctions(getApp(),siteSettings.functionsRegion),'manageSales')(input)).data;

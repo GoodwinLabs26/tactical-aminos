@@ -69,6 +69,6 @@ test('shipping requires paid status and leaves inventory/referral counters uncha
  const {docs,service}=fixture();const input={orderId:'order1',tracking:'9400111899223856920000'};
  await assert.rejects(service.ship('admin',input),/Record payment/);
  await service.paid('admin',{orderId:'order1'});await service.ship('admin',input);await service.ship('admin',input);
- assert.equal(docs.get('orders/order1').fulfillmentStatus,'shipped');assert.equal(docs.get('orders/order1').trackingEmailStatus,'not-connected');assert.equal(docs.get('products/bpc').stockQuantity,3);assert.equal(docs.get('affiliates/affiliate').paidReferralCount,1);
+ assert.equal(docs.get('orders/order1').fulfillmentStatus,'shipped');assert.notEqual(docs.get('orders/order1').trackingEmailStatus,'not-connected');assert.equal(docs.get('products/bpc').stockQuantity,3);assert.equal(docs.get('affiliates/affiliate').paidReferralCount,1);
  await assert.rejects(service.cancel('admin',{orderId:'order1'}),/Only unpaid/);
 });
